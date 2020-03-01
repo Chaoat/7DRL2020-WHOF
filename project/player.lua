@@ -4,7 +4,7 @@ controls["moveBot"] = {"kp2", "down"}
 controls["moveBotRight"] = {"kp3"}
 controls["moveRight"] = {"kp6", "right"}
 controls["moveTopRight"] = {"kp9"}
-controls["moveTop"] = {"kp8", "top"}
+controls["moveTop"] = {"kp8", "up"}
 controls["moveTopLeft"] = {"kp7"}
 controls["moveLeft"] = {"kp4", "left"}
 controls["moveStay"] = {"kp5"}
@@ -16,7 +16,6 @@ function innitiatePlayer(map, x, y)
 	for control, keys in pairs(controls) do
 		for i = 1, #keys do
 			reverseControls[keys[i]] = control
-			--error(keys[i] .. ":" .. control)
 		end
 	end
 	
@@ -36,7 +35,6 @@ end
 
 function playerKeypressed(player, camera, key)
 	local action = reverseControls[key]
-	--error(key)
 	
 	local dirX = 0
 	local dirY = 0

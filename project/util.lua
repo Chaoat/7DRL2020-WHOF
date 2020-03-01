@@ -6,3 +6,8 @@ function roundFloat(number)
 		return math.floor(number)
 	end
 end
+
+function randomFromTable(list)
+	local i = math.ceil(math.random()*#list)
+	return list[i], i
+end
