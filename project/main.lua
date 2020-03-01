@@ -8,11 +8,10 @@ require "letter"
 require "player"
 
 function love.load()
+	love.keyboard.setKeyRepeat(true)
+	
 	Map = innitiateMap()
 	Camera = innitiateCamera(0, 0, 800, 600, 0.5, 0.5, 15, 15)
-	
-	CameraX = 0.5
-	CameraY = 0.5
 	
 	Player = innitiatePlayer(Map, 0, 0)
 end
@@ -33,19 +32,11 @@ function love.update(dt)
 	end
 	
 	updateMap(Map, dt)
+	updatePlayer(Player, Camera, dt)
 end
 
 function love.keypressed(key)
-	if key == "a" then
-		shiftCharacter(Player.character, -1, 0)
-	elseif key == "d" then
-		shiftCharacter(Player.character, 1, 0)
-	end
-	if key == "w" then
-		shiftCharacter(Player.character, 0, -1)
-	elseif key == "s" then
-		shiftCharacter(Player.character, 0, 1)
-	end
+	playerKeypressed(Player, Camera, key)
 end
 
 function love.draw()
