@@ -39,6 +39,9 @@ function shiftCharacter(character, xDir, yDir)
 	
 	oldTile.character = nil
 	character.approachingTile = nextTile
+	if character.lance then
+		character.lance.tile.lance = nil
+	end
 	
 	updateCharacterPositions({character})
 end
@@ -46,7 +49,13 @@ end
 function updateCharacterPositions(characterList)
 	for i = 1, #characterList do
 		local character = characterList[i]
-		if checkTileWalkable(character.approachingTile) then
+		local walkable = checkTileWalkable(character.approachingTile)
+		
+		if character.lance and walkable then
+			
+		end
+		
+		if walkable then
 			character.tile = character.approachingTile
 			character.approachingTile.character = character
 		else

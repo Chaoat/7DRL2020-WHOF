@@ -54,6 +54,7 @@ function getTileFromPoint(map, x, y, angle)
 end
 
 function drawMap(map, camera)
-	local visibleCharacters = drawTiles(map, camera)
+	local visibleCharacters, visibleLances = drawTiles(map, camera)
 	drawCharacters(visibleCharacters, camera)
+	drawLances(visibleLances, camera)
 end
