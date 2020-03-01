@@ -14,6 +14,7 @@ require "round"
 require "aiturn"
 require "turn"
 require "mapstructures"
+require "lance"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

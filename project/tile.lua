@@ -22,7 +22,7 @@ tileCharacters['tree'] = {
 {tile = " ", chance = 1}}
 
 function initiateTile(x, y, kind, letter)
-	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil}
+	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil, lance = nil}
 	
 	if letter == nil then
 		local chosenChar = ""
