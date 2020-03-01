@@ -1,7 +1,7 @@
 --creates a character
-function innitiateCharacter(map, x, y, letter)
+function initiateCharacter(map, x, y, letter)
 	local tile = getMapTile(map, x, y)
-	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, active = false}
+	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, active = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	tile.character = character
@@ -37,10 +37,21 @@ function shiftCharacter(character, xDir, yDir)
 	local oldTile = character.tile
 	local nextTile = getMapTile(character.map, oldTile.x + xDir, oldTile.y + yDir)
 	
-	if checkTileWalkable(nextTile) then
-		oldTile.character = nil
-		nextTile.character = character
-		character.tile = nextTile
+	oldTile.character = nil
+	character.approachingTile = nextTile
+	
+	updateCharacterPositions({character})
+end
+
+function updateCharacterPositions(characterList)
+	for i = 1, #characterList do
+		local character = characterList[i]
+		if checkTileWalkable(character.approachingTile) then
+			character.tile = character.approachingTile
+			character.approachingTile.character = character
+		else
+			character.tile.character = character
+		end
 	end
 end
 

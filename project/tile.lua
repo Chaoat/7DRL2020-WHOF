@@ -21,7 +21,7 @@ tileProperties['tree'] = {walkable = false, blockVision = true}
 tileCharacters['tree'] = {
 {tile = " ", chance = 1}}
 
-function innitiateTile(x, y, kind, letter)
+function initiateTile(x, y, kind, letter)
 	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil}
 	
 	if letter == nil then
@@ -48,7 +48,7 @@ function innitiateTile(x, y, kind, letter)
 			end
 		end
 		
-		letter = innitiateLetter(chosenChar, colour)
+		letter = initiateLetter(chosenChar, colour)
 	end
 	
 	tile.letter = letter

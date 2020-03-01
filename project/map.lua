@@ -1,4 +1,4 @@
-function innitiateMap()
+function initiateMap()
 	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}}
 	fillMapArea(map, "ground", -50, -50, 50, 50)
 	return map
@@ -23,7 +23,7 @@ function expandMap(map, tileKind, newTileX, newTileY)
 		
 		for j = map.minY, map.maxY do
 			if map.tiles[i][j] == nil then
-				map.tiles[i][j] = innitiateTile(i, j, "ground")
+				map.tiles[i][j] = initiateTile(i, j, "ground")
 			end
 		end
 	end
@@ -42,7 +42,7 @@ function getMapTile(map, x, y)
 	if map.minX <= x and x <= map.maxX and map.minY <= y and y <= map.maxY then
 		return map.tiles[x][y]
 	else
-		return innitiateTile(x, y, "empty")
+		return initiateTile(x, y, "empty")
 	end
 end
 

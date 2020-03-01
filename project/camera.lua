@@ -1,5 +1,5 @@
 --creates a camera
-function innitiateCamera(screenX, screenY, width, height, centerX, centerY, tileWidth, tileHeight)
+function initiateCamera(screenX, screenY, width, height, centerX, centerY, tileWidth, tileHeight)
 	local camera = {screenX = screenX, screenY = screenY, width = width, height = height, centerX = centerX, centerY = centerY, tileWidth = tileWidth, tileHeight = tileHeight, tilesWide = nil, tilesTall = nil}
 	updateCameraSize(camera, width, height)
 	return camera

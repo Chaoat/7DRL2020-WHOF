@@ -9,7 +9,7 @@ function spawnStructure(map, x, y, structureName, direction)
 			local targetY = y + j - math.ceil(template.size/2)
 			local tileKind = template.tiles[i][j]
 			if tileKind then
-				map.tiles[targetX][targetY] = innitiateTile(targetX, targetY, tileKind, innitiateLetter(template.symbols[i][j], template.colours[i][j]))
+				map.tiles[targetX][targetY] = initiateTile(targetX, targetY, tileKind, initiateLetter(template.symbols[i][j], template.colours[i][j]))
 			end
 		end
 	end
