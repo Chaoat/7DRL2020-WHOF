@@ -14,16 +14,18 @@ end
 
 function resolveRound(player, map, roundLength)
 	for i=1,roundLength do
-		resolveTurn()
+		resolveTurn(player)
 	end
 
 	resolveAITurn()
 end
 
-function resolveTurn()
+function resolveTurn(player)
 	--shift the player
-	local xDir, yDir = getAdjacenDir(0, 0, player.character.facing)
-	player.movePlayer(player, xDir, yDir)
+	print("resolving turn: ")
+	print(player.character.facing)
+	local xDir, yDir = getRelativeGridPositionFromAngle(0, 0, player.character.facing)
+	movePlayer(player, xDir, yDir)
 	--TODO shift all horseman AI
 end
 

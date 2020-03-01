@@ -65,6 +65,7 @@ function cardinalRound(angle)
 	end
 	
 	angle = (math.pi/4)*roundFloat(angle/(math.pi/4))
+	return angle
 end
 
 

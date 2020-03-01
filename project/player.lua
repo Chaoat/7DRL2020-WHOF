@@ -128,15 +128,21 @@ function determinePlayerAction(player, dirX, dirY)
 		modifySpeed(player, -1)
 	end
 
+	print("player speed and facing: ")
+	print(player.speed)
+	print(player.character.facing)
+
 	--Start the round
 	startRound(player, player.character.map)
 end
 
 --Clamps the speed
 function modifySpeed(player, speedChange)
-	if player.speed + speedChange >= player.maxSpeed then
+	player.speed = player.speed + speedChange
+
+	if player.speed >= player.maxSpeed then
 		player.speed = player.maxSpeed
-	elseif player.speed + speedChange <= 0 then
+	elseif player.speed <= 0 then
 	    player.speed = 0
 	end
 end
