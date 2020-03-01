@@ -67,3 +67,11 @@ function cardinalRound(angle)
 	angle = (math.pi/4)*roundFloat(angle/(math.pi/4))
 	return angle
 end
+
+
+function getRelativeGridPositionFromAngle(x, y, angle)
+	angle = cardinalRound(angle)
+	local xDir = roundFloat(math.cos(angle))
+	local yDir = roundFloat(math.sin(angle))
+	return xDir, yDir
+end

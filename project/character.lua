@@ -37,13 +37,27 @@ function shiftCharacter(character, xDir, yDir)
 	local oldTile = character.tile
 	local nextTile = getMapTile(character.map, oldTile.x + xDir, oldTile.y + yDir)
 	
-	oldTile.character = nil
 	character.approachingTile = nextTile
+	removeCharFromTile(character)
+	
+	updateCharacterPositions({character})
+end
+
+function removeCharFromTile(character)
+	character.tile.character = nil
 	if character.lance then
 		character.lance.tile.lance = nil
 	end
-	
-	updateCharacterPositions({character})
+end
+
+function placeCharOnTile(character, tile)
+	character.tile = tile
+	tile.character = character
+	if character.lance then
+		local lanceTile = getTileFromPoint(character.map, tile.x, tile.y, character.facing)
+		character.lance.tile = lanceTile
+		lanceTile.lance = character.lance
+	end
 end
 
 function updateCharacterPositions(characterList)
@@ -51,15 +65,10 @@ function updateCharacterPositions(characterList)
 		local character = characterList[i]
 		local walkable = checkTileWalkable(character.approachingTile)
 		
-		if character.lance and walkable then
-			
-		end
-		
 		if walkable then
-			character.tile = character.approachingTile
-			character.approachingTile.character = character
+			placeCharOnTile(character, character.approachingTile)
 		else
-			character.tile.character = character
+			placeCharOnTile(character, character.tile)
 		end
 	end
 end
@@ -82,4 +91,29 @@ function drawCharacters(characters, camera)
 		local character = characters[i]
 		drawLetter(character.letter, character.x, character.y, camera)
 	end
+end
+
+--Sets a character facing to degree
+function SetFacingDeg(character, angle)
+	character.facing = math.rad(angle)
+end
+
+--Shifts a character facing 45 deg clockwise
+function shiftClockwise(character)
+	local degFacing = math.deg(character.facing)
+	degFacing = degFacing + 45
+	if degFacing >= 360 then
+		degFacing = degFacing - 360
+	end
+	character.facing = math.rad(degFacing)
+end
+
+--Shifts a character facing 45 deg anticlockwise
+function shiftAnticlockwise(character)
+	local degFacing = math.deg(character.facing)
+	degFacing = degFacing - 45
+	if degFacing <= 0 then
+		degFacing = degFacing + 360
+	end
+	character.facing = math.rad(degFacing)
 end
