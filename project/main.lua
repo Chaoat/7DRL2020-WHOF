@@ -12,7 +12,7 @@ require "formationTable"
 require "formation"
 require "round"
 require "aiturn"
-require "turn"git sat
+require "turn"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

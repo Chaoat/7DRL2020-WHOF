@@ -9,6 +9,7 @@ end
 
 function angleBetweenVectors(a, b, x, y)
 	return math.atan2(y-b, x-a)
+end
 	
 function randomFromTable(list)
 	local i = math.ceil(math.random()*#list)
