@@ -9,6 +9,15 @@ function initiateLance(map, character, colour)
 	return lance
 end
 
+function updateLancePos(lance)
+	local character = lance.character
+	local tile = getTileFromPoint(character.map, character.tile.x, character.tile.y, character.facing)
+	
+	lance.tile.lance = nil
+	tile.lance = lance
+	lance.tile = tile
+end
+
 function drawLances(lances, camera)
 	for i = 1, #lances do
 		local lance = lances[i]
