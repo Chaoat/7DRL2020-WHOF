@@ -35,7 +35,21 @@ function innitiateTile(x, y, kind)
 	return tile
 end
 
+function checkTileWalkable(tile)
+	if tile.properties.walkable then
+		if tile.character == nil then
+			return true
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
 function drawTiles(map, camera)
+	local visibleCharacters = {}
+	
 	local tilesWide = camera.tilesWide
 	local tilesTall = camera.tilesTall
 	
@@ -48,11 +62,14 @@ function drawTiles(map, camera)
 			if tile.properties.walkable then
 				local letter = tile.letter
 				if tile.character then
+					table.insert(visibleCharacters, tile.character)
 					letter = tile.character.letter
+				else
+					drawLetter(tile.letter, i, j, camera)
 				end
-				
-				drawLetter(letter, i, j, camera)
 			end
 		end
 	end
+	
+	return visibleCharacters
 end

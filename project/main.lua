@@ -5,6 +5,7 @@ require "font"
 require "character"
 require "camera"
 require "letter"
+require "player"
 
 function love.load()
 	Map = innitiateMap()
@@ -13,7 +14,7 @@ function love.load()
 	CameraX = 0.5
 	CameraY = 0.5
 	
-	innitiateCharacter(Map, 3, 3, innitiateLetter("@", {1, 0, 0, 1}))
+	Player = innitiatePlayer(Map, 0, 0)
 end
 
 function love.update(dt)
@@ -29,6 +30,21 @@ function love.update(dt)
 	end
 	if love.keyboard.isDown("down") then
 		Camera.centerY = Camera.centerY + camSpeed*dt
+	end
+	
+	updateMap(Map, dt)
+end
+
+function love.keypressed(key)
+	if key == "a" then
+		shiftCharacter(Player.character, -1, 0)
+	elseif key == "d" then
+		shiftCharacter(Player.character, 1, 0)
+	end
+	if key == "w" then
+		shiftCharacter(Player.character, 0, -1)
+	elseif key == "s" then
+		shiftCharacter(Player.character, 0, 1)
 	end
 end
 

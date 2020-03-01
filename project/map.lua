@@ -1,5 +1,5 @@
 function innitiateMap()
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}}
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}}
 	fillMapArea(map, "ground", -50, -50, 50, 50)
 	return map
 end
@@ -34,6 +34,10 @@ function fillMapArea(map, tileKind, x1, y1, x2, y2)
 	expandMap(map, tileKind, x2, y2)
 end
 
+function updateMap(map, dt)
+	updateActiveCharacters(map.activeCharacters, dt)
+end
+
 function getMapTile(map, x, y)
 	if map.minX <= x and x <= map.maxX and map.minY <= y and y <= map.maxY then
 		return map.tiles[x][y]
@@ -43,5 +47,6 @@ function getMapTile(map, x, y)
 end
 
 function drawMap(map, camera)
-	drawTiles(map, camera)
+	local visibleCharacters = drawTiles(map, camera)
+	drawCharacters(visibleCharacters, camera)
 end
