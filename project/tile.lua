@@ -3,9 +3,11 @@ local tileCharacters = {}
 
 tileProperties['ground'] = {walkable = true, blockVision = false}
 tileCharacters['ground'] = {
-{tile = ".", chance = 3},
+{tile = ".", chance = 9},
 {tile = ";", chance = 1},
-{tile = ",", chance = 2}}
+{tile = ",", chance = 2}, 
+{tile = "~", chance = 1},
+{tile = "'", chance = 1}}
 
 tileProperties['empty'] = {walkable = false, blockVision = true}
 tileCharacters['empty'] = {
