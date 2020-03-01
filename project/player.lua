@@ -3,11 +3,11 @@ local controls = {}
 controls["moveBotLeft"] = {"kp1", "z", "b"}
 controls["moveBot"] = {"kp2", "down", "x", "j"}
 controls["moveBotRight"] = {"kp3", "c", "n"}
-controls["moveRight"] = {"kp6", "right", "a", "l"}
+controls["moveRight"] = {"kp6", "right", "d", "l"}
 controls["moveTopRight"] = {"kp9", "e", "u"}
 controls["moveTop"] = {"kp8", "up", "w", "k"}
 controls["moveTopLeft"] = {"kp7", "q", "y"}
-controls["moveLeft"] = {"kp4", "left", "d", "h"}
+controls["moveLeft"] = {"kp4", "left", "a", "h"}
 controls["moveStay"] = {"kp5", "s", ","}
 
 local reverseControls = {}
