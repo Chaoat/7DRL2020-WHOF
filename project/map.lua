@@ -1,5 +1,5 @@
 function innitiateMap()
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}}
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}}
 	fillMapArea(map, "ground", -50, -50, 50, 50)
 	return map
 end
@@ -42,26 +42,6 @@ function getMapTile(map, x, y)
 	end
 end
 
-function drawMap(map, screenX, screenY, width, height, centerX, centerY, tileSizeX, tileSizeY)
-	setFont("square", tileSizeY)
-	
-	local tilesWide = math.ceil(width/tileSizeX) + 1
-	local tilesTall = math.ceil(height/tileSizeY) + 1
-	
-	local startX = roundFloat(centerX) - math.ceil(tilesWide/2)
-	local startY = roundFloat(centerY) - math.ceil(tilesTall/2)
-	
-	for i = startX, startX + tilesWide do
-		for j = startY, startY + tilesTall do
-			local tile = getMapTile(map, i, j)
-			if tile.properties.walkable then
-				local drawX = screenX + width/2 + (i - centerX)*tileSizeX
-				local drawY = screenY + height/2 + (j - centerY)*tileSizeY
-				
-				love.graphics.setColor(tile.colour)
-				--love.graphics.rectangle('line', drawX, drawY, tileSizeX, tileSizeY)
-				love.graphics.print(tile.character, drawX, drawY)
-			end
-		end
-	end
+function drawMap(map, camera)
+	drawTiles(map, camera)
 end
