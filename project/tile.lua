@@ -13,33 +13,45 @@ tileProperties['empty'] = {walkable = false, blockVision = true}
 tileCharacters['empty'] = {
 {tile = " ", chance = 1}}
 
-function innitiateTile(x, y, kind)
+tileProperties['building'] = {walkable = false, blockVision = true}
+tileCharacters['building'] = {
+{tile = " ", chance = 1}}
+
+tileProperties['tree'] = {walkable = false, blockVision = true}
+tileCharacters['tree'] = {
+{tile = " ", chance = 1}}
+
+function innitiateTile(x, y, kind, letter)
 	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil}
 	
-	local chosenChar = ""
-	local colour = {1, 1, 1, 1}
-	local totalChance = 0
-	for i = 1, #tileCharacters[kind] do
-		totalChance = totalChance + tileCharacters[kind][i].chance
-	end
-	local randChoice = math.random()*totalChance
-	for i = 1, #tileCharacters[kind] do
-		randChoice = randChoice - tileCharacters[kind][i].chance
-		if randChoice < 0 then
-			chosenChar = tileCharacters[kind][i].tile
-			
-			if tileCharacters[kind][i].colour1 then
-				local c1 = tileCharacters[kind][i].colour1
-				local c2 = tileCharacters[kind][i].colour2
-				local spot = math.random()
-				colour = {c1[1]*spot + c2[1]*(1 - spot), c1[2]*spot + c2[2]*(1 - spot), c1[3]*spot + c2[3]*(1 - spot), c1[4]*spot + c2[4]*(1 - spot)}
-			end
-			
-			break
+	if letter == nil then
+		local chosenChar = ""
+		local colour = {1, 1, 1, 1}
+		local totalChance = 0
+		for i = 1, #tileCharacters[kind] do
+			totalChance = totalChance + tileCharacters[kind][i].chance
 		end
+		local randChoice = math.random()*totalChance
+		for i = 1, #tileCharacters[kind] do
+			randChoice = randChoice - tileCharacters[kind][i].chance
+			if randChoice < 0 then
+				chosenChar = tileCharacters[kind][i].tile
+				
+				if tileCharacters[kind][i].colour1 then
+					local c1 = tileCharacters[kind][i].colour1
+					local c2 = tileCharacters[kind][i].colour2
+					local spot = math.random()
+					colour = {c1[1]*spot + c2[1]*(1 - spot), c1[2]*spot + c2[2]*(1 - spot), c1[3]*spot + c2[3]*(1 - spot), c1[4]*spot + c2[4]*(1 - spot)}
+				end
+				
+				break
+			end
+		end
+		
+		letter = innitiateLetter(chosenChar, colour)
 	end
 	
-	tile.letter = innitiateLetter(chosenChar, colour)
+	tile.letter = letter
 	
 	return tile
 end
@@ -68,14 +80,12 @@ function drawTiles(map, camera)
 	for i = startX, startX + tilesWide do
 		for j = startY, startY + tilesTall do
 			local tile = getMapTile(map, i, j)
-			if tile.properties.walkable then
-				local letter = tile.letter
-				if tile.character then
-					table.insert(visibleCharacters, tile.character)
-					letter = tile.character.letter
-				else
-					drawLetter(tile.letter, i, j, camera)
-				end
+			local letter = tile.letter
+			if tile.character then
+				table.insert(visibleCharacters, tile.character)
+				letter = tile.character.letter
+			else
+				drawLetter(tile.letter, i, j, camera)
 			end
 		end
 	end

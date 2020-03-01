@@ -13,6 +13,7 @@ require "formation"
 require "round"
 require "aiturn"
 require "turn"
+require "mapstructures"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)
@@ -23,6 +24,7 @@ function love.load()
 	Player = innitiatePlayer(Map, 0, 0)
 	
 	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
+	spawnStructure(Map, 0, -10, "tree", 0)
 end
 
 function love.update(dt)	
