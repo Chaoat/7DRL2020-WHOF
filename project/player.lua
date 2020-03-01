@@ -81,8 +81,8 @@ function playerKeypressed(player, camera, key)
 	
 	if kind == "movement" then
 		if player.currentlyActing then
-			--movePlayer(player, dirX, dirY, camera)
-			startRound(player, 1, dirX, dirY, camera)
+			movePlayer(player, dirX, dirY, camera)
+			--startRound(player, 1, dirX, dirY, camera)
 		end
 	end
 end
