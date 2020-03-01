@@ -1,5 +1,5 @@
 function innitiateMap()
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}}
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}}
 	fillMapArea(map, "ground", -50, -50, 50, 50)
 	return map
 end
@@ -44,6 +44,13 @@ function getMapTile(map, x, y)
 	else
 		return innitiateTile(x, y, "empty")
 	end
+end
+
+function getTileFromPoint(map, x, y, angle)
+	angle = cardinalRound(angle)
+	local xDir = roundFloat(math.cos(angle))
+	local yDir = roundFloat(math.sin(angle))
+	return getMapTile(map, x + xDir, y + yDir)
 end
 
 function drawMap(map, camera)

@@ -44,6 +44,18 @@ function shiftCharacter(character, xDir, yDir)
 	end
 end
 
+--Repeatedly shift until character arrives at target position
+function multiSlide(character, targetX, targetY)
+	while character.tile.x ~= targetX or character.tile.y ~= targetY do
+		local targetTile = getTileFromPoint(character.map, character.tile.x, character.tile.y, math.atan2(targetY - character.tile.y, targetX - character.tile.x))
+		if not checkTileWalkable(targetTile) then
+			break
+		else
+			shiftCharacter(character, targetTile.x - character.tile.x, targetTile.y - character.tile.y)
+		end
+	end
+end
+
 --Given a character table and a camera, draw all the characters on the camera
 function drawCharacters(characters, camera)
 	for i = 1, #characters do

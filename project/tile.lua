@@ -3,11 +3,11 @@ local tileCharacters = {}
 
 tileProperties['ground'] = {walkable = true, blockVision = false}
 tileCharacters['ground'] = {
-{tile = ".", chance = 9},
-{tile = ";", chance = 1},
-{tile = ",", chance = 2}, 
-{tile = "~", chance = 1},
-{tile = "'", chance = 1}}
+{tile = ".", chance = 9, colour1 = {173/255, 105/255, 0, 1}, colour2 = {137/255, 200/255, 0, 1}},
+{tile = ";", chance = 1, colour1 = {173/255, 105/255, 0, 1}, colour2 = {142/255, 142/255, 142/255, 1}},
+{tile = ",", chance = 2, colour1 = {137/255, 194/255, 0, 1}, colour2 = {74/255, 193/255, 0, 1}}, 
+{tile = "~", chance = 1, colour1 = {86/255, 193/255, 60/255, 1}, colour2 = {36/255, 193/255, 42/255, 1}},
+{tile = "'", chance = 1, colour1 = {137/255, 194/255, 0, 1}, colour2 = {74/255, 193/255, 0, 1}}}
 
 tileProperties['empty'] = {walkable = false, blockVision = true}
 tileCharacters['empty'] = {
@@ -16,7 +16,8 @@ tileCharacters['empty'] = {
 function innitiateTile(x, y, kind)
 	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil}
 	
-	chosenChar = ""
+	local chosenChar = ""
+	local colour = {1, 1, 1, 1}
 	local totalChance = 0
 	for i = 1, #tileCharacters[kind] do
 		totalChance = totalChance + tileCharacters[kind][i].chance
@@ -26,11 +27,19 @@ function innitiateTile(x, y, kind)
 		randChoice = randChoice - tileCharacters[kind][i].chance
 		if randChoice < 0 then
 			chosenChar = tileCharacters[kind][i].tile
+			
+			if tileCharacters[kind][i].colour1 then
+				local c1 = tileCharacters[kind][i].colour1
+				local c2 = tileCharacters[kind][i].colour2
+				local spot = math.random()
+				colour = {c1[1]*spot + c2[1]*(1 - spot), c1[2]*spot + c2[2]*(1 - spot), c1[3]*spot + c2[3]*(1 - spot), c1[4]*spot + c2[4]*(1 - spot)}
+			end
+			
 			break
 		end
 	end
 	
-	tile.letter = innitiateLetter(chosenChar, {1, 1, 1, 1})
+	tile.letter = innitiateLetter(chosenChar, colour)
 	
 	return tile
 end

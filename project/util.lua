@@ -54,3 +54,15 @@ function distanceBetweenAngles(rawangle1, rawangle2)
 		return 0
 	end
 end
+
+--Round the angle into a cardinal direction angle
+function cardinalRound(angle)
+	while angle < -math.pi do
+		angle = angle + 2*math.pi
+	end
+	while angle >= math.pi do
+		angle = angle - 2*math.pi
+	end
+	
+	angle = (math.pi/4)*roundFloat(angle/(math.pi/4))
+end
