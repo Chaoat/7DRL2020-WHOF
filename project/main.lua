@@ -6,6 +6,9 @@ require "character"
 require "camera"
 require "letter"
 require "player"
+require "round"
+require "aiturn"
+require "turn"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

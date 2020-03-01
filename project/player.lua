@@ -31,10 +31,12 @@ function updatePlayer(player, camera, dt)
 	camera.y = player.character.y
 end
 
+--Shifts the player 1 space
 function movePlayer(player, xdir, ydir, camera)
 	shiftCharacter(player.character, xdir, ydir)
 end
 
+--Detects player input to start a new round
 function playerKeypressed(player, camera, key)
 	local action = reverseControls[key]
 	--error(key)
@@ -80,7 +82,13 @@ function playerKeypressed(player, camera, key)
 	
 	if kind == "movement" then
 		if player.currentlyActing then
-			movePlayer(player, dirX, dirY, camera)
+			--movePlayer(player, dirX, dirY, camera)
+			startRound(player, 1, dirX, dirY, camera)
 		end
 	end
+end
+
+--changes the player's facing depending on input
+function playerAngleInput(dirX, dirY)
+	--Should this just go on the character?
 end

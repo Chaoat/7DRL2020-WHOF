@@ -6,3 +6,7 @@ function roundFloat(number)
 		return math.floor(number)
 	end
 end
+
+function angleBetweenVectors(a, b, x, y)
+	return math.atan2(y-b, x-a)
+end
