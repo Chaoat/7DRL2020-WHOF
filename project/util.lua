@@ -55,6 +55,35 @@ function distanceBetweenAngles(rawangle1, rawangle2)
 	end
 end
 
+function findAngleDirection(rawangle1, rawangle2)
+	rawangle1 = simplifyAngle(rawangle1)
+	rawangle2 = simplifyAngle(rawangle2)
+	
+	if rawangle1 ~= rawangle2 then	
+		local simpleDistance = rawangle2 - rawangle1
+		local loopDistance = 0
+		if rawangle1 > 0 then
+			loopDistance = (math.pi - rawangle1) + (math.pi + rawangle2)
+		else
+			loopDistance = (math.pi - rawangle2) + (math.pi + rawangle1)
+		end
+		
+		if math.abs(simpleDistance) < loopDistance then
+			return simpleDistance/math.abs(simpleDistance)
+		else
+			if rawangle1 > 0 then
+				return 1
+			else
+				return -1
+			end
+		end
+	else
+		return 0
+	end
+end
+
+
+
 --Round the angle into a cardinal direction angle
 function cardinalRound(angle)
 	while angle < -math.pi do

@@ -22,6 +22,7 @@ function drawLances(lances, camera)
 			letter = "/"
 		end
 		
-		drawLetter({letter = letter, colour = character.lance.colour}, character.lance.tile.x, character.lance.tile.y, camera)
+		local xShift, yShift = getRelativeGridPositionFromAngle(character.x, character.y, character.facing)
+		drawLetter({letter = letter, colour = character.lance.colour}, character.x + xShift, character.y + yShift, camera)
 	end
 end
