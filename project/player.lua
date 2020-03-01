@@ -13,6 +13,8 @@ controls["moveStay"] = {"kp5", "s", ","}
 
 local reverseControls = {}
 
+local maxSpeed = 3
+
 function innitiatePlayer(map, x, y)
 	--Do some preprocessing on controls
 	for control, keys in pairs(controls) do
@@ -21,7 +23,7 @@ function innitiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, currentlyActing = true, targeting = false}
+	player = {character = nil, currentlyActing = true, targeting = false, speed = 0}
 	player.character = activateCharacter(innitiateCharacter(map, x, y, innitiateLetter("@", {1, 1, 0, 1})))
 	return player
 end
@@ -79,15 +81,64 @@ function playerKeypressed(player, camera, key)
 		kind = "rest"
 	end
 	
+	--Player made an input change
 	if kind == "movement" then
 		if player.currentlyActing then
-			movePlayer(player, dirX, dirY, camera)
-			--startRound(player, 1, dirX, dirY, camera)
+			determinePlayerAction(player, dirX, dirY)
 		end
+	end
+
+	if kind == "rest" then
+		--Player made a blank move with no input then just start the round
+		startRound(player, player.character.map)
 	end
 end
 
---changes the player's facing depending on input
-function playerAngleInput(dirX, dirY)
-	--Should this just go on the character?
+--changes the player's facing and speed depending on input then starts a round
+function determinePlayerAction(player, dirX, dirY)
+	angle = angleBetweenVectors(0, 0, dirX, dirY)
+	-- Angle relative to the direction
+	relAngle = distanceBetweenAngle(angle, layer.character.facing)
+	--Convert rel angle to degrees
+	relAngle = math.deg(relAngle)
+
+	--relative angle of zero means will accelerate forward
+	if relAngle == 0 then
+		modifySpeed(player, 1)
+	end
+
+	--relative angle of 45 or 315 will not change speed, only angle
+	if relAngle == 45 then
+		shiftClockwise(player.character)
+	end
+	if relAngle == 315 then
+		shiftAnticlockwise(player.character)
+	end
+
+	--Doing a turn that slows you
+	if relAngle == 90 || relAngle == 135 then
+		shiftClockwise(player.character)
+		modifySpeed(player, -1)
+	end
+	if relAngle == 225 || relAngle == 270 then
+		shiftAnticlockwise(player.character)
+		modifySpeed(player, -1)
+	end
+
+	--Just slowing down
+	if relAngle == 180 then
+		modifySpeed(player, -1)
+	end
+
+	--Start the round
+	startRound(player, player.character.map)
+end
+
+--Clamps the speed
+function modifySpeed(player, speedChange)
+	if player.speed + speedChange >= maxSpeed then
+		player.speed = maxSpeed
+	elseif player.speed + speedChange <= 0 then
+	    player.speed = 0
+	end
 end

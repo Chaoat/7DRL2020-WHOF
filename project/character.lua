@@ -51,3 +51,28 @@ function drawCharacters(characters, camera)
 		drawLetter(character.letter, character.x, character.y, camera)
 	end
 end
+
+--Sets a character facing to degree
+function SetFacingDeg(character, angle)
+	character.facing = math.rad(angle)
+end
+
+--Shifts a character facing 45 deg clockwise
+function shiftClockwise(character)
+	degFacing = math.deg(character.facing)
+	degFacing += 45
+	if degFacing >= 360 then
+		degFacing - 360
+	end
+	character.facing = math.rad(degFacing)
+end
+
+--Shifts a character facing 45 deg anticlockwise
+function shiftAnticlockwise(character)
+	degFacing = math.deg(character.facing)
+	degFacing -= 45
+	if degFacing <= 0 then
+		degFacing + 360
+	end
+	character.facing = math.rad(degFacing)
+end
