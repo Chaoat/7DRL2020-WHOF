@@ -32,5 +32,5 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 		table.insert(enemyList, enemy)
 	end
 	
-	innitiateFormation(enemyList, x, y, formationTemplate.size, rotation)
+	innitiateFormation(map, enemyList, x, y, formationTemplate, rotation)
 end

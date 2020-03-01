@@ -14,7 +14,7 @@ function getFormationTemplateInDifficultyRange(minDiff, maxDiff)
 end
 
 local function createFormationTemplate(radius, difficulty, positions)
-	local formation = {size = 2*radius + 1, difficulty = difficulty, positions = positions}
+	local formation = {size = 2*radius + 1, difficulty = difficulty, positions = positions, behaviour = "chase"}
 	table.insert(formations, formation)
 end
 
