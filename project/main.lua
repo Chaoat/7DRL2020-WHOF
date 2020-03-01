@@ -12,6 +12,8 @@ function love.load()
 	
 	CameraX = 0.5
 	CameraY = 0.5
+	
+	innitiateCharacter(Map, 3, 3, innitiateLetter("@", {1, 0, 0, 1}))
 end
 
 function love.update(dt)

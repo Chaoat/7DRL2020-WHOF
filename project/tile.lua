@@ -51,7 +51,7 @@ function drawTiles(map, camera)
 					letter = tile.character.letter
 				end
 				
-				drawLetter(tile.letter, i, j, camera)
+				drawLetter(letter, i, j, camera)
 			end
 		end
 	end
