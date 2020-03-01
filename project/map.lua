@@ -43,6 +43,8 @@ function getMapTile(map, x, y)
 end
 
 function drawMap(map, screenX, screenY, width, height, centerX, centerY, tileSizeX, tileSizeY)
+	setFont("square", tileSizeY)
+	
 	local tilesWide = math.ceil(width/tileSizeX) + 1
 	local tilesTall = math.ceil(height/tileSizeY) + 1
 	
@@ -56,9 +58,9 @@ function drawMap(map, screenX, screenY, width, height, centerX, centerY, tileSiz
 				local drawX = screenX + width/2 + (i - centerX)*tileSizeX
 				local drawY = screenY + height/2 + (j - centerY)*tileSizeY
 				
-				love.graphics.setColor(1, 1, 1, 1)
-				love.graphics.rectangle('line', drawX, drawY, tileSizeX, tileSizeY)
-				love.graphics.print(i .. ":" .. j, drawX, drawY)
+				love.graphics.setColor(tile.colour)
+				--love.graphics.rectangle('line', drawX, drawY, tileSizeX, tileSizeY)
+				love.graphics.print(tile.character, drawX, drawY)
 			end
 		end
 	end

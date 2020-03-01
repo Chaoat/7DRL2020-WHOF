@@ -1,6 +1,7 @@
 require "map"
 require "tile"
 require "util"
+require "font"
 
 function love.load()
 	Map = innitiateMap()
@@ -26,5 +27,5 @@ function love.update(dt)
 end
 
 function love.draw()
-	drawMap(Map, 0, 0, 800, 600, CameraX, CameraY, 40, 40)
+	drawMap(Map, 0, 0, 800, 600, CameraX, CameraY, 15, 15)
 end
