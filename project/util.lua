@@ -56,7 +56,7 @@ function distanceBetweenAngles(rawangle1, rawangle2)
 end
 
 function simplifyAngle(angle)
-	while math.abs(angle1) > math.pi do
+	while math.abs(angle) > math.pi do
 		if angle < 0 then
 			angle = angle + 2*math.pi
 		else

@@ -99,14 +99,17 @@ function determinePlayerAction(player, dirX, dirY)
 	-- Angle relative to the direction
 	local relAngle = distanceBetweenAngles(angle, player.character.facing)
 	--is the angle positive or negative
-	local angleDir = findAngleDirection(angle, player.character.facing)
+	local angleDir = findAngleDirection(player.character.facing, angle)
 	--Convert rel angle to degrees
 	relAngle = math.deg(relAngle)
 	--Makes it negative or positive
 	relAngle = relAngle * angleDir
+	print("relative angle")
+	print(relAngle)
 
 	--At zero speeed just shift in the direction immedietly
 	if player.speed == 0 then
+		print("player use single space move")
 		player.character.facing = angle
 		player.speed = 1
 	else
@@ -139,7 +142,7 @@ function determinePlayerAction(player, dirX, dirY)
 		end
 
 		--Just slowing down
-		if relAngle == 180 then
+		if relAngle == 180 or relAngle == -180 then
 			modifySpeed(player, -1)
 			print("player slowing down")
 		end
