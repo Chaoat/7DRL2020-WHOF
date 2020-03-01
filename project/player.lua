@@ -1,13 +1,15 @@
 local controls = {}
-controls["moveBotLeft"] = {"kp1"}
-controls["moveBot"] = {"kp2", "down"}
-controls["moveBotRight"] = {"kp3"}
-controls["moveRight"] = {"kp6", "right"}
-controls["moveTopRight"] = {"kp9"}
-controls["moveTop"] = {"kp8", "up"}
-controls["moveTopLeft"] = {"kp7"}
-controls["moveLeft"] = {"kp4", "left"}
-controls["moveStay"] = {"kp5"}
+
+--Support for WASD, Keypad, and Vi-keys
+controls["moveBotLeft"] = {"kp1", "z", "b"}
+controls["moveBot"] = {"kp2", "down", "x", "j"}
+controls["moveBotRight"] = {"kp3", "c", "n"}
+controls["moveRight"] = {"kp6", "right", "d", "l"}
+controls["moveTopRight"] = {"kp9", "e", "u"}
+controls["moveTop"] = {"kp8", "up", "w", "k"}
+controls["moveTopLeft"] = {"kp7", "q", "y"}
+controls["moveLeft"] = {"kp4", "left", "a", "h"}
+controls["moveStay"] = {"kp5", "s", ","}
 
 local reverseControls = {}
 
