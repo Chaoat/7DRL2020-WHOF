@@ -27,8 +27,8 @@ function innitiatePlayer(map, x, y)
 end
 
 function updatePlayer(player, camera, dt)
-	camera.x = player.character.x
-	camera.y = player.character.y
+	camera.centerX = player.character.x
+	camera.centerY = player.character.y
 end
 
 function movePlayer(player, xdir, ydir, camera)

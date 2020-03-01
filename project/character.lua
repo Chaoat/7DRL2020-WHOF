@@ -1,7 +1,7 @@
 --creates a character
 function innitiateCharacter(map, x, y, letter)
 	local tile = getMapTile(map, x, y)
-	local character = {x = x, y = y, tile = tile, letter = letter, map = map, active = false}
+	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, active = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	tile.character = character

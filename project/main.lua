@@ -9,6 +9,7 @@ require "player"
 require "enemy"
 require "mapgeneration"
 require "formationTable"
+require "formation"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

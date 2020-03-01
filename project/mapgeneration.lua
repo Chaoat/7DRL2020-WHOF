@@ -1,17 +1,18 @@
 function spawnFormation(map, x, y, formationTemplate, direction)
+	local rotation = direction
+	if direction == "left" then
+		rotation = math.pi
+	elseif direction == "top" then
+		rotation = -math.pi/2
+	elseif direction == "bot" then
+		rotation = math.pi/2
+	elseif direction == "right" then
+		rotation = 0
+	end
+	
+	local enemyList = {}
 	for i = 1, #formationTemplate.positions do
 		local position = formationTemplate.positions[i]
-		
-		local rotation = direction
-		if direction == "left" then
-			rotation = math.pi
-		elseif direction == "top" then
-			rotation = -math.pi/2
-		elseif direction == "bot" then
-			rotation = math.pi/2
-		elseif direction == "right" then
-			rotation = 0
-		end
 		
 		local dist = math.sqrt(position.y^2 + position.x^2)
 		local angle = math.atan2(position.y, position.x)
@@ -19,6 +20,17 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 		local xPos = roundFloat(dist*math.cos(angle))
 		local yPos = roundFloat(dist*math.sin(angle))
 		
-		innitiateEnemy(map, x + xPos, y + yPos, position.kind)
+		local enemy = innitiateEnemy(map, x + xPos, y + yPos, position.kind)
+		if position.stance then
+			enemy.stance = position.stance
+		end
+		if position.facing then
+			enemy.character.facing = position.facing
+		end
+		enemy.character.facing = enemy.character.facing + rotation
+		
+		table.insert(enemyList, enemy)
 	end
+	
+	innitiateFormation(enemyList, x, y, formationTemplate.size, rotation)
 end
