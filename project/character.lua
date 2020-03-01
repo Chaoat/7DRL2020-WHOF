@@ -1,7 +1,7 @@
 --creates a character
-function initiateCharacter(map, x, y, letter)
+function initiateCharacter(map, x, y, letter, side)
 	local tile = getMapTile(map, x, y)
-	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, active = false}
+	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, lance = nil, side = side, active = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	tile.character = character

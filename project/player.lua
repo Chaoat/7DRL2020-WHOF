@@ -22,7 +22,7 @@ function initiatePlayer(map, x, y)
 	end
 	
 	player = {character = nil, currentlyActing = true, targeting = false}
-	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1})))
+	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1}), "player"))
 	return player
 end
 
