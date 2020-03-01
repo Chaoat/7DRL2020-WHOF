@@ -21,7 +21,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, currentlyActing = true, targeting = false}
+	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1})))
 	return player
 end
@@ -94,9 +94,9 @@ end
 
 --changes the player's facing and speed depending on input then starts a round
 function determinePlayerAction(player, dirX, dirY)
-	angle = angleBetweenVectors(0, 0, dirX, dirY)
+	local angle = angleBetweenVectors(0, 0, dirX, dirY)
 	-- Angle relative to the direction
-	relAngle = distanceBetweenAngle(angle, layer.character.facing)
+	local relAngle = distanceBetweenAngles(angle, player.character.facing)
 	--Convert rel angle to degrees
 	relAngle = math.deg(relAngle)
 
@@ -114,11 +114,11 @@ function determinePlayerAction(player, dirX, dirY)
 	end
 
 	--Doing a turn that slows you
-	if relAngle == 90 || relAngle == 135 then
+	if relAngle == 90 or relAngle == 135 then
 		shiftClockwise(player.character)
 		modifySpeed(player, -1)
 	end
-	if relAngle == 225 || relAngle == 270 then
+	if relAngle == 225 or relAngle == 270 then
 		shiftAnticlockwise(player.character)
 		modifySpeed(player, -1)
 	end
@@ -134,8 +134,8 @@ end
 
 --Clamps the speed
 function modifySpeed(player, speedChange)
-	if player.speed + speedChange >= maxSpeed then
-		player.speed = maxSpeed
+	if player.speed + speedChange >= player.maxSpeed then
+		player.speed = player.maxSpeed
 	elseif player.speed + speedChange <= 0 then
 	    player.speed = 0
 	end

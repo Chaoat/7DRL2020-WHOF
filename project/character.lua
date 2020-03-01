@@ -82,20 +82,20 @@ end
 
 --Shifts a character facing 45 deg clockwise
 function shiftClockwise(character)
-	degFacing = math.deg(character.facing)
-	degFacing += 45
+	local degFacing = math.deg(character.facing)
+	degFacing = degFacing + 45
 	if degFacing >= 360 then
-		degFacing - 360
+		degFacing = degFacing - 360
 	end
 	character.facing = math.rad(degFacing)
 end
 
 --Shifts a character facing 45 deg anticlockwise
 function shiftAnticlockwise(character)
-	degFacing = math.deg(character.facing)
-	degFacing -= 45
+	local degFacing = math.deg(character.facing)
+	degFacing = degFacing - 45
 	if degFacing <= 0 then
-		degFacing + 360
+		degFacing = degFacing + 360
 	end
 	character.facing = math.rad(degFacing)
 end
