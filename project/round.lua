@@ -22,8 +22,6 @@ end
 
 function resolveTurn(player)
 	--shift the player
-	print("resolving turn: ")
-	print(math.deg(player.character.facing))
 	local xDir, yDir = getRelativeGridPositionFromAngle(0, 0, player.character.facing)
 	movePlayer(player, xDir, yDir)
 	--TODO shift all horseman AI
