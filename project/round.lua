@@ -22,7 +22,8 @@ end
 
 function resolveTurn()
 	--shift the player
-
+	local xDir, yDir = getAdjacenDir(0, 0, player.character.facing)
+	player.movePlayer(player, xDir, yDir)
 	--TODO shift all horseman AI
 end
 

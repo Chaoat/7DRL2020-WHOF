@@ -46,10 +46,8 @@ function getMapTile(map, x, y)
 	end
 end
 
-function getTileFromPoint(map, x, y, angle)
-	angle = cardinalRound(angle)
-	local xDir = roundFloat(math.cos(angle))
-	local yDir = roundFloat(math.sin(angle))
+function getTileFromPoint(x, y, angle)
+	local xDir, yDir = getRelativeGridPositionFromAngle(map, x, y, angle)
 	return getMapTile(map, x + xDir, y + yDir)
 end
 

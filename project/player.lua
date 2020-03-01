@@ -34,7 +34,7 @@ function updatePlayer(player, camera, dt)
 end
 
 --Shifts the player 1 space
-function movePlayer(player, xdir, ydir, camera)
+function movePlayer(player, xdir, ydir)
 	shiftCharacter(player.character, xdir, ydir)
 end
 
