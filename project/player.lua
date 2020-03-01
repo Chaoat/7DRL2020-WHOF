@@ -98,8 +98,12 @@ function determinePlayerAction(player, dirX, dirY)
 	local angle = angleBetweenVectors(0, 0, dirX, dirY)
 	-- Angle relative to the direction
 	local relAngle = distanceBetweenAngles(angle, player.character.facing)
+	--is the angle positive or negative
+	local angleDir = findAngleDirection(angle, player.character.facing)
 	--Convert rel angle to degrees
 	relAngle = math.deg(relAngle)
+	--Makes it negative or positive
+	relAngle = relAngle * angleDir
 
 	--At zero speeed just shift in the direction immedietly
 	if player.speed == 0 then
@@ -117,7 +121,7 @@ function determinePlayerAction(player, dirX, dirY)
 			shiftClockwise(player.character)
 			print("player turning clockwise")
 		end
-		if relAngle == 315 then
+		if relAngle == -45 then
 			shiftAnticlockwise(player.character)
 			print("player turning anticlockwise")
 		end
@@ -128,7 +132,7 @@ function determinePlayerAction(player, dirX, dirY)
 			modifySpeed(player, -1)
 			print("player slowing down and turning clockwise")
 		end
-		if relAngle == 225 or relAngle == 270 then
+		if relAngle == -90 or relAngle == -135 then
 			shiftAnticlockwise(player.character)
 			modifySpeed(player, -1)
 			print("player slowing down and turning anticlockwise")
