@@ -37,20 +37,38 @@ function shiftCharacter(character, xDir, yDir)
 	local oldTile = character.tile
 	local nextTile = getMapTile(character.map, oldTile.x + xDir, oldTile.y + yDir)
 	
-	oldTile.character = nil
 	character.approachingTile = nextTile
+	removeCharFromTile(character)
 	
 	updateCharacterPositions({character})
+end
+
+function removeCharFromTile(character)
+	character.tile.character = nil
+	if character.lance then
+		character.lance.tile.lance = nil
+	end
+end
+
+function placeCharOnTile(character, tile)
+	character.tile = tile
+	tile.character = character
+	if character.lance then
+		local lanceTile = getTileFromPoint(character.map, tile.x, tile.y, character.facing)
+		character.lance.tile = lanceTile
+		lanceTile.lance = character.lance
+	end
 end
 
 function updateCharacterPositions(characterList)
 	for i = 1, #characterList do
 		local character = characterList[i]
-		if checkTileWalkable(character.approachingTile) then
-			character.tile = character.approachingTile
-			character.approachingTile.character = character
+		local walkable = checkTileWalkable(character.approachingTile)
+		
+		if walkable then
+			placeCharOnTile(character, character.approachingTile)
 		else
-			character.tile.character = character
+			placeCharOnTile(character, character.tile)
 		end
 	end
 end

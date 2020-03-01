@@ -31,8 +31,6 @@ end
 function love.update(dt)	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
-	
-	
 end
 
 function love.keypressed(key)

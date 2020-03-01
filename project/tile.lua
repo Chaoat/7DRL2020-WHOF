@@ -70,6 +70,7 @@ end
 
 function drawTiles(map, camera)
 	local visibleCharacters = {}
+	local visibleLances = {}
 	
 	local tilesWide = camera.tilesWide
 	local tilesTall = camera.tilesTall
@@ -80,15 +81,15 @@ function drawTiles(map, camera)
 	for i = startX, startX + tilesWide do
 		for j = startY, startY + tilesTall do
 			local tile = getMapTile(map, i, j)
-			local letter = tile.letter
 			if tile.character then
 				table.insert(visibleCharacters, tile.character)
-				letter = tile.character.letter
+			elseif tile.lance then
+				table.insert(visibleLances, tile.lance)
 			else
 				drawLetter(tile.letter, i, j, camera)
 			end
 		end
 	end
 	
-	return visibleCharacters
+	return visibleCharacters, visibleLances
 end
