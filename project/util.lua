@@ -7,6 +7,9 @@ function roundFloat(number)
 	end
 end
 
+function angleBetweenVectors(a, b, x, y)
+	return math.atan2(y-b, x-a)
+	
 function randomFromTable(list)
 	local i = math.ceil(math.random()*#list)
 	return list[i], i
