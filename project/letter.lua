@@ -1,11 +1,11 @@
 --Instantiate letter
-function innitiateLetter(letter, colour)
+function initiateLetter(letter, colour)
 	local letter = {letter = letter, colour = colour}
 	return letter
 end
 
 function copyLetter(letter)
-	local newLetter = innitiateLetter(letter.letter, letter.colour)
+	local newLetter = initiateLetter(letter.letter, letter.colour)
 	return newLetter
 end
 

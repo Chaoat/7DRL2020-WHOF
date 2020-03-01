@@ -18,10 +18,10 @@ require "mapstructures"
 function love.load()
 	love.keyboard.setKeyRepeat(true)
 	
-	Map = innitiateMap()
-	Camera = innitiateCamera(0, 0, 800, 600, 0.5, 0.5, 15, 15)
+	Map = initiateMap()
+	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 15, 15)
 	
-	Player = innitiatePlayer(Map, 0, 0)
+	Player = initiatePlayer(Map, 0, 0)
 	
 	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	spawnStructure(Map, 0, -10, "tree", 0)

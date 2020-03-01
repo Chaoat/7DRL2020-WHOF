@@ -13,7 +13,7 @@ controls["moveStay"] = {"kp5", "s", ","}
 
 local reverseControls = {}
 
-function innitiatePlayer(map, x, y)
+function initiatePlayer(map, x, y)
 	--Do some preprocessing on controls
 	for control, keys in pairs(controls) do
 		for i = 1, #keys do
@@ -22,7 +22,7 @@ function innitiatePlayer(map, x, y)
 	end
 	
 	player = {character = nil, currentlyActing = true, targeting = false}
-	player.character = activateCharacter(innitiateCharacter(map, x, y, innitiateLetter("@", {1, 1, 0, 1})))
+	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1})))
 	return player
 end
 

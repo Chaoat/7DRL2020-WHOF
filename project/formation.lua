@@ -1,5 +1,5 @@
 --Create a formation from a list of enemies
-function innitiateFormation(map, enemyList, x, y, template, facing)
+function initiateFormation(map, enemyList, x, y, template, facing)
 	local formation = {map = map, members = {}, x = x, y = y, size = template.size, facing = template.facing, behaviour = template.behaviour}
 	for i = 1, #enemyList do
 		local enemy = enemyList[i]

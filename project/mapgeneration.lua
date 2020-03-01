@@ -20,7 +20,7 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 		local xPos = roundFloat(dist*math.cos(angle))
 		local yPos = roundFloat(dist*math.sin(angle))
 		
-		local enemy = innitiateEnemy(map, x + xPos, y + yPos, position.kind)
+		local enemy = initiateEnemy(map, x + xPos, y + yPos, position.kind)
 		if position.stance then
 			enemy.stance = position.stance
 		end
@@ -32,5 +32,5 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 		table.insert(enemyList, enemy)
 	end
 	
-	innitiateFormation(map, enemyList, x, y, formationTemplate, rotation)
+	initiateFormation(map, enemyList, x, y, formationTemplate, rotation)
 end
