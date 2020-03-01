@@ -16,21 +16,7 @@ function love.load()
 	Player = innitiatePlayer(Map, 0, 0)
 end
 
-function love.update(dt)
-	local camSpeed = 10
-	if love.keyboard.isDown("left") then
-		Camera.centerX = Camera.centerX - camSpeed*dt
-	end
-	if love.keyboard.isDown("right") then
-		Camera.centerX = Camera.centerX + camSpeed*dt
-	end
-	if love.keyboard.isDown("up") then
-		Camera.centerY = Camera.centerY - camSpeed*dt
-	end
-	if love.keyboard.isDown("down") then
-		Camera.centerY = Camera.centerY + camSpeed*dt
-	end
-	
+function love.update(dt)	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
 end
