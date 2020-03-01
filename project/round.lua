@@ -22,7 +22,7 @@ end
 
 function resolveTurn(player)
 	--shift the player
-	local xDir, yDir = getRelativeGridPositionFromAngle(0, 0, player.character.facing)
+	local xDir, yDir = getRelativeGridPositionFromAngle(player.character.facing)
 	movePlayer(player, xDir, yDir)
 	--TODO shift all horseman AI
 end

@@ -47,7 +47,7 @@ function getMapTile(map, x, y)
 end
 
 function getTileFromPoint(map, x, y, angle)
-	local xDir, yDir = getRelativeGridPositionFromAngle(map, x, y, angle)
+	local xDir, yDir = getRelativeGridPositionFromAngle(angle)
 	return getMapTile(map, x + xDir, y + yDir)
 end
 

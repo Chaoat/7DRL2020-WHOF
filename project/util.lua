@@ -55,6 +55,17 @@ function distanceBetweenAngles(rawangle1, rawangle2)
 	end
 end
 
+function simplifyAngle(angle)
+	while math.abs(angle1) > math.pi do
+		if angle < 0 then
+			angle = angle + 2*math.pi
+		else
+			angle = angle - 2*math.pi
+		end
+	end
+	return angle
+end
+
 function findAngleDirection(rawangle1, rawangle2)
 	rawangle1 = simplifyAngle(rawangle1)
 	rawangle2 = simplifyAngle(rawangle2)
@@ -98,7 +109,7 @@ function cardinalRound(angle)
 end
 
 
-function getRelativeGridPositionFromAngle(x, y, angle)
+function getRelativeGridPositionFromAngle(angle)
 	angle = cardinalRound(angle)
 	local xDir = roundFloat(math.cos(angle))
 	local yDir = roundFloat(math.sin(angle))
