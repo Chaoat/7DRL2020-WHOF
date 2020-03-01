@@ -100,38 +100,44 @@ function determinePlayerAction(player, dirX, dirY)
 	--Convert rel angle to degrees
 	relAngle = math.deg(relAngle)
 
-	--relative angle of zero means will accelerate forward
-	if relAngle == 0 then
-		modifySpeed(player, 1)
-		print("player moving forward")
-	end
+	--At zero speeed just shift in the direction immedietly
+	if player.speed == 0 then
+		player.character.facing = angle
+		player.speed = 1
+	else
+		--relative angle of zero means will accelerate forward
+		if relAngle == 0 then
+			modifySpeed(player, 1)
+			print("player moving forward")
+		end
 
-	--relative angle of 45 or 315 will not change speed, only angle
-	if relAngle == 45 then
-		shiftClockwise(player.character)
-		print("player turning clockwise")
-	end
-	if relAngle == 315 then
-		shiftAnticlockwise(player.character)
-		print("player turning anticlockwise")
-	end
+		--relative angle of 45 or 315 will not change speed, only angle
+		if relAngle == 45 then
+			shiftClockwise(player.character)
+			print("player turning clockwise")
+		end
+		if relAngle == 315 then
+			shiftAnticlockwise(player.character)
+			print("player turning anticlockwise")
+		end
 
-	--Doing a turn that slows you
-	if relAngle == 90 or relAngle == 135 then
-		shiftClockwise(player.character)
-		modifySpeed(player, -1)
-		print("player slowing down and turning clockwise")
-	end
-	if relAngle == 225 or relAngle == 270 then
-		shiftAnticlockwise(player.character)
-		modifySpeed(player, -1)
-		print("player slowing down and turning anticlockwise")
-	end
+		--Doing a turn that slows you
+		if relAngle == 90 or relAngle == 135 then
+			shiftClockwise(player.character)
+			modifySpeed(player, -1)
+			print("player slowing down and turning clockwise")
+		end
+		if relAngle == 225 or relAngle == 270 then
+			shiftAnticlockwise(player.character)
+			modifySpeed(player, -1)
+			print("player slowing down and turning anticlockwise")
+		end
 
-	--Just slowing down
-	if relAngle == 180 then
-		modifySpeed(player, -1)
-		print("player slowing down")
+		--Just slowing down
+		if relAngle == 180 then
+			modifySpeed(player, -1)
+			print("player slowing down")
+		end
 	end
 
 	print("player speed and facing: ")
