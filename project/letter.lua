@@ -4,6 +4,11 @@ function innitiateLetter(letter, colour)
 	return letter
 end
 
+function copyLetter(letter)
+	local newLetter = innitiateLetter(letter.letter, letter.colour)
+	return newLetter
+end
+
 --Draw a letter at tile[x][y] on camera
 function drawLetter(letter, x, y, camera)
 	setFont("square", camera.tileHeight)

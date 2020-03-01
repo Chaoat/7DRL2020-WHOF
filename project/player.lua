@@ -1,4 +1,5 @@
 local controls = {}
+
 --Support for WASD, Keypad, and Vi-keys
 controls["moveBotLeft"] = {"kp1", "z", "b"}
 controls["moveBot"] = {"kp2", "down", "x", "j"}
@@ -17,7 +18,6 @@ function innitiatePlayer(map, x, y)
 	for control, keys in pairs(controls) do
 		for i = 1, #keys do
 			reverseControls[keys[i]] = control
-			--error(keys[i] .. ":" .. control)
 		end
 	end
 	
@@ -39,7 +39,6 @@ end
 --Detects player input to start a new round
 function playerKeypressed(player, camera, key)
 	local action = reverseControls[key]
-	--error(key)
 	
 	local dirX = 0
 	local dirY = 0
