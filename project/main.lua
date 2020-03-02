@@ -12,11 +12,11 @@ require "formationTable"
 require "formation"
 require "round"
 require "aiturn"
-require "turn"
 require "mapstructures"
 require "lance"
 require "decal"
 require "SimplyTimers"
+require "roundmanager"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)
@@ -25,6 +25,8 @@ function love.load()
 	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 15, 15)
 	
 	Player = initiatePlayer(Map, 0, 0)
+
+	CurRound = initiateRound(player, map, 1)
 	
 	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	spawnStructure(Map, 0, -10, "tree", 0)
@@ -37,6 +39,7 @@ function love.update(dt)
 	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
+	updateRound(Player, Map, CurRound, dt)
 	updateDecals(Map.decals, dt)
 end
 

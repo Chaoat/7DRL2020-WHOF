@@ -5,8 +5,9 @@ function startRound(player, map)
 
 	aiInput()
 
-	resolveRound(player, map, roundLength)
+	round = initiateRound(player, map, roundLength)
 	createPlayerDecals(player)
+	return round
 end
 
 --The AI select their actions for the turn
@@ -37,8 +38,8 @@ function resolveTurn(player)
 	--TODO shift all horseman AI
 end
 
-function updateRound()
-	-- TODO
+function updateRound(player, map, curRound)
+	
 end
 
 --resolve all the infintry
