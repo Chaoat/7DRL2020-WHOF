@@ -18,7 +18,7 @@ function updateRound(player, map, curRound, dt)
 		end
 		--Play AI inf turn
 		if not curRound.playedInfTurn then
-			resolveAITurn(player)
+			resolveAIRound(player, map)
 			curRound.playedInfTurn = true
 			resetRoundTime(curRound)
 		--Round is over

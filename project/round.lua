@@ -15,12 +15,7 @@ function aiInput()
 	--TODO
 end
 
-function resolveRound(player, map, roundLength)
-	for i=1,roundLength do
-		resolveTurn(player)
-		updateCharacterPositions(map.activeCharacters)
-	end
-	
+function resolveAIRound(player, map)
 	for i = 1, #map.formations do
 		determineFormationAction(map, player, map.formations[i])
 	end
