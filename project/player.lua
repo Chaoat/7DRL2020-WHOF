@@ -21,7 +21,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3, decals = {}}
+	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1}), "player"))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
@@ -169,35 +169,38 @@ end
 
 --Creates player arrow decals
 function createPlayerDecals(player)
-	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
-	local accelerateArrow = initiateDecal(Map, tileX, tileY, "arrow")
-	accelerateArrow.facing = player.character.facing
-	table.insert(player.decals, accelerateArrow)
+	local arrowColour = {1, 1, 0, 1}
+	local niceLittleLocalFunction = function(facing, imageFacing, dist)
+		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, facing, dist)
+		local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
+		arrow.colour = arrowColour
+		arrow.flashing = 0.3
+		table.insert(player.decals, arrow)
+	end
 	
-	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing + math.pi/4, player.speed)
-	local clockRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
-	clockRotateArrow.facing = player.character.facing + math.pi/4
-	table.insert(player.decals, clockRotateArrow)
-	
-	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing + math.pi/4, math.max(player.speed - 1, 0))
-	local clockSlowRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
-	clockSlowRotateArrow.facing = player.character.facing + math.pi/2
-	table.insert(player.decals, clockSlowRotateArrow)
-	
-	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing - math.pi/4, player.speed)
-	local anticlockRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
-	anticlockRotateArrow.facing = player.character.facing - math.pi/4
-	table.insert(player.decals, anticlockRotateArrow)
-	
-	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing - math.pi/4, math.max(player.speed - 1, 0))
-	local anticlockSlowRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
-	anticlockSlowRotateArrow.facing = player.character.facing - math.pi/2
-	table.insert(player.decals, anticlockSlowRotateArrow)
-	
-	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, math.max(player.speed - 1, 0))
-	local slowArrow = initiateDecal(Map, tileX, tileY, "arrow")
-	slowArrow.facing = player.character.facing - math.pi
-	table.insert(player.decals, slowArrow)
+	if player.speed > 0 then
+		if player.speed < player.maxSpeed then
+			niceLittleLocalFunction(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
+		end
+		
+		niceLittleLocalFunction(player.character.facing + math.pi/4, player.character.facing + math.pi/4, player.speed)
+		
+		niceLittleLocalFunction(player.character.facing - math.pi/4, player.character.facing - math.pi/4, player.speed)
+		
+		if player.speed > 1 then
+			niceLittleLocalFunction(player.character.facing + math.pi/4, player.character.facing + math.pi/2, player.speed - 1)
+			
+			niceLittleLocalFunction(player.character.facing - math.pi/4, player.character.facing - math.pi/2, player.speed - 1)
+			
+			niceLittleLocalFunction(player.character.facing, player.character.facing - math.pi, player.speed - 1)
+		end
+		
+		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, player.speed)
+		local restDot = initiateDecal(Map, tileX, tileY, "dot")
+		restDot.colour = arrowColour
+		restDot.flashing = 0.3
+		table.insert(player.decals, restDot)
+	end
 end
 
 --Removes all the player decals

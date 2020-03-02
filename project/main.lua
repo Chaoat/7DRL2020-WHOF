@@ -27,9 +27,13 @@ function love.load()
 	
 	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	spawnStructure(Map, 0, -10, "tree", 0)
+	
+	GlobalTime = 0
 end
 
 function love.update(dt)	
+	GlobalTime = GlobalTime + dt
+	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
 	updateDecals(Map.decals, dt)
