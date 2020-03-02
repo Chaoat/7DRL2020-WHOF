@@ -26,7 +26,7 @@ function love.load()
 	
 	Player = initiatePlayer(Map, 0, 0)
 
-	CurRound = initiateRound(player, map, 1)
+	CurRound = initiateRound(player, map, 0)
 	
 	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	spawnStructure(Map, 0, -10, "tree", 0)
@@ -44,7 +44,7 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-	playerKeypressed(Player, Camera, key)
+	playerKeypressed(Player, Camera, key, CurRound)
 end
 
 function love.draw()

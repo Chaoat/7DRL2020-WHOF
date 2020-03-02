@@ -1,11 +1,12 @@
 --Starts a new round now that the player has chosen their input
-function startRound(player, map)
+function startRound(player, map, curRound)
+	print("starting new round")
 	removePlayerDecals(player)
 	local roundLength = getRoundLength(player)
 
 	aiInput()
 
-	round = initiateRound(player, map, roundLength)
+	curRound = resetRound(player, map, roundLength, curRound)
 	createPlayerDecals(player)
 	return round
 end
@@ -26,15 +27,12 @@ function resolveAIRound(player, map)
 	updateCharacterPositions(map.activeCharacters)
 end
 
-function resolveTurn(player)
+function resolveTurn(player, map, curTurn)
 	--shift the player
 	local xDir, yDir = getRelativeGridPositionFromAngle(player.character.facing)
 	movePlayer(player, xDir, yDir)
 	--TODO shift all horseman AI
-end
-
-function updateRound(player, map, curRound)
-	
+	updateCharacterPositions(map.activeCharacters)
 end
 
 --resolve all the infintry

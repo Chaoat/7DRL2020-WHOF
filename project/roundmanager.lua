@@ -1,8 +1,16 @@
 --Handles the current round and timers between turns
 function initiateRound(player, map, maxTurns)
-	local curRound = {maxTurns = 1, curTurn = 1, playedInfTurn = false, timerList = {}, turndelay = 0.7, finished = false}
+	local curRound = {maxTurns = 1, curTurn = 1, playedAITurn = false, timerList = {}, turndelay = 0.7, finished = false}
 	addTimer(curRound.turndelay, "turnTimer", curRound.timerList)
-	round.maxTurns = maxTurns
+	curRound.maxTurns = maxTurns
+	return curRound
+end
+
+function resetRound(player, map, maxTurns, curRound)
+	curRound.curTurn = 1
+	curRound.maxTurns = maxTurns
+	curRound.playedAITurn = false
+	curRound.finished = false
 	return curRound
 end
 
@@ -11,19 +19,23 @@ function updateRound(player, map, curRound, dt)
 	if updateTimer(dt, "turnTimer", curRound.timerList) or curRound.finished then
 		--Play a regular turn
 		if curRound.curTurn <= curRound.maxTurns then
+			print("play turn")
 			resolveTurn(player, map, curRound.curTurn)
 			advanceRound(curRound)
 			resetRoundTime(curRound)
 			return
 		end
 		--Play AI inf turn
-		if not curRound.playedInfTurn then
+		if not curRound.playedAITurn then
+			print("ai turn")
 			resolveAIRound(player, map)
-			curRound.playedInfTurn = true
+			curRound.playedAITurn = true
 			resetRoundTime(curRound)
 		--Round is over
 		elseif not curRound.finished then
+			print("round finished")
 		    curRound.finished = true
+		    updateCharacterPositions(map.activeCharacters)
 		end
 	else
 	    --Wait until the timer is done

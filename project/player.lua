@@ -45,7 +45,7 @@ function movePlayer(player, xdir, ydir)
 end
 
 --Detects player input to start a new round
-function playerKeypressed(player, camera, key)
+function playerKeypressed(player, camera, key, curRound)
 	local action = reverseControls[key]
 	
 	local dirX = 0
@@ -89,19 +89,20 @@ function playerKeypressed(player, camera, key)
 	
 	--Player made an input change
 	if kind == "movement" then
-		if player.currentlyActing then
-			determinePlayerAction(player, dirX, dirY)
+		print(curRound.finished)
+		if player.currentlyActing or not curRound.finished then
+			determinePlayerAction(player, dirX, dirY, curRound)
 		end
 	end
 
 	if kind == "rest" then
 		--Player made a blank move with no input then just start the round
-		startRound(player, player.character.map)
+		startRound(player, player.character.map, curRound)
 	end
 end
 
 --changes the player's facing and speed depending on input then starts a round
-function determinePlayerAction(player, dirX, dirY)
+function determinePlayerAction(player, dirX, dirY, curRound)
 	local angle = angleBetweenVectors(0, 0, dirX, dirY)
 	-- Angle relative to the direction
 	local relAngle = distanceBetweenAngles(angle, player.character.facing)
@@ -154,7 +155,7 @@ function determinePlayerAction(player, dirX, dirY)
 	end
 	
 	--Start the round
-	startRound(player, player.character.map)
+	startRound(player, player.character.map, curRound)
 end
 
 --Clamps the speed
