@@ -7,18 +7,24 @@ function initiateRound(player, map, maxTurns)
 end
 
 function updateRound(player, map, curRound, dt)
+	--Only does the update if the animations between turns are done
 	if updateTimer(dt, "turnTimer", curRound.timerList) or curRound.finished then
 		--Play a regular turn
 		if curRound.curTurn <= curRound.maxTurns then
 			resolveTurn(player, map, curRound.curTurn)
 			advanceRound(curRound)
+			resetRoundTime(curRound)
 			return
 		end
 		--Play AI inf turn
-		if not playedInfTurn then
+		if not curRound.playedInfTurn then
 			resolveAITurn(player)
-		end
+			curRound.playedInfTurn = true
+			resetRoundTime(curRound)
 		--Round is over
+		elseif not curRound.finished then
+		    curRound.finished = true
+		end
 	else
 	    --Wait until the timer is done
 	end
@@ -26,4 +32,8 @@ end
 
 function advanceRound(curRound)
 	curRound.curTurn = curRound.curTurn + 1
+end
+
+function resetRoundTime(curRound)
+	resetTimer(curRound.turndelay, "turnTimer", curRound.timerList)
 end
