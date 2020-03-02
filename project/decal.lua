@@ -47,8 +47,8 @@ function createArrowDecal(map, x, y, facing)
 	local imageName = "arrow"
 	local decalFacing = facing
 	if distanceBetweenAngles(facing, math.pi/4)%(math.pi/2) == 0 then
-		print(decalFacing)
-		print(facing%math.pi/2)
+		--print(decalFacing)
+		--print(facing%math.pi/2)
 		imageName = "diagArrow"
 		decalFacing = decalFacing - math.pi/4
 	end

@@ -1,6 +1,6 @@
 --Create a formation from a list of enemies
 function initiateFormation(map, enemyList, x, y, template, facing)
-	local formation = {map = map, members = {}, x = x, y = y, size = template.size, facing = template.facing, behaviour = template.behaviour}
+	local formation = {map = map, members = {}, x = x, y = y, size = template.size, order = "follow", facing = facing, behaviour = template.behaviour}
 	for i = 1, #enemyList do
 		local enemy = enemyList[i]
 		
@@ -46,8 +46,6 @@ function updateFormationMembers(formation)
 		member.enemy.formationY = formation.y + member.posY
 		member.enemy.formationFacing = formation.facing + member.facing
 	end
-	
-	testForceFormationPosition(formation)
 end
 
 function testForceFormationPosition(formation)
@@ -58,7 +56,7 @@ function testForceFormationPosition(formation)
 end
 
 function determineFormationAction(map, player, formation)
-	local fightersNotReady = checkFormationInLine(formation)
+	local membersNotReady = checkFormationInLine(map, formation)
 	local targetX = nil
 	local targetY = nil
 	local targetFacing = nil
@@ -66,7 +64,7 @@ function determineFormationAction(map, player, formation)
 	if formation.behaviour == "chase" then
 		targetX = player.character.x
 		targetY = player.character.y
-		if fightersNotReady >= #formation.members/2 then 
+		if membersNotReady < #formation.members/2 then 
 			action = "move"
 		end
 		
@@ -76,18 +74,24 @@ function determineFormationAction(map, player, formation)
 	end
 	
 	if action == "move" then
-		local angle = cardinalRound(math.atan2(targetY - player.character.y, targetX - player.character.x))
+		local angle = cardinalRound(math.atan2(targetY - formation.y, targetX - formation.x))
 		moveFormation(formation, roundFloat(math.cos(angle)), roundFloat(math.sin(angle)))
+		formation.order = "follow"
+	elseif action == "disperse" then
+		formation.order = "disperse"
 	end
 end
 
-function checkFormationInLine(formation)
+function checkFormationInLine(map, formation)
 	local nFightersNotReady = 0
 	for i = 1, #formation.members do
 		local member = formation.members[i]
-		if not (member.enemy.character.x == member.enemy.formationX and member.enemy.character.y == member.enemy.formationY and member.enemy.character.facing == member.enemy.formationFacing) then
-			nFighters = nFighters + 1
+		local tile = getMapTile(map, member.enemy.formationX, member.enemy.formationY)
+		if tile.properties.walkable then
+			if not (member.enemy.character.tile.x == member.enemy.formationX and member.enemy.character.tile.y == member.enemy.formationY and (member.enemy.character.facing == member.enemy.formationFacing or not member.enemy.character.lance)) then
+				nFightersNotReady = nFightersNotReady + 1
+			end
 		end
 	end
-	return nFighters
+	return nFightersNotReady
 end
