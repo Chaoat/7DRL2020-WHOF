@@ -15,5 +15,5 @@ end
 function getDrawPos(x, y, camera)
 	local drawX = camera.screenX + camera.width/2 + (x - camera.centerX)*camera.tileWidth
 	local drawY = camera.screenY + camera.height/2 + (y - camera.centerY)*camera.tileHeight
-	return drawX, drawY
+	return roundFloat(drawX), roundFloat(drawY)
 end

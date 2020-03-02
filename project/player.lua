@@ -21,7 +21,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3}
+	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3, decals = {}}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1}), "player"))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
@@ -164,5 +164,45 @@ function modifySpeed(player, speedChange)
 		player.speed = player.maxSpeed
 	elseif player.speed <= 0 then
 	    player.speed = 0
+	end
+end
+
+--Creates player arrow decals
+function createPlayerDecals(player)
+	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
+	local accelerateArrow = initiateDecal(Map, tileX, tileY, "arrow")
+	accelerateArrow.facing = player.character.facing
+	table.insert(player.decals, accelerateArrow)
+	
+	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing + math.pi/4, player.speed)
+	local clockRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
+	clockRotateArrow.facing = player.character.facing + math.pi/4
+	table.insert(player.decals, clockRotateArrow)
+	
+	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing + math.pi/4, math.max(player.speed - 1, 0))
+	local clockSlowRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
+	clockSlowRotateArrow.facing = player.character.facing + math.pi/2
+	table.insert(player.decals, clockSlowRotateArrow)
+	
+	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing - math.pi/4, player.speed)
+	local anticlockRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
+	anticlockRotateArrow.facing = player.character.facing - math.pi/4
+	table.insert(player.decals, anticlockRotateArrow)
+	
+	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing - math.pi/4, math.max(player.speed - 1, 0))
+	local anticlockSlowRotateArrow = initiateDecal(Map, tileX, tileY, "arrow")
+	anticlockSlowRotateArrow.facing = player.character.facing - math.pi/2
+	table.insert(player.decals, anticlockSlowRotateArrow)
+	
+	local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, math.max(player.speed - 1, 0))
+	local slowArrow = initiateDecal(Map, tileX, tileY, "arrow")
+	slowArrow.facing = player.character.facing - math.pi
+	table.insert(player.decals, slowArrow)
+end
+
+--Removes all the player decals
+function removePlayerDecals(player)
+	for i = 1, #player.decals do
+		player.decals[i].remove = true
 	end
 end

@@ -15,6 +15,7 @@ require "aiturn"
 require "turn"
 require "mapstructures"
 require "lance"
+require "decal"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)
@@ -31,6 +32,7 @@ end
 function love.update(dt)	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
+	updateDecals(Map.decals, dt)
 end
 
 function love.keypressed(key)

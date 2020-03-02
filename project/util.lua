@@ -115,3 +115,7 @@ function getRelativeGridPositionFromAngle(angle)
 	local yDir = roundFloat(math.sin(angle))
 	return xDir, yDir
 end
+
+function getCardinalPointInDirection(x, y, angle, dist)
+	return x + dist*roundFloat(math.cos(angle)), y + dist*roundFloat(math.sin(angle))
+end

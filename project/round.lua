@@ -1,10 +1,12 @@
 --Starts a new round now that the player has chosen their input
 function startRound(player, map)
+	removePlayerDecals(player)
 	local roundLength = getRoundLength(player)
 
 	aiInput()
 
 	resolveRound(player, map, roundLength)
+	createPlayerDecals(player)
 end
 
 --The AI select their actions for the turn
