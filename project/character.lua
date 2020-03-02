@@ -71,16 +71,17 @@ function updateCharacterPositions(characterList)
 	--print("b")
 	local i = 1
 	local loops = 0
+	local forceNoMove = false
 	while #movingCharacters > 0 do
 		--print("a")
 		local character = movingCharacters[i]
 		
-		if not character.approachingTile.waitingForCheck then
+		if not character.approachingTile.waitingForCheck or forceNoMove then
 			local walkable = checkTileWalkable(character.approachingTile)
 			
 			character.tile.waitingForCheck = false
 			character.moving = false
-			if walkable then
+			if walkable and not forceNoMove then
 				placeCharOnTile(character, character.approachingTile)
 			else
 				placeCharOnTile(character, character.tile)
@@ -97,7 +98,7 @@ function updateCharacterPositions(characterList)
 			 loops = loops + 1
 			 
 			 if loops > #movingCharacters then
-				break
+				forceNoMove = true
 			 end
 		end
 	end
