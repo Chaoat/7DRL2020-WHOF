@@ -19,7 +19,7 @@ function updateRound(player, map, curRound, dt)
 	if updateTimer(dt, "turnTimer", curRound.timerList) or curRound.finished then
 		--Play a regular turn
 		if curRound.curTurn <= curRound.maxTurns then
-			print("play turn")
+			--print("play turn")
 			resolveTurn(player, map, curRound.curTurn)
 			advanceRound(curRound)
 			resetRoundTime(curRound)
@@ -27,13 +27,13 @@ function updateRound(player, map, curRound, dt)
 		end
 		--Play AI inf turn
 		if not curRound.playedAITurn then
-			print("ai turn")
+			--print("ai turn")
 			resolveAIRound(player, map)
 			curRound.playedAITurn = true
 			resetRoundTime(curRound)
 		--Round is over
 		elseif not curRound.finished then
-			print("round finished")
+			--print("round finished")
 		    curRound.finished = true
 		    updateCharacterPositions(map.activeCharacters)
 			createPlayerDecals(player)
