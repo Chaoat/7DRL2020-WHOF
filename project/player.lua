@@ -89,7 +89,6 @@ function playerKeypressed(player, camera, key, curRound)
 	
 	--Player made an input change
 	if kind == "movement" then
-		print(curRound.finished)
 		if player.currentlyActing or not curRound.finished then
 			determinePlayerAction(player, dirX, dirY, curRound)
 		end
