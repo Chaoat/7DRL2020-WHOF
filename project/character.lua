@@ -1,7 +1,7 @@
 --creates a character
 function initiateCharacter(map, x, y, letter, side)
 	local tile = getMapTile(map, x, y)
-	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, lance = nil, side = side, active = false}
+	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, active = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	tile.character = character
@@ -39,13 +39,13 @@ function shiftCharacter(character, xDir, yDir)
 	local nextTile = getMapTile(character.map, oldTile.x + xDir, oldTile.y + yDir)
 	
 	character.approachingTile = nextTile
+	character.moving = true
 	removeCharFromTile(character)
-	
-	updateCharacterPositions({character})
 end
 
 function removeCharFromTile(character)
 	character.tile.character = nil
+	character.tile.waitingForCheck = true
 	if character.lance then
 		character.lance.tile.lance = nil
 	end
@@ -62,14 +62,43 @@ function placeCharOnTile(character, tile)
 end
 
 function updateCharacterPositions(characterList)
+	local movingCharacters = {}
 	for i = 1, #characterList do
 		local character = characterList[i]
-		local walkable = checkTileWalkable(character.approachingTile)
+		table.insert(movingCharacters, character)
+	end
+	
+	--print("b")
+	local i = 1
+	local loops = 0
+	while #movingCharacters > 0 do
+		--print("a")
+		local character = movingCharacters[i]
 		
-		if walkable then
-			placeCharOnTile(character, character.approachingTile)
+		if not character.approachingTile.waitingForCheck then
+			local walkable = checkTileWalkable(character.approachingTile)
+			
+			character.tile.waitingForCheck = false
+			character.moving = false
+			if walkable then
+				placeCharOnTile(character, character.approachingTile)
+			else
+				placeCharOnTile(character, character.tile)
+			end
+			
+			table.remove(movingCharacters, i)
+			loops = 0
 		else
-			placeCharOnTile(character, character.tile)
+			i = i + 1
+		end
+		
+		if i > #movingCharacters then
+			 i = 1
+			 loops = loops + 1
+			 
+			 if loops > #movingCharacters then
+				break
+			 end
 		end
 	end
 end

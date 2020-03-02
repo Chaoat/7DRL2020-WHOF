@@ -114,45 +114,45 @@ function determinePlayerAction(player, dirX, dirY)
 
 	--At zero speeed just shift in the direction immedietly
 	if player.speed == 0 then
-		print("player use single space move")
+		--print("player use single space move")
 		player.character.facing = angle
 		player.speed = 1
 	else
 		--relative angle of zero means will accelerate forward
 		if relAngle == 0 then
 			modifySpeed(player, 1)
-			print("player moving forward")
+			--print("player moving forward")
 		end
 
 		--relative angle of 45 or 315 will not change speed, only angle
 		if relAngle == 45 then
 			shiftClockwise(player.character)
-			print("player turning clockwise")
+			--print("player turning clockwise")
 		end
 		if relAngle == -45 then
 			shiftAnticlockwise(player.character)
-			print("player turning anticlockwise")
+			--print("player turning anticlockwise")
 		end
 
 		--Doing a turn that slows you
 		if relAngle == 90 or relAngle == 135 then
 			shiftClockwise(player.character)
 			modifySpeed(player, -1)
-			print("player slowing down and turning clockwise")
+			--print("player slowing down and turning clockwise")
 		end
 		if relAngle == -90 or relAngle == -135 then
 			shiftAnticlockwise(player.character)
 			modifySpeed(player, -1)
-			print("player slowing down and turning anticlockwise")
+			--print("player slowing down and turning anticlockwise")
 		end
 
 		--Just slowing down
 		if relAngle == 180 or relAngle == -180 then
 			modifySpeed(player, -1)
-			print("player slowing down")
+			--print("player slowing down")
 		end
 	end
-
+	
 	--Start the round
 	startRound(player, player.character.map)
 end
@@ -170,7 +170,7 @@ end
 
 --Creates player arrow decals
 function createPlayerDecals(player)
-	local arrowColour = {1, 1, 0, 0.5}
+	local arrowColour = {1, 1, 1, 0.5}
 	local niceLittleLocalFunction = function(facing, imageFacing, dist)
 		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, facing, dist)
 		local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
@@ -180,9 +180,7 @@ function createPlayerDecals(player)
 	end
 	
 	if player.speed > 0 then
-		if player.speed < player.maxSpeed then
-			niceLittleLocalFunction(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
-		end
+		niceLittleLocalFunction(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
 		
 		niceLittleLocalFunction(player.character.facing + math.pi/4, player.character.facing + math.pi/4, player.speed)
 		
@@ -196,11 +194,13 @@ function createPlayerDecals(player)
 			niceLittleLocalFunction(player.character.facing, player.character.facing - math.pi, player.speed - 1)
 		end
 		
-		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, player.speed)
-		local restDot = initiateDecal(Map, tileX, tileY, "dot")
-		restDot.colour = arrowColour
-		restDot.flashing = 0.3
-		table.insert(player.decals, restDot)
+		if player.speed < player.maxSpeed then
+			local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, player.speed)
+			local restDot = initiateDecal(Map, tileX, tileY, "dot")
+			restDot.colour = arrowColour
+			restDot.flashing = 0.3
+			table.insert(player.decals, restDot)
+		end
 	end
 end
 

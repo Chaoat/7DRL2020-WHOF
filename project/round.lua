@@ -18,9 +18,17 @@ end
 function resolveRound(player, map, roundLength)
 	for i=1,roundLength do
 		resolveTurn(player)
+		updateCharacterPositions(map.activeCharacters)
 	end
-
-	resolveAITurn()
+	
+	for i = 1, #map.formations do
+		determineFormationAction(map, player, map.formations[i])
+	end
+	
+	for i = 1, #map.enemies do
+		resolveAITurn(map.enemies[i], player)
+	end
+	updateCharacterPositions(map.activeCharacters)
 end
 
 function resolveTurn(player)
@@ -35,8 +43,9 @@ function updateRound(player, map, curRound)
 end
 
 --resolve all the infintry
-function resolveAITurn()
-
+function resolveAITurn(enemy, player)
+	enemy.decideAction(enemy, player)
+	enemyAct(enemy, player)
 end
 
 function getRoundLength(player, map)
