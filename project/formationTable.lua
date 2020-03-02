@@ -21,8 +21,17 @@ end
 --.S.
 --..S
 --.S.
-createFormationTemplate(1, 0, {
+createFormationTemplate(1, 1, {
 	{kind = "swordsman", x = 1, y = 0},
 	{kind = "swordsman", x = 0, y = -1},
 	{kind = "swordsman", x = 0, y = 1}
+})
+
+--.L.
+--.L.
+--.L.
+createFormationTemplate(1, 0, {
+	{kind = "lancer", x = 0, y = 0},
+	{kind = "lancer", x = 0, y = -1},
+	{kind = "lancer", x = 0, y = 1}
 })

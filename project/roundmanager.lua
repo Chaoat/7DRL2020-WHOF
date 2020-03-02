@@ -1,6 +1,6 @@
 --Handles the current round and timers between turns
 function initiateRound(player, map, maxTurns)
-	local curRound = {maxTurns = 1, curTurn = 1, playedAITurn = false, timerList = {}, turndelay = 0.7, finished = false}
+	local curRound = {maxTurns = 1, curTurn = 1, playedAITurn = false, timerList = {}, turndelay = 0, finished = false}
 	addTimer(curRound.turndelay, "turnTimer", curRound.timerList)
 	curRound.maxTurns = maxTurns
 	return curRound
@@ -36,6 +36,7 @@ function updateRound(player, map, curRound, dt)
 			print("round finished")
 		    curRound.finished = true
 		    updateCharacterPositions(map.activeCharacters)
+			createPlayerDecals(player)
 		end
 	else
 	    --Wait until the timer is done

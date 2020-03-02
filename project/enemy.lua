@@ -7,6 +7,17 @@ enemyKinds["swordsman"]= {
 	end,
 	lance = false
 }
+enemyKinds["lancer"]= {
+	letter = initiateLetter("L", {1, 0, 0, 1}),
+	decideAction = function(enemy, target)
+		if enemy.formation.order == "disperse" then
+			enemy.stance = "chase"
+		else
+			enemy.stance = "formation"
+		end
+	end,
+	lance = true
+}
 
 function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]
@@ -65,12 +76,21 @@ local enemyRotate = function(enemy, targetFacing)
 end
 
 
+local enemyRotateThenMoveToPoint = function(enemy, x, y)
+	local angleToTarget = cardinalRound(math.atan2(y - enemy.character.tile.y, x - enemy.character.tile.x))
+	if distanceBetweenAngles(angleToTarget, enemy.character.facing) > 0 and enemy.character.lance then
+		enemyRotate(enemy, angleToTarget)
+	elseif x ~= enemy.character.tile.x or y ~= enemy.character.tile.y then
+		enemyMoveToPos(enemy, x, y)
+	end
+end
+
 local enemyChase = function(enemy, target)
-	enemyMoveToPos(enemy, target.character.tile.x, target.character.tile.y)
+	enemyRotateThenMoveToPoint(enemy, target.character.tile.x, target.character.tile.y)
 end
 
 local enemyFollowFormation = function(enemy)
-	if enemy.formationFacing ~= enemy.character.facing and enemy.character.lance then
+	if distanceBetweenAngles(enemy.formationFacing, enemy.character.facing) > 0 and enemy.character.lance then
 		enemyRotate(enemy, enemy.formationFacing)
 	elseif enemy.formationX ~= enemy.character.tile.x or enemy.formationY ~= enemy.character.tile.y then
 		enemyMoveToPos(enemy, enemy.formationX, enemy.formationY)

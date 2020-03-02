@@ -28,7 +28,7 @@ function love.load()
 
 	CurRound = initiateRound(player, map, 0)
 	
-	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
+	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "right")
 	spawnStructure(Map, 0, -10, "tree", 0)
 	
 	GlobalTime = 0

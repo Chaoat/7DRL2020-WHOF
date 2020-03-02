@@ -11,7 +11,7 @@ end
 
 function updateActiveCharacters(charList, dt)
 	for i = 1, #charList do
-		local speed = 10
+		local speed = 20
 		local character = charList[i]
 		
 		local xMoveDiff = character.tile.x - character.x

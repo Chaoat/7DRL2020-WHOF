@@ -7,7 +7,7 @@ function startRound(player, map, curRound)
 	aiInput()
 
 	curRound = resetRound(player, map, roundLength, curRound)
-	createPlayerDecals(player)
+	
 	return round
 end
 

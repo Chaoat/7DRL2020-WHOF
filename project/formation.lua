@@ -81,12 +81,15 @@ function determineFormationAction(map, player, formation)
 		end
 	end
 	
+	print("formation members not ready: " .. membersNotReady)
+	print("formation action: " .. action)
+	
+	formation.order = "follow"
 	if action == "move" then
 		local angle = cardinalRound(math.atan2(targetY - formation.y, targetX - formation.x))
 		moveFormation(formation, roundFloat(math.cos(angle)), roundFloat(math.sin(angle)))
-		formation.order = "follow"
 	elseif action == "rotate" then
-		local rotation = findAngleDirection(formation.facing, targetFacing)*distanceBetweenAngles(formation.facing, targetFacing)
+		local rotation = findAngleDirection(formation.facing, targetFacing)*math.pi/2
 		rotateFormation(formation, rotation)
 	elseif action == "disperse" then
 		formation.order = "disperse"
@@ -99,7 +102,7 @@ function checkFormationInLine(map, formation)
 		local member = formation.members[i]
 		local tile = getMapTile(map, member.enemy.formationX, member.enemy.formationY)
 		if tile.properties.walkable then
-			if not (member.enemy.character.tile.x == member.enemy.formationX and member.enemy.character.tile.y == member.enemy.formationY and (member.enemy.character.facing == member.enemy.formationFacing or not member.enemy.character.lance)) then
+			if not (member.enemy.character.tile.x == member.enemy.formationX and member.enemy.character.tile.y == member.enemy.formationY and (distanceBetweenAngles(member.enemy.character.facing, member.enemy.formationFacing) == 0 or not member.enemy.character.lance)) then
 				nFightersNotReady = nFightersNotReady + 1
 			end
 		end
