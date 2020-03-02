@@ -22,7 +22,7 @@ function initiatePlayer(map, x, y)
 	end
 	
 	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 100, arrows = 3}
-	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1}), "player"))
+	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 1, 1}), "player"))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
 end
@@ -170,7 +170,7 @@ end
 
 --Creates player arrow decals
 function createPlayerDecals(player)
-	local arrowColour = {1, 1, 0, 1}
+	local arrowColour = {1, 1, 0, 0.5}
 	local niceLittleLocalFunction = function(facing, imageFacing, dist)
 		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, facing, dist)
 		local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
