@@ -70,11 +70,10 @@ local enemyChase = function(enemy, target)
 end
 
 local enemyFollowFormation = function(enemy)
-	if enemy.formationX ~= enemy.character.tile.x or enemy.formationY ~= enemy.character.tile.y then
-		enemyMoveToPos(enemy, enemy.formationX, enemy.formationY)
-		print(enemy.formationX)
-	elseif enemy.formationFacing ~= enemy.character.facing and enemy.character.lance then
+	if enemy.formationFacing ~= enemy.character.facing and enemy.character.lance then
 		enemyRotate(enemy, enemy.formationFacing)
+	elseif enemy.formationX ~= enemy.character.tile.x or enemy.formationY ~= enemy.character.tile.y then
+		enemyMoveToPos(enemy, enemy.formationX, enemy.formationY)
 	end
 end
 

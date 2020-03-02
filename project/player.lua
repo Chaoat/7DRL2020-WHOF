@@ -171,7 +171,7 @@ end
 --Creates player arrow decals
 function createPlayerDecals(player)
 	local arrowColour = {1, 1, 1, 0.5}
-	local niceLittleLocalFunction = function(facing, imageFacing, dist)
+	local localArrowCreate = function(facing, imageFacing, dist)
 		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, facing, dist)
 		local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
 		arrow.colour = arrowColour
@@ -180,18 +180,18 @@ function createPlayerDecals(player)
 	end
 	
 	if player.speed > 0 then
-		niceLittleLocalFunction(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
+		localArrowCreate(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
 		
-		niceLittleLocalFunction(player.character.facing + math.pi/4, player.character.facing + math.pi/4, player.speed)
+		localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/4, player.speed)
 		
-		niceLittleLocalFunction(player.character.facing - math.pi/4, player.character.facing - math.pi/4, player.speed)
+		localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/4, player.speed)
 		
 		if player.speed > 1 then
-			niceLittleLocalFunction(player.character.facing + math.pi/4, player.character.facing + math.pi/2, player.speed - 1)
+			localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/2, player.speed - 1)
 			
-			niceLittleLocalFunction(player.character.facing - math.pi/4, player.character.facing - math.pi/2, player.speed - 1)
+			localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/2, player.speed - 1)
 			
-			niceLittleLocalFunction(player.character.facing, player.character.facing - math.pi, player.speed - 1)
+			localArrowCreate(player.character.facing, player.character.facing - math.pi, player.speed - 1)
 		end
 		
 		if player.speed < player.maxSpeed then

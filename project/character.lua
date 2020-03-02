@@ -135,6 +135,10 @@ function shiftClockwise(character)
 		degFacing = degFacing - 360
 	end
 	character.facing = math.rad(degFacing)
+	
+	if character.lance then
+		updateLancePos(character.lance)
+	end
 end
 
 --Shifts a character facing 45 deg anticlockwise
@@ -145,4 +149,8 @@ function shiftAnticlockwise(character)
 		degFacing = degFacing + 360
 	end
 	character.facing = math.rad(degFacing)
+	
+	if character.lance then
+		updateLancePos(character.lance)
+	end
 end
