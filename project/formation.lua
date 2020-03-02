@@ -30,10 +30,10 @@ function rotateFormation(formation, rotation)
 	for i = 1, #formation.members do
 		local member = formation.members[i]
 		
-		local dist = math.sqrt(member.posX^2 + member.posY^2)
+		local dist = orthogDistance(0, 0, member.posX, member.posY)
 		local angle = math.atan2(member.posY, member.posX) + rotation
-		member.posX = dist*math.cos(angle)
-		member.posY = dist*math.sin(angle)
+		member.posX = dist*roundFloat(math.cos(angle))
+		member.posY = dist*roundFloat(math.sin(angle))
 	end
 	updateFormationMembers(formation)
 end
@@ -57,15 +57,23 @@ end
 
 function determineFormationAction(map, player, formation)
 	local membersNotReady = checkFormationInLine(map, formation)
+	
 	local targetX = nil
 	local targetY = nil
 	local targetFacing = nil
+	
 	local action = "none"
 	if formation.behaviour == "chase" then
 		targetX = player.character.x
 		targetY = player.character.y
 		if membersNotReady < #formation.members/2 then 
-			action = "move"
+			local angleToTarget = math.atan2(targetY - formation.y, targetX - formation.x)
+			if distanceBetweenAngles(formation.facing, angleToTarget) >= math.pi/2 then
+				targetFacing = cardinalRound(angleToTarget)
+				action = "rotate"
+			else
+				action = "move"
+			end
 		end
 		
 		if math.sqrt((targetX - formation.x)^2 + (targetY - formation.y)^2) <= 3 then
@@ -77,6 +85,9 @@ function determineFormationAction(map, player, formation)
 		local angle = cardinalRound(math.atan2(targetY - formation.y, targetX - formation.x))
 		moveFormation(formation, roundFloat(math.cos(angle)), roundFloat(math.sin(angle)))
 		formation.order = "follow"
+	elseif action == "rotate" then
+		local rotation = findAngleDirection(formation.facing, targetFacing)*distanceBetweenAngles(formation.facing, targetFacing)
+		rotateFormation(formation, rotation)
 	elseif action == "disperse" then
 		formation.order = "disperse"
 	end

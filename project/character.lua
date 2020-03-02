@@ -69,6 +69,7 @@ function updateCharacterPositions(characterList)
 	
 	--print("b")
 	local i = 1
+	local loops = 0
 	while #movingCharacters > 0 do
 		--print("a")
 		local character = movingCharacters[i]
@@ -85,12 +86,18 @@ function updateCharacterPositions(characterList)
 			end
 			
 			table.remove(movingCharacters, i)
+			loops = 0
 		else
 			i = i + 1
 		end
 		
 		if i > #movingCharacters then
 			 i = 1
+			 loops = loops + 1
+			 
+			 if loops > #movingCharacters then
+				break
+			 end
 		end
 	end
 end

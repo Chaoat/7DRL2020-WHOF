@@ -25,15 +25,34 @@ end
 
 local enemyMoveToPos = function(enemy, x, y)
 	local angleToTarget = angleBetweenVectors(enemy.character.tile.x, enemy.character.tile.y, x, y)
-	local xDir, yDir
 	local blocked = true
 	
+	local xDir, yDir
+	local map = enemy.character.map
+	local i = 0
 	while blocked do
+		local side = 1
+		if i%2 == 0 then
+			side = -1
+		end
 		
+		local angle = angleToTarget + side*math.ceil(i/2)*(math.pi/4)
+		local tile = getTileFromPoint(map, enemy.character.tile.x, enemy.character.tile.y, angle)
+		
+		if tile.properties.walkable then
+			blocked = false
+			xDir, yDir = getRelativeGridPositionFromAngle(angle)
+		else
+			i = i + 1
+			if i >= 8 then
+				break
+			end
+		end
 	end
 	
-	
-	shiftCharacter(enemy.character, xDir, yDir)
+	if not blocked then
+		shiftCharacter(enemy.character, xDir, yDir)
+	end
 end
 
 local enemyRotate = function(enemy, targetFacing)
