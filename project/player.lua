@@ -21,7 +21,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3, decals = {}, health = 100, arrows = 3}
+	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 100, arrows = 3}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1}), "player"))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
