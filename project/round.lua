@@ -29,6 +29,10 @@ function resolveTurn(player)
 	--TODO shift all horseman AI
 end
 
+function updateRound()
+	-- TODO
+end
+
 --resolve all the infintry
 function resolveAITurn()
 

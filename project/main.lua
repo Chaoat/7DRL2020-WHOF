@@ -16,6 +16,7 @@ require "turn"
 require "mapstructures"
 require "lance"
 require "decal"
+require "SimplyTimers"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

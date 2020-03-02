@@ -21,7 +21,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3, decals = {}}
+	player = {character = nil, currentlyActing = true, targeting = false, speed = 0, maxSpeed = 3, decals = {}, health = 100, arrows = 3}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 0, 1}), "player"))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
@@ -30,6 +30,13 @@ end
 function updatePlayer(player, camera, dt)
 	camera.centerX = player.character.x
 	camera.centerY = player.character.y
+end
+
+function damagePlayer(player, amount)
+	player.health = player.health - amount
+	if player.health <= 0 then
+		--TODO: Trigger Game Over
+	end
 end
 
 --Shifts the player 1 space
@@ -104,8 +111,6 @@ function determinePlayerAction(player, dirX, dirY)
 	relAngle = math.deg(relAngle)
 	--Makes it negative or positive
 	relAngle = relAngle * angleDir
-	print("relative angle")
-	print(relAngle)
 
 	--At zero speeed just shift in the direction immedietly
 	if player.speed == 0 then
@@ -147,10 +152,6 @@ function determinePlayerAction(player, dirX, dirY)
 			print("player slowing down")
 		end
 	end
-
-	print("player speed and facing: ")
-	print(player.speed)
-	print(math.deg(player.character.facing))
 
 	--Start the round
 	startRound(player, player.character.map)
