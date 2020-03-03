@@ -9,7 +9,7 @@ tileCharacters['ground'] = {
 {tile = "~", chance = 1, colour1 = {86/255, 193/255, 60/255, 1}, colour2 = {36/255, 193/255, 42/255, 1}},
 {tile = "'", chance = 1, colour1 = {137/255, 194/255, 0, 1}, colour2 = {74/255, 193/255, 0, 1}}}
 
-tileProperties['empty'] = {walkable = false, blockVision = true}
+tileProperties['empty'] = {walkable = false, blockVision = false}
 tileCharacters['empty'] = {
 {tile = " ", chance = 1}}
 
