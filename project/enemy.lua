@@ -1,7 +1,8 @@
 local enemyKinds = {}
+local enemyColour = {0.5, 0.5, 1, 1}
 
 enemyKinds["swordsman"]= {
-	letter = initiateLetter("S", {1, 0, 0, 1}),
+	letter = initiateLetter("S", enemyColour),
 	decideAction = function(enemy, target)
 		if enemy.formation.order == "disperse" then
 			enemy.stance = "chase"
@@ -12,7 +13,7 @@ enemyKinds["swordsman"]= {
 	lance = false
 }
 enemyKinds["lancer"]= {
-	letter = initiateLetter("L", {1, 0, 0, 1}),
+	letter = initiateLetter("L", enemyColour),
 	decideAction = function(enemy, target)
 		if enemy.formation.order == "disperse" then
 			enemy.stance = "chase"
@@ -49,8 +50,8 @@ enemyKinds["messenger"]= {
 function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]
 	
-	local enemy = {character = nil, kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, formationX = 0, formationY = 0, formationFacing = 0}
-	enemy.character = activateCharacter(initiateCharacter(map, x, y, copyLetter(enemyKind.letter), "enemy"))
+	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, formationX = 0, formationY = 0, formationFacing = 0}
+	enemy.character = activateCharacter(initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy))
 	
 	if enemyKind.lance then
 		initiateLance(map, enemy.character, enemyKind.letter.colour)
@@ -129,5 +130,22 @@ function enemyAct(enemy, player)
 		enemyChase(enemy, player)
 	elseif enemy.stance == "formation" then
 		enemyFollowFormation(enemy)
+	end
+end
+
+function damageEnemy(enemy, damage)
+	enemy.dead = true
+end
+
+function cleanupDeadEnemies(enemies)
+	local i = 1
+	while i <= #enemies do
+		local enemy = enemies[i]
+		if enemy.dead then
+			enemy.character.dead = true
+			table.remove(enemies, i)
+		else
+			i = i + 1
+		end
 	end
 end

@@ -48,6 +48,29 @@ function updateFormationMembers(formation)
 	end
 end
 
+function cleanupFormations(formations)
+	local i = 1
+	while i <= #formations do
+		local formation = formations[i]
+		
+		local j = 1
+		while j <= #formation.members do
+			local member = formation.members[j]
+			if member.enemy.dead then
+				table.remove(formation.members, j)
+			else
+				j = j + 1
+			end
+		end
+		
+		if #formation.members == 0 then
+			table.remove(formations, i)
+		else
+			i = i + 1
+		end
+	end
+end
+
 function testForceFormationPosition(formation)
 	for i = 1, #formation.members do
 		local member = formation.members[i]

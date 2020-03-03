@@ -26,6 +26,7 @@ function doFontPreProcessing()
 	
 	addQuadToBank("@", 0, 5)
 	addQuadToBank(" ", 1, 5)
+	addQuadToBank("#", 2, 5)
 end
 
 --Instantiate letter

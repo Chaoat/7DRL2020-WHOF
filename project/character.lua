@@ -1,7 +1,11 @@
 --creates a character
-function initiateCharacter(map, x, y, letter, side)
+function initiateCharacter(map, x, y, letter, master)
 	local tile = getMapTile(map, x, y)
-	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, active = false}
+	local side = nil
+	if master then
+		side = master.side
+	end
+	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	tile.character = character
@@ -19,6 +23,23 @@ function updateActiveCharacters(charList, dt)
 		
 		character.x = character.x + speed*xMoveDiff*dt
 		character.y = character.y + speed*yMoveDiff*dt
+	end
+end
+
+function cleanupDeadCharacters(characters)
+	local i = 1
+	while i <= #characters do
+		local character = characters[i]
+		if character.dead then
+			removeCharFromTile(character)
+			character.tile.waitingForCheck = false
+			if character.lance then
+				character.lance.dead = true
+			end
+			table.remove(characters, i)
+		else
+			i = i + 1
+		end
 	end
 end
 
@@ -122,6 +143,17 @@ function drawCharacters(characters, camera)
 	for i = 1, #characters do
 		local character = characters[i]
 		drawLetter(character.letter, character.x, character.y, camera)
+	end
+end
+
+--Damages the characters master, if it has one
+function damageCharacter(character, damage, angle, speed)
+	if character.side == "enemy" then
+		damageEnemy(character.master, damage)
+	end
+	
+	if character.dead then
+		
 	end
 end
 
