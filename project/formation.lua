@@ -89,7 +89,7 @@ function determineFormationAction(map, player, formation)
 	if formation.behaviour == "chase" then
 		targetX = player.character.x
 		targetY = player.character.y
-		if membersNotReady < #formation.members/2 then 
+		if membersNotReady <= 0 then--#formation.members/2 then 
 			local angleToTarget = math.atan2(targetY - formation.y, targetX - formation.x)
 			if distanceBetweenAngles(formation.facing, angleToTarget) >= math.pi/2 then
 				targetFacing = cardinalRound(angleToTarget)

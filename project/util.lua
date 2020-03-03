@@ -120,6 +120,11 @@ function orthogDistance(x1, y1, x2, y2)
 	return math.max(math.abs(x2 - x1), math.abs(y2 - y1))
 end
 
+--Rotates a point by an angle, maintaining square space
+function orthogRotate(x, y, angle)
+	--local lineDist = 
+end
+
 function getRelativeGridPositionFromAngle(angle)
 	angle = cardinalRound(angle)
 	local xDir = roundFloat(math.cos(angle))

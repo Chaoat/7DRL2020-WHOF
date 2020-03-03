@@ -20,7 +20,9 @@ require "roundmanager"
 require "particles"
 
 function love.load()
+	math.randomseed(os.clock())
 	love.keyboard.setKeyRepeat(true)
+	
 	doFontPreProcessing()
 	
 	Map = initiateMap()
