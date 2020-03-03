@@ -3,7 +3,7 @@ local decalBank = {}
 function initiateDecal(map, x, y, imageName)
 	if not decalBank[imageName] then
 		decalBank[imageName] = love.graphics.newImage("images/" .. imageName .. ".png")
-		decalBank[imageName]:setFilter("nearest", "nearest")
+		--decalBank[imageName]:setFilter("nearest", "nearest")
 	end
 	
 	local decal = {map = map, x = x, y = y, image = decalBank[imageName], imageWidth = decalBank[imageName]:getWidth(), imageHeight = decalBank[imageName]:getHeight(), colour = {1, 1, 1, 1}, facing = 0}
