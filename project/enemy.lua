@@ -22,6 +22,29 @@ enemyKinds["lancer"]= {
 	end,
 	lance = true
 }
+enemyKinds["bowman"]= {
+	letter = initiateLetter("B", {1, 0, 0, 1}),
+	decideAction = function(enemy, target)
+		if enemy.formation.order == "disperse" then
+			enemy.stance = "chase"
+		else
+			enemy.stance = "formation"
+		end
+	end,
+	lance = false
+}
+enemyKinds["messenger"]= {
+	letter = initiateLetter("M", {1, 0, 0, 1}),
+	decideAction = function(enemy, target)
+		if enemy.formation.order == "disperse" then
+			enemy.stance = "chase"
+		else
+			enemy.stance = "formation"
+		end
+	end,
+	lance = false
+}
+
 
 function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]

@@ -32,6 +32,27 @@ createFormationTemplate(1, 0, "chase", {
 	{kind = "swordsman", x = 0, y = 1}
 })
 
+--S.S
+--.B.
+--S.S
+createFormationTemplate(1, 0, "chase", {
+	{kind = "swordsman", x = 1, y = 1},
+	{kind = "swordsman", x = 1, y = -1},
+	{kind = "bowman", x = 0, y = 0},
+	{kind = "swordsman", x = -1, y = -1},
+	{kind = "swordsman", x = -1, y = 1}
+})
+
+--...
+--LBL
+--.L.
+createFormationTemplate(1, 2, "chase", {
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "lancer", x = 1, y = 0},
+	{kind = "lancer", x = 0, y = -1},
+	{kind = "bowman", x = 0, y = 0}
+})
+
 --.L.
 --.L.
 --.L.
@@ -39,4 +60,143 @@ createFormationTemplate(1, 1, "chase", {
 	{kind = "lancer", x = 0, y = 0},
 	{kind = "lancer", x = 0, y = -1},
 	{kind = "lancer", x = 0, y = 1}
+})
+
+--.B.
+--.B.
+--.B.
+createFormationTemplate(1, 1, "chase", {
+	{kind = "bowman", x = 0, y = 0},
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "bowman", x = 0, y = 1}
+})
+
+--.S.
+--L..
+--.S.
+createFormationTemplate(1, 1, "chase", {
+	{kind = "swordsman", x = 0, y = -1},
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "swordsman", x = 0, y = 1}
+})
+
+--.S.
+--S.B
+--.S.
+createFormationTemplate(1, 1, "chase", {
+	{kind = "swordsman", x = 0, y = -1},
+	{kind = "swordsman", x = -1, y = 0},
+	{kind = "bowman", x = 1, y = 0},
+	{kind = "swordsman", x = 0, y = 1}
+})
+
+--...
+--LSB
+--...
+createFormationTemplate(1, 1, "chase", {
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "swordsman", x = 0, y = 0},
+	{kind = "bowman", x = 1, y = 0}
+})
+
+--S..
+--L.B
+--S..
+createFormationTemplate(1, 1, "chase", {
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "swordsman", x = -1, y = -1},
+	{kind = "swordsman", x = -1, y = 1},
+	{kind = "bowman", x = 1, y = 0}
+})
+
+--.....
+--..S..
+--L.S.L
+--..S..
+--.....
+createFormationTemplate(1, 3, "chase", {
+	{kind = "lancer", x = 2, y = 0},
+	{kind = "swordsman", x = 0, y = -1},
+	{kind = "swordsman", x = 0, y = 0},
+	{kind = "swordsman", x = 0, y = -1},
+	{kind = "lancer", x = -2, y = 0}
+})
+
+--..L..
+--.....
+--L.B.L
+--.....
+--..L..
+createFormationTemplate(1, 4, "chase", {
+	{kind = "lancer", x = -2, y = 0},
+	{kind = "lancer", x = 0, y = -2},
+	{kind = "bowman", x = 0, y = 0},
+	{kind = "lancer", x = 0, y = 2},
+	{kind = "lancer", x = 2, y = 0}
+})
+
+--.S...
+--S..B.
+--S..B.
+--S..B.
+--.S...
+createFormationTemplate(1, 6, "chase", {
+	{kind = "swordsman", x = -2, y = 0},
+	{kind = "swordsman", x = -2, y = -1},
+	{kind = "swordsman", x = -2, y = 1},
+	{kind = "bowman", x = 1, y = -1},
+	{kind = "bowman", x = 1, y = 0},
+	{kind = "bowman", x = 1, y = 1},
+	{kind = "swordsman", x = -1, y = 2},
+	{kind = "swordsman", x = -1, y = -2}
+})
+
+--.L.S.
+--.S.L.
+--.L.S.
+--.S.L.
+--.L.S.
+createFormationTemplate(1, 6, "chase", {
+	{kind = "swordsman", x = -1, y = 2},
+	{kind = "lancer", x = -1, y = 1},
+	{kind = "swordsman", x = -1, y = 0},
+	{kind = "lancer", x = -1, y = -1},
+	{kind = "swordsman", x = -1, y = -2},
+	{kind = "lancer", x = 1, y = 2},
+	{kind = "swordsman", x = 1, y = 1},
+	{kind = "lancer", x = 1, y = 0},
+	{kind = "swordsman", x = 1, y = -1},
+	{kind = "lancer", x = -1, y = -2}
+})
+
+--..L..
+--.LB..
+--.LB..
+--.LB..
+--..L..
+createFormationTemplate(1, 6, "chase", {
+	{kind = "lancer", x = 0, y = 2},
+	{kind = "lancer", x = -1, y = 1},
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "lancer", x = -1, y = -1},
+	{kind = "lancer", x = 0, y = -2},
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "bowman", x = 0, y = 0},
+	{kind = "bowman", x = 0, y = 1}
+})
+
+--.S.S.
+--LB...
+--.....
+--LB...
+--.S.S.
+createFormationTemplate(1, 5, "chase", {
+	{kind = "swordsman", x = -2, y = 2},
+	{kind = "swordsman", x = 0, y = 2},
+	{kind = "bowman", x = -1, y = 1},
+	{kind = "lancer", x = -2, y = 1},
+	{kind = "lancer", x = -2, y = -1},
+	{kind = "bowman", x = -1, y = -1},
+	{kind = "swordsman", x = 0, y = -2},
+	{kind = "swordsman", x = -2, y = -2}
 })
