@@ -1,6 +1,6 @@
 --Create a formation from a list of enemies
 function initiateFormation(map, enemyList, x, y, template, facing)
-	local formation = {map = map, members = {}, x = x, y = y, size = template.size, order = "follow", facing = facing, behaviour = template.behaviour}
+	local formation = {map = map, members = {}, x = x, y = y, size = template.size, order = "follow", facing = facing, behaviour = template.behaviour, leniency = template.leniency}
 	for i = 1, #enemyList do
 		local enemy = enemyList[i]
 		
@@ -86,7 +86,7 @@ function determineFormationAction(map, player, formation)
 	if formation.behaviour == "chase" then
 		targetX = player.character.x
 		targetY = player.character.y
-		if membersNotReady <= 0 then--#formation.members/2 then 
+		if membersNotReady <= #formation.members*formation.leniency then 
 			local angleToTarget = math.atan2(targetY - formation.y, targetX - formation.x)
 			if distanceBetweenAngles(formation.facing, angleToTarget) >= math.pi/2 then
 				targetFacing = cardinalRound(angleToTarget)
@@ -96,17 +96,16 @@ function determineFormationAction(map, player, formation)
 			end
 		end
 		
-		if orthogDistance(targetX, targetY, formation.x, formation.y) <= 4 then
+		if orthogDistance(targetX, targetY, formation.x, formation.y) <= formation.size/2 + 3 then
 			formation.order = "disperse"
 		else
 			formation.order = "follow"
 		end
 	end
 	
-	print("formation members not ready: " .. membersNotReady)
-	print("formation action: " .. action)
+	--print("formation members not ready: " .. membersNotReady)
+	--print("formation action: " .. action)
 	
-	formation.order = "follow"
 	if action == "move" then
 		local angle = cardinalRound(math.atan2(targetY - formation.y, targetX - formation.x))
 		moveFormation(formation, roundFloat(math.cos(angle)), roundFloat(math.sin(angle)))

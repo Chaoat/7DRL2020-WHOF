@@ -78,17 +78,19 @@ local enemyMoveToPos = function(enemy, x, y)
 		local angle = angleToTarget + side*math.ceil(i/2)*(math.pi/4)
 		local tile = getTileFromPoint(map, enemy.character.tile.x, enemy.character.tile.y, angle)
 		
-		local walkable = tile.properties.walkable
-		if walkable then
-			if tile.character then
-				if tile.character.side == "enemy" then
-					if not checkEnemyMoving(tile.character.master) then
-						walkable = false
-					end
-				end
-			end
+		local walkable = checkTileWalkable(tile, enemy.character)
+		local tileCharacter = tile.waitingForCharacter
+		if not tileCharacter then
+			tileCharacter = tile.character
 		end
 		
+		if not walkable and tileCharacter then
+			if tileCharacter.side == "player" then
+				walkable = false
+			elseif checkEnemyMoving(tileCharacter.master) then
+				walkable = true
+			end
+		end
 		
 		if walkable then
 			blocked = false
@@ -133,7 +135,7 @@ local enemyFollowFormation = function(enemy)
 	if distanceBetweenAngles(enemy.formationFacing, enemy.character.facing) > 0 and enemy.character.lance then
 		enemyRotate(enemy, enemy.formationFacing)
 	elseif enemy.formationX ~= enemy.character.tile.x or enemy.formationY ~= enemy.character.tile.y then
-		print("Moving To: [" .. enemy.formationX .. ":" .. enemy.formationY .. "]")
+		--print("Moving To: [" .. enemy.formationX .. ":" .. enemy.formationY .. "]")
 		enemyMoveToPos(enemy, enemy.formationX, enemy.formationY)
 	end
 end
@@ -158,6 +160,7 @@ function checkEnemyMoving(enemy)
 	end
 	
 	if enemy.stance == "formation" then
+		--print(enemy.character.id .. "= " .. enemy.formationX .. ":" .. enemy.character.tile.x .. " , " .. enemy.formationY .. ":" .. enemy.character.tile.y)
 		if enemy.formationX == enemy.character.tile.x and enemy.formationY == enemy.character.tile.y then
 			return false
 		end

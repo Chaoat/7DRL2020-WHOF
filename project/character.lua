@@ -36,7 +36,7 @@ function cleanupDeadCharacters(characters)
 		local character = characters[i]
 		if character.dead then
 			removeCharFromTile(character)
-			character.tile.waitingForCheck = false
+			character.tile.waitingForCharacter = false
 			if character.lance then
 				character.lance.dead = true
 			end
@@ -66,11 +66,13 @@ function shiftCharacter(character, xDir, yDir)
 	character.approachingTile = nextTile
 	character.moving = true
 	removeCharFromTile(character)
+	
+	--print("--")
 end
 
 function removeCharFromTile(character)
 	character.tile.character = nil
-	character.tile.waitingForCheck = true
+	character.tile.waitingForCharacter = character
 	if character.lance then
 		removeLanceFromTile(character.lance)
 	end
@@ -116,11 +118,12 @@ function updateCharacterPositions(characterList)
 	local forceNoMove = false
 	while #movingCharacters > 0 do
 		local character = movingCharacters[i]
+		--print(character.id)
 		
-		if not character.approachingTile.waitingForCheck or forceNoMove then
-			local walkable = checkTileWalkable(character.approachingTile)
+		if not character.approachingTile.waitingForCharacter or forceNoMove then
+			local walkable = checkTileWalkable(character.approachingTile, character)
 			
-			character.tile.waitingForCheck = false
+			character.tile.waitingForCharacter = false
 			character.moving = false
 			if walkable or character.forceMove then
 				placeCharOnTile(character, character.approachingTile)
@@ -132,7 +135,8 @@ function updateCharacterPositions(characterList)
 			table.remove(movingCharacters, i)
 			moved = true
 		else
-			character.blockedBy = character.approachingTile.character
+			character.blockedBy = character.approachingTile.waitingForCharacter
+			--print(character.id .. " is blocked by " .. character.blockedBy.id)
 			i = i + 1
 		end
 		
@@ -166,7 +170,7 @@ end
 function multiSlide(character, targetX, targetY)
 	while character.tile.x ~= targetX or character.tile.y ~= targetY do
 		local targetTile = getTileFromPoint(character.map, character.tile.x, character.tile.y, math.atan2(targetY - character.tile.y, targetX - character.tile.x))
-		if not checkTileWalkable(targetTile) then
+		if not checkTileWalkable(targetTile, character) then
 			break
 		else
 			shiftCharacter(character, targetTile.x - character.tile.x, targetTile.y - character.tile.y)
@@ -179,6 +183,10 @@ function drawCharacters(characters, camera)
 	for i = 1, #characters do
 		local character = characters[i]
 		drawLetter(character.letter, character.x, character.y, camera)
+		
+		--local drawX, drawY = getDrawPos(character.x, character.y, camera)
+		--love.graphics.setColor(1, 1, 1, 1)
+		--love.graphics.print(character.id, drawX, drawY)
 	end
 end
 

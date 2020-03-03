@@ -22,7 +22,7 @@ tileCharacters['tree'] = {
 {tile = " ", chance = 1}}
 
 function initiateTile(x, y, kind, letter)
-	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, particleInfluence = 0, partInfColour = {0, 0, 0, 0}, character = nil, waitingForCheck = false, lances = {}}
+	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, particleInfluence = 0, partInfColour = {0, 0, 0, 0}, character = nil, waitingForCharacter = false, lances = {}}
 	
 	if letter == nil then
 		local chosenChar = ""
@@ -56,9 +56,17 @@ function initiateTile(x, y, kind, letter)
 	return tile
 end
 
-function checkTileWalkable(tile)
+function checkTileWalkable(tile, character)
 	if tile.properties.walkable then
 		if tile.character == nil then
+			if character then
+				for i = 1, #tile.lances do
+					local lance = tile.lances[i]
+					if lance.character.side ~= character.side then
+						return false
+					end
+				end
+			end
 			return true
 		else
 			return false

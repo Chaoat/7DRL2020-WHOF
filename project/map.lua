@@ -1,6 +1,6 @@
 function initiateMap()
 	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}}
-	fillMapArea(map, "ground", -50, -50, 50, 50)
+	fillMapArea(map, "ground", -100, -100, 100, 100)
 	return map
 end
 

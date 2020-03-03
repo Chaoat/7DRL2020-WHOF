@@ -18,7 +18,7 @@ end
 --Intercept: chase after the player, predicting where they go
 --Hold: Do not move from formation
 --Loose: Spawn in formation then split up into individual
-local function createFormationTemplate(difficulty, behaviour, positions)
+local function createFormationTemplate(difficulty, behaviour, positions, leniency)
 	local radius = 0
 	for i = 1, #positions do
 		positions[i].x = -positions[i].x
@@ -26,7 +26,15 @@ local function createFormationTemplate(difficulty, behaviour, positions)
 		radius = math.max(math.abs(positions[i].x), math.abs(positions[i].y))
 	end
 	
-	local formation = {size = 2*radius + 1, difficulty = difficulty, positions = positions, behaviour = behaviour}
+	if not leniency then
+		if behaviour == "chase" then
+			leniency = 0.5
+		else
+			leniency = 0
+		end
+	end
+	
+	local formation = {size = 2*radius + 1, difficulty = difficulty, positions = positions, behaviour = behaviour, leniency = leniency}
 	table.insert(formations, formation)
 end
 
