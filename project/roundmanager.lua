@@ -58,6 +58,7 @@ end
 function cleanupDeadObjects(map)
 	cleanupDeadEnemies(map.enemies)
 	cleanupDeadCharacters(map.characters)
+	cleanupDeadCharacters(map.activeCharacters)
 	cleanupDeadLances(map.lances)
 	cleanupFormations(map.formations)
 end
