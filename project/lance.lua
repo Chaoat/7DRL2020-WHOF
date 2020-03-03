@@ -1,7 +1,9 @@
 function initiateLance(map, character, colour)
 	local tileX = character.x + roundFloat(math.cos(character.facing))
 	local tileY = character.y + roundFloat(math.sin(character.facing))
-	local lance = {character = character, tile = getMapTile(map, tileX, tileY), colour = colour}
+	
+	local lance = {character = character, tile = nil, tileI = nil, colour = colour}
+	placeLanceOnTile(lance, getMapTile(map, tileX, tileY))
 	
 	lance.tile.lance = lance
 	character.lance = lance
@@ -9,13 +11,32 @@ function initiateLance(map, character, colour)
 	return lance
 end
 
+function removeLanceFromTile(lance)
+	if lance.tile then
+		table.remove(lance.tile.lances, lance.tileI)
+		local i = lance.tileI
+		while i <= #lance.tile.lances do
+			lance.tile.lances[i].tileI = lance.tile.lances[i].tileI - 1
+			i = i + 1
+		end
+		
+		lance.tile = nil
+		lance.tileI = nil
+	end
+end
+
+function placeLanceOnTile(lance, tile)
+	removeLanceFromTile(lance)
+	
+	table.insert(tile.lances, lance)
+	lance.tileI = #tile.lances
+	lance.tile = tile
+end
+
 function updateLancePos(lance)
 	local character = lance.character
 	local tile = getTileFromPoint(character.map, character.tile.x, character.tile.y, character.facing)
-	
-	lance.tile.lance = nil
-	tile.lance = lance
-	lance.tile = tile
+	placeLanceOnTile(lance, tile)
 end
 
 function drawLances(lances, camera)

@@ -47,7 +47,7 @@ function removeCharFromTile(character)
 	character.tile.character = nil
 	character.tile.waitingForCheck = true
 	if character.lance then
-		character.lance.tile.lance = nil
+		removeLanceFromTile(character.lance)
 	end
 end
 
@@ -56,8 +56,7 @@ function placeCharOnTile(character, tile)
 	tile.character = character
 	if character.lance then
 		local lanceTile = getTileFromPoint(character.map, tile.x, tile.y, character.facing)
-		character.lance.tile = lanceTile
-		lanceTile.lance = character.lance
+		placeLanceOnTile(character.lance, lanceTile)
 	end
 end
 
@@ -65,12 +64,14 @@ function updateCharacterPositions(characterList)
 	local movingCharacters = {}
 	for i = 1, #characterList do
 		local character = characterList[i]
-		table.insert(movingCharacters, character)
+		if character.moving then
+			table.insert(movingCharacters, character)
+		end
 	end
 	
 	--print("b")
 	local i = 1
-	local loops = 0
+	local moved = false
 	local forceNoMove = false
 	while #movingCharacters > 0 do
 		--print("a")
@@ -88,17 +89,17 @@ function updateCharacterPositions(characterList)
 			end
 			
 			table.remove(movingCharacters, i)
-			loops = 0
+			moved = true
 		else
 			i = i + 1
 		end
 		
 		if i > #movingCharacters then
 			 i = 1
-			 loops = loops + 1
 			 
-			 if loops > #movingCharacters then
+			 if not moved then
 				forceNoMove = true
+				print("Fix Move Stalemate")
 			 end
 		end
 	end

@@ -76,8 +76,10 @@ function determineFormationAction(map, player, formation)
 			end
 		end
 		
-		if math.sqrt((targetX - formation.x)^2 + (targetY - formation.y)^2) <= 3 then
-			action = "disperse"
+		if orthogDistance(targetX, targetY, formation.x, formation.y) <= 4 then
+			formation.order = "disperse"
+		else
+			formation.order = "follow"
 		end
 	end
 	
@@ -91,8 +93,6 @@ function determineFormationAction(map, player, formation)
 	elseif action == "rotate" then
 		local rotation = findAngleDirection(formation.facing, targetFacing)*math.pi/2
 		rotateFormation(formation, rotation)
-	elseif action == "disperse" then
-		formation.order = "disperse"
 	end
 end
 

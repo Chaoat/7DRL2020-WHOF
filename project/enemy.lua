@@ -3,7 +3,11 @@ local enemyKinds = {}
 enemyKinds["swordsman"]= {
 	letter = initiateLetter("S", {1, 0, 0, 1}),
 	decideAction = function(enemy, target)
-		enemy.stance = "formation"
+		if enemy.formation.order == "disperse" then
+			enemy.stance = "chase"
+		else
+			enemy.stance = "formation"
+		end
 	end,
 	lance = false
 }

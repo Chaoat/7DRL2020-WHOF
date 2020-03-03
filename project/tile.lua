@@ -22,7 +22,7 @@ tileCharacters['tree'] = {
 {tile = " ", chance = 1}}
 
 function initiateTile(x, y, kind, letter)
-	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil, waitingForCheck = false, lance = nil}
+	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil, waitingForCheck = false, lances = {}}
 	
 	if letter == nil then
 		local chosenChar = ""
@@ -68,6 +68,13 @@ function checkTileWalkable(tile)
 	end
 end
 
+function tileHasLance(tile)
+	if #tile.lances > 0 then
+		return tile.lances[1]
+	end
+	return false
+end
+
 function drawTiles(map, camera)
 	local visibleCharacters = {}
 	local visibleLances = {}
@@ -83,8 +90,9 @@ function drawTiles(map, camera)
 			local tile = getMapTile(map, i, j)
 			if tile.character then
 				table.insert(visibleCharacters, tile.character)
-			elseif tile.lance then
-				table.insert(visibleLances, tile.lance)
+				--drawLetter(initiateLetter("#", {1, 1, 0, 1}), i, j, camera)
+			elseif tileHasLance(tile) then
+				table.insert(visibleLances, tileHasLance(tile))
 			else
 				drawLetter(tile.letter, i, j, camera)
 			end
