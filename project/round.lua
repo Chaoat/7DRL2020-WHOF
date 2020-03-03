@@ -1,6 +1,6 @@
 --Starts a new round now that the player has chosen their input
 function startRound(player, map, curRound)
-	print("starting new round")
+	--print("starting new round")
 	removePlayerDecals(player)
 	local roundLength = getRoundLength(player)
 

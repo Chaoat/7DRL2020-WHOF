@@ -70,9 +70,13 @@ function checkLanceCollisions(characters)
 				end
 				
 				damageCharacter(character, 10, angle, speed + 1)
+				-- There was a collision
+				return true
 			end
 		end
 	end
+	-- There wasnt a collision
+	return false
 end
 
 function drawLances(lances, camera)
