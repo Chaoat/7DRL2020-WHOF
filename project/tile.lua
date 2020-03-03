@@ -90,7 +90,7 @@ function drawTiles(map, camera)
 			local tile = getMapTile(map, i, j)
 			if tile.character then
 				table.insert(visibleCharacters, tile.character)
-				--drawLetter(initiateLetter("#", {1, 1, 0, 1}), i, j, camera)
+				drawLetter(initiateLetter("#", {1, 1, 0, 1}), i, j, camera)
 			elseif tileHasLance(tile) then
 				table.insert(visibleLances, tileHasLance(tile))
 			else

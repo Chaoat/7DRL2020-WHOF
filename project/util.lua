@@ -93,7 +93,10 @@ function findAngleDirection(rawangle1, rawangle2)
 	end
 end
 
-
+function randBetween(n1, n2)
+	local diff = n2 - n1
+	return n1 + diff*math.random()
+end
 
 --Round the angle into a cardinal direction angle
 function cardinalRound(angle)

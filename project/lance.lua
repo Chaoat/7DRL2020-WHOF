@@ -39,6 +39,42 @@ function updateLancePos(lance)
 	placeLanceOnTile(lance, tile)
 end
 
+function cleanupDeadLances(lances)
+	local i = 1
+	while i <= #lances do
+		local lance = lances[i]
+		if lance.dead then
+			removeLanceFromTile(lance)
+			table.remove(lances, i)
+		else
+			i = i + 1
+		end
+	end
+end
+
+function checkLanceCollisions(characters)
+	for i = 1, #characters do
+		local character = characters[i]
+		local cTile = character.tile
+		
+		for j = 1, #cTile.lances do
+			local lance = cTile.lances[j]
+			local lanceChar = lance.character
+			if lanceChar.side ~= character.side then
+				local angle = math.atan2(character.tile.y - lanceChar.tile.y, character.tile.x - lanceChar.tile.x) + randBetween(-math.pi/8, math.pi/8)
+				local speed = 0
+				if lanceChar.master.speed then
+					speed = lanceChar.master.speed
+					
+					lanceChar.master.speed = math.max(speed - 1, 0)
+				end
+				
+				damageCharacter(character, 10, angle, speed)
+			end
+		end
+	end
+end
+
 function drawLances(lances, camera)
 	for i = 1, #lances do
 		local lance = lances[i]

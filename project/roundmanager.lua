@@ -21,7 +21,7 @@ function updateRound(player, map, curRound, dt)
 		if curRound.curTurn <= curRound.maxTurns then
 			--print("play turn")
 			resolveTurn(player, map, curRound.curTurn)
-			advanceRound(curRound)
+			advanceRound(curRound, map)
 			resetRoundTime(curRound)
 			return
 		end
@@ -43,8 +43,18 @@ function updateRound(player, map, curRound, dt)
 	end
 end
 
-function advanceRound(curRound)
+function advanceRound(curRound, map)
+	checkLanceCollisions(map.activeCharacters)
+	cleanupDeadObjects(map)
+	
 	curRound.curTurn = curRound.curTurn + 1
+end
+
+function cleanupDeadObjects(map)
+	cleanupDeadEnemies(map.enemies)
+	cleanupDeadCharacters(map.characters)
+	cleanupDeadLances(map.lances)
+	cleanupFormations(map.formations)
 end
 
 function resetRoundTime(curRound)
