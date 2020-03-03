@@ -69,7 +69,7 @@ function checkLanceCollisions(characters)
 					lanceChar.master.speed = math.max(speed - 1, 0)
 				end
 				
-				damageCharacter(character, 10, angle, speed)
+				damageCharacter(character, 10, angle, speed + 1)
 			end
 		end
 	end

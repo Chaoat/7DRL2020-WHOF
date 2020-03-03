@@ -1,11 +1,11 @@
 local kindProperties = {}
 kindProperties["blood"] = function(particle)
 	particle.infColour = {1, 0, 0, 1}
-	particle.influence = 1
+	particle.influence = 0.5
 	particle.infFade = particle.influence/particle.timeLeft
 	
 	particle.trailColour = {1, 0, 0, 1}
-	particle.trailStrength = 0.6
+	particle.trailStrength = 0.4
 	particle.trailFade = particle.trailStrength/particle.timeLeft
 	
 	friction = 4
