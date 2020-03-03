@@ -98,6 +98,11 @@ function randBetween(n1, n2)
 	return n1 + diff*math.random()
 end
 
+function blendColours(c1, c2, ratio)
+	local otherR = 1 - ratio
+	return {c1[1]*ratio + c2[1]*otherR, c1[2]*ratio + c2[2]*otherR, c1[3]*ratio + c2[3]*otherR, c1[4]*ratio + c2[4]*otherR}
+end
+
 --Round the angle into a cardinal direction angle
 function cardinalRound(angle)
 	while angle < -math.pi do

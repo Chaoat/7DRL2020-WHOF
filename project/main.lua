@@ -17,6 +17,7 @@ require "lance"
 require "decal"
 require "SimplyTimers"
 require "roundmanager"
+require "particles"
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)
@@ -41,7 +42,6 @@ function love.update(dt)
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
 	updateRound(Player, Map, CurRound, dt)
-	updateDecals(Map.decals, dt)
 end
 
 function love.keypressed(key)

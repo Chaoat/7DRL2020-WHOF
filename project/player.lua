@@ -10,6 +10,7 @@ controls["moveTop"] = {"kp8", "up", "w", "k"}
 controls["moveTopLeft"] = {"kp7", "q", "y"}
 controls["moveLeft"] = {"kp4", "left", "a", "h"}
 controls["moveStay"] = {"kp5", "s", ","}
+controls["sword"] = {"1"}
 
 local reverseControls = {}
 

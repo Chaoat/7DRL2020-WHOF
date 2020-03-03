@@ -152,8 +152,13 @@ function damageCharacter(character, damage, angle, speed)
 		damageEnemy(character.master, damage)
 	end
 	
-	if character.dead then
-		
+	if character.master then
+		if character.master.dead then
+			local tileLetter = getMapTile(character.map, character.tile.x, character.tile.y).letter
+			tileLetter.letter = "x"
+			tileLetter.colour = {1, 0, 0, 1}
+			spawnBloodBurst(character.map, character.tile.x + 0.5, character.tile.y + 0.5, 5*speed, angle)
+		end
 	end
 end
 

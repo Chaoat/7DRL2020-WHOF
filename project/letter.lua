@@ -31,7 +31,7 @@ end
 
 --Instantiate letter
 function initiateLetter(letter, colour)
-	local letter = {letter = letter, colour = colour, facing = 0}
+	local letter = {letter = letter, colour = colour, backColour = {0, 0, 0, 0}, facing = 0, momentaryInfluenceColour = {0, 0, 0, 0}, momentaryInfluence = 0}
 	return letter
 end
 
@@ -42,12 +42,33 @@ end
 
 --Draw a letter at tile[x][y] on camera
 function drawLetter(letter, x, y, camera)
-	love.graphics.setColor(letter.colour)
-	
 	local drawX, drawY = getDrawPos(x, y, camera)
 	
 	if not quadBank[letter.letter] then
 		print("Letter missing: " .. letter.letter)
 	end
+	
+	if letter.backColour then
+		drawBackdrop(letter, x, y, camera)
+	end
+	
+	if letter.momentaryInfluence > 0 then
+		love.graphics.setColor(blendColours(letter.momentaryInfluenceColour, letter.colour, letter.momentaryInfluence))
+	else
+		love.graphics.setColor(letter.colour)
+	end
+	
 	love.graphics.draw(fontImage, quadBank[letter.letter], drawX + camera.tileWidth/2, drawY + camera.tileHeight/2, letter.facing, camera.tileWidth/letterTileWidth, camera.tileHeight/letterTileHeight, letterTileWidth/2, letterTileHeight/2)
+end
+
+function drawBackdrop(letter, x, y, camera)
+	local drawX, drawY = getDrawPos(x, y, camera)
+	
+	if letter.momentaryInfluence > 0 then
+		love.graphics.setColor(blendColours(letter.momentaryInfluenceColour, letter.backColour, letter.momentaryInfluence))
+	else
+		love.graphics.setColor(letter.backColour)
+	end
+	
+	love.graphics.rectangle('fill', drawX, drawY, camera.tileWidth, camera.tileHeight)
 end

@@ -1,5 +1,5 @@
 function initiateMap()
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}, lances = {}, decals = {}}
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}}
 	fillMapArea(map, "ground", -50, -50, 50, 50)
 	return map
 end
@@ -36,6 +36,8 @@ end
 
 function updateMap(map, dt)
 	updateActiveCharacters(map.activeCharacters, dt)
+	updateParticles(map, map.particles, dt)
+	updateDecals(map.decals, dt)
 end
 
 function getMapTile(map, x, y)
@@ -52,6 +54,7 @@ function getTileFromPoint(map, x, y, angle)
 end
 
 function drawMap(map, camera)
+	applyParticleInfluence(map, map.particles)
 	local visibleCharacters, visibleLances = drawTiles(map, camera)
 	drawCharacters(visibleCharacters, camera)
 	drawLances(visibleLances, camera)

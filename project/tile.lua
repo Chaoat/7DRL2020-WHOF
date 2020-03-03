@@ -22,7 +22,7 @@ tileCharacters['tree'] = {
 {tile = " ", chance = 1}}
 
 function initiateTile(x, y, kind, letter)
-	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, character = nil, waitingForCheck = false, lances = {}}
+	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, particleInfluence = 0, partInfColour = {0, 0, 0, 0}, character = nil, waitingForCheck = false, lances = {}}
 	
 	if letter == nil then
 		local chosenChar = ""
@@ -90,12 +90,16 @@ function drawTiles(map, camera)
 			local tile = getMapTile(map, i, j)
 			if tile.character then
 				table.insert(visibleCharacters, tile.character)
-				drawLetter(initiateLetter("#", {1, 1, 0, 1}), i, j, camera)
+				--drawLetter(initiateLetter("#", {1, 1, 0, 1}), i, j, camera)
+				drawBackdrop(tile.letter, i, j, camera)
 			elseif tileHasLance(tile) then
 				table.insert(visibleLances, tileHasLance(tile))
+				drawBackdrop(tile.letter, i, j, camera)
 			else
 				drawLetter(tile.letter, i, j, camera)
 			end
+			
+			tile.letter.momentaryInfluence = 0
 		end
 	end
 	

@@ -61,7 +61,7 @@ function checkLanceCollisions(characters)
 			local lance = cTile.lances[j]
 			local lanceChar = lance.character
 			if lanceChar.side ~= character.side then
-				local angle = math.atan2(character.tile.y - lanceChar.tile.y, character.tile.x - lanceChar.tile.x) + randBetween(-math.pi/8, math.pi/8)
+				local angle = math.atan2(character.tile.y - lanceChar.tile.y, character.tile.x - lanceChar.tile.x) + randBetween(-math.pi/16, math.pi/16)
 				local speed = 0
 				if lanceChar.master.speed then
 					speed = lanceChar.master.speed
@@ -89,6 +89,6 @@ function drawLances(lances, camera)
 		end
 		
 		local xShift, yShift = getRelativeGridPositionFromAngle(character.facing)
-		drawLetter({letter = letter, colour = character.lance.colour}, character.x + xShift, character.y + yShift, camera)
+		drawLetter(initiateLetter(letter, character.lance.colour), character.x + xShift, character.y + yShift, camera)
 	end
 end
