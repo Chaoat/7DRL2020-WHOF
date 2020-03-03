@@ -122,7 +122,17 @@ end
 
 --Rotates a point by an angle, maintaining square space
 function orthogRotate(x, y, angle)
-	--local lineDist = 
+	local curAngle = math.atan2(y, x)
+	local dist = orthogDistance(0, 0, x, y)
+	
+	angle = curAngle + angle
+	local boundAngle = math.min(angle%(math.pi/2), math.pi/2 - angle%(math.pi/2))
+	
+	local distMultiple = math.sqrt(1 + math.tan(boundAngle))
+	
+	local returnX = roundFloat(distMultiple*dist*math.cos(angle))
+	local returnY = roundFloat(distMultiple*dist*math.sin(angle))
+	return returnX, returnY
 end
 
 function getRelativeGridPositionFromAngle(angle)

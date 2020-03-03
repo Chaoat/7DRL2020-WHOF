@@ -1,3 +1,5 @@
+local charID = 0
+
 --creates a character
 function initiateCharacter(map, x, y, letter, master)
 	local tile = getMapTile(map, x, y)
@@ -5,8 +7,10 @@ function initiateCharacter(map, x, y, letter, master)
 	if master then
 		side = master.side
 	end
-	local character = {x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false}
+	local character = {id = charID, x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false, blockedBy = nil, forceMove = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
+	
+	charID = charID + 1
 	
 	tile.character = character
 	table.insert(map.characters, character)
@@ -82,6 +86,22 @@ function placeCharOnTile(character, tile)
 end
 
 function updateCharacterPositions(characterList)
+	local checkIfCircularBlockage = function(character, blockedList)
+		local idEncountered = {}
+		while character.blockedBy do
+			table.insert(blockedList, character)
+			idEncountered[character.id] = true
+			print(character.id)
+			
+			if idEncountered[character.blockedBy.id] then
+				return true
+			else
+				character = character.blockedBy
+			end
+		end
+		return false
+	end
+	
 	local movingCharacters = {}
 	for i = 1, #characterList do
 		local character = characterList[i]
@@ -95,7 +115,6 @@ function updateCharacterPositions(characterList)
 	local moved = false
 	local forceNoMove = false
 	while #movingCharacters > 0 do
-		--print("a")
 		local character = movingCharacters[i]
 		
 		if not character.approachingTile.waitingForCheck or forceNoMove then
@@ -103,8 +122,9 @@ function updateCharacterPositions(characterList)
 			
 			character.tile.waitingForCheck = false
 			character.moving = false
-			if walkable and not forceNoMove then
+			if walkable or character.forceMove then
 				placeCharOnTile(character, character.approachingTile)
+				character.forceMove = false
 			else
 				placeCharOnTile(character, character.tile)
 			end
@@ -112,16 +132,32 @@ function updateCharacterPositions(characterList)
 			table.remove(movingCharacters, i)
 			moved = true
 		else
+			character.blockedBy = character.approachingTile.character
 			i = i + 1
 		end
 		
 		if i > #movingCharacters then
-			 i = 1
-			 
 			 if not moved then
 				forceNoMove = true
+				
+				--for j = 1, #movingCharacters do
+				--	local character = movingCharacters[j]
+				--	if character.moving and not character.forceMove then
+				--		local blockedList = {}
+				--		if checkIfCircularBlockage(character, blockedList) then
+				--			for k = 1, #blockedList do
+				--				blockedList[k].forceMove = true
+				--				print("WOW IT ACTUALLY HAPPENED")
+				--			end
+				--		end
+				--	end
+				--end
+				
 				print("Fix Move Stalemate")
 			 end
+			 
+			 i = 1
+			 moved = false
 		end
 	end
 end

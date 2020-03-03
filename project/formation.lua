@@ -30,10 +30,7 @@ function rotateFormation(formation, rotation)
 	for i = 1, #formation.members do
 		local member = formation.members[i]
 		
-		local dist = orthogDistance(0, 0, member.posX, member.posY)
-		local angle = math.atan2(member.posY, member.posX) + rotation
-		member.posX = dist*roundFloat(math.cos(angle))
-		member.posY = dist*roundFloat(math.sin(angle))
+		member.posX, member.posY = orthogRotate(member.posX, member.posY, rotation)
 	end
 	updateFormationMembers(formation)
 end

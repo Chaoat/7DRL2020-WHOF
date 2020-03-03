@@ -14,11 +14,7 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 	for i = 1, #formationTemplate.positions do
 		local position = formationTemplate.positions[i]
 		
-		local dist = math.sqrt(position.y^2 + position.x^2)
-		local angle = math.atan2(position.y, position.x)
-		angle = angle + rotation
-		local xPos = roundFloat(dist*math.cos(angle))
-		local yPos = roundFloat(dist*math.sin(angle))
+		local xPos, yPos = orthogRotate(position.x, position.y, rotation)
 		
 		local enemy = initiateEnemy(map, x + xPos, y + yPos, position.kind)
 		if position.stance then
