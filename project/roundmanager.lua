@@ -1,6 +1,6 @@
 --Handles the current round and timers between turns
 function initiateRound(player, map, maxTurns)
-	local curRound = {maxTurns = 1, curTurn = 1, playedAITurn = false, timerList = {}, turndelay = 0, finished = false}
+	local curRound = {maxTurns = 1, curTurn = 1, playedAITurn = false, timerList = {}, turndelay = 0.01, addedturndelay = 0, finished = false}
 	addTimer(curRound.turndelay, "turnTimer", curRound.timerList)
 	curRound.maxTurns = maxTurns
 	return curRound
@@ -11,6 +11,7 @@ function resetRound(player, map, maxTurns, curRound)
 	curRound.maxTurns = maxTurns
 	curRound.playedAITurn = false
 	curRound.finished = false
+	curRound.turndelay = 0.01
 	return curRound
 end
 
@@ -44,7 +45,11 @@ function updateRound(player, map, curRound, dt)
 end
 
 function advanceRound(curRound, map)
-	checkLanceCollisions(map.activeCharacters)
+	if checkLanceCollisions(map.activeCharacters) then
+		--Add to the turn delay when hitting a unit
+		curRound.addedturndelay = 0.3
+	end 
+
 	cleanupDeadObjects(map)
 	
 	curRound.curTurn = curRound.curTurn + 1
@@ -58,5 +63,6 @@ function cleanupDeadObjects(map)
 end
 
 function resetRoundTime(curRound)
-	resetTimer(curRound.turndelay, "turnTimer", curRound.timerList)
+	resetTimer(curRound.turndelay + curRound.addedturndelay, "turnTimer", curRound.timerList)
+	curRound.addedturndelay = 0
 end

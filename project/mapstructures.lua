@@ -27,9 +27,12 @@ local function newStructureTemplate(name, radius, colours, tiles, symbols, tileC
 			template.symbols[i][j] = symbols[j][i]
 			
 			local tile = ""
+
 			if tiles[j][i] == "n" then
+				--nil tile, can be moved through
 				tile = nil
 			elseif tiles[j][i] == "t" then
+				--tree tile cant be moved through
 				tile = "tree"
 			end
 			template.tiles[i][j] = tile
