@@ -24,7 +24,7 @@ enemyKinds["lancer"]= {
 	lance = true
 }
 enemyKinds["bowman"]= {
-	letter = initiateLetter("B", {1, 0, 0, 1}),
+	letter = initiateLetter("B", enemyColour),
 	decideAction = function(enemy, target)
 		if enemy.formation.order == "disperse" then
 			enemy.stance = "chase"
@@ -35,7 +35,7 @@ enemyKinds["bowman"]= {
 	lance = false
 }
 enemyKinds["messenger"]= {
-	letter = initiateLetter("M", {1, 0, 0, 1}),
+	letter = initiateLetter("M", enemyColour),
 	decideAction = function(enemy, target)
 		if enemy.formation.order == "disperse" then
 			enemy.stance = "chase"
