@@ -205,7 +205,7 @@ createFormationTemplate(1, "chase", {
 --.....
 --LB...
 --.S.S.
-createFormationTemplate(0, "chase", {
+createFormationTemplate(1, "chase", {
 	{kind = "swordsman", x = -2, y = 2},
 	{kind = "swordsman", x = 0, y = 2},
 	{kind = "bowman", x = -1, y = 1},
@@ -214,4 +214,19 @@ createFormationTemplate(0, "chase", {
 	{kind = "bowman", x = -1, y = -1},
 	{kind = "swordsman", x = 0, y = -2},
 	{kind = "swordsman", x = -2, y = -2}
+})
+
+--.L...
+--.#B..
+--.#...
+--.#B..
+--.L...
+createFormationTemplate(0, "guard", {
+	{kind = "lancer", x = -1, y = 2},
+	{kind = "lancer", x = -1, y = -2},
+	{kind = "bowman", x = 0, y = 1},
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "barrier", x = -1, y = -1},
+	{kind = "barrier", x = -1, y = 0},
+	{kind = "barrier", x = -1, y = 1}
 })

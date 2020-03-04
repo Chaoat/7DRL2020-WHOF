@@ -11,7 +11,8 @@ enemyKinds["swordsman"]= {
 		end
 	end,
 	lance = false,
-	sword = true
+	sword = true,
+	bleeds = true
 }
 enemyKinds["lancer"]= {
 	letter = initiateLetter("L", enemyColour),
@@ -26,7 +27,8 @@ enemyKinds["lancer"]= {
 			end
 		end
 	end,
-	lance = true
+	lance = true,
+	bleeds = true
 }
 enemyKinds["bowman"]= {
 	letter = initiateLetter("B", enemyColour),
@@ -49,7 +51,8 @@ enemyKinds["bowman"]= {
 	end,
 	lance = false,
 	bow = {shootRange = 9, reloadTime = 3},
-	fleeRange = 4
+	fleeRange = 4,
+	bleeds = true
 }
 enemyKinds["messenger"]= {
 	letter = initiateLetter("M", enemyColour),
@@ -60,7 +63,16 @@ enemyKinds["messenger"]= {
 			enemy.stance = "formation"
 		end
 	end,
-	lance = false
+	lance = false,
+	bleeds = true
+}
+enemyKinds["barrier"]= {
+	letter = initiateLetter("#", enemyColour),
+	decideAction = function(enemy, target)
+		enemy.stance = "hold"
+	end,
+	lance = false,
+	bleeds = false
 }
 
 
@@ -69,6 +81,7 @@ function initiateEnemy(map, x, y, kind)
 	
 	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0}
 	enemy.character = activateCharacter(initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy))
+	enemy.character.bleeds = enemyKind.bleeds
 	
 	if enemy.bow then
 		enemy.reloading = 0
@@ -267,6 +280,9 @@ function cleanupDeadEnemies(enemies)
 	while i <= #enemies do
 		local enemy = enemies[i]
 		if enemy.dead then
+			if enemy.firingdecal then
+				enemy.firingdecal.remove = true
+			end
 			enemy.character.dead = true
 			table.remove(enemies, i)
 		else

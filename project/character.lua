@@ -7,7 +7,7 @@ function initiateCharacter(map, x, y, letter, master)
 	if master then
 		side = master.side
 	end
-	local character = {id = charID, x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false, blockedBy = nil, forceMove = false, swording = false}
+	local character = {id = charID, x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false, blockedBy = nil, forceMove = false, swording = false, bleeds = true}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	charID = charID + 1
@@ -35,9 +35,11 @@ function cleanupDeadCharacters(characters)
 	while i <= #characters do
 		local character = characters[i]
 		if character.dead then
-			local tileLetter = getMapTile(character.map, character.tile.x, character.tile.y).letter
-			tileLetter.letter = "x"
-			tileLetter.colour = {1, 0, 0, 1}
+			if character.bleeds then
+				local tileLetter = getMapTile(character.map, character.tile.x, character.tile.y).letter
+				tileLetter.letter = "x"
+				tileLetter.colour = {1, 0, 0, 1}
+			end
 			
 			removeCharFromTile(character)
 			character.tile.waitingForCharacter = false
@@ -134,6 +136,12 @@ function updateCharacterPositions(characterList)
 				character.forceMove = false
 			else
 				placeCharOnTile(character, character.tile)
+				if character.master.speed and not character.approachingTile.character then
+					if character.master.speed > 2 then
+						damageCharacter(character, (character.master.speed - 2), 0, 0)
+					end
+					character.master.speed = 0
+				end
 			end
 			
 			table.remove(movingCharacters, i)
@@ -197,7 +205,7 @@ function checkSlashConnections(characters)
 			for j = 1, #map.activeCharacters do
 				local targetChar = map.activeCharacters[j]
 				
-				if targetChar.side ~= character.side then
+				if targetChar.side ~= character.side and targetChar.bleeds then
 					if orthogDistance(character.tile.x, character.tile.y, targetChar.tile.x, targetChar.tile.y) == 1 then
 						characterSlash(character, targetChar)
 						characterHit = true
@@ -254,7 +262,9 @@ function damageCharacter(character, damage, angle, speed)
 			angle = findAngleBetween(character.facing, angle, speedRatio)
 		end
 		
-		spawnBloodBurst(character.map, character.tile.x + 0.5, character.tile.y + 0.5, 5*speed, angle)
+		if character.bleeds then
+			spawnBloodBurst(character.map, character.tile.x + 0.5, character.tile.y + 0.5, 5*speed, angle)
+		end
 	end
 end
 
