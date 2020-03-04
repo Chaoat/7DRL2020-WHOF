@@ -29,7 +29,7 @@ function love.load()
 	doFontPreProcessing()
 	
 	Map = initiateMap()
-	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 12, 12)
+	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 66, 50)
 	
 	Player = initiatePlayer(Map, 0, 0)
 	Interface = initiateInterface(Player)
@@ -48,6 +48,8 @@ end
 
 function love.update(dt)	
 	GlobalTime = GlobalTime + dt
+	
+	print(dt*60)
 	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)

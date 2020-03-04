@@ -1,6 +1,6 @@
 --creates a camera
-function initiateCamera(screenX, screenY, width, height, centerX, centerY, tileWidth, tileHeight)
-	local camera = {screenX = screenX, screenY = screenY, width = width, height = height, centerX = centerX, centerY = centerY, tileWidth = tileWidth, tileHeight = tileHeight, tilesWide = nil, tilesTall = nil, movingCursor = false, cursor = nil, cursorX = 0, cursorY = 0}
+function initiateCamera(screenX, screenY, width, height, centerX, centerY, tilesWide, tilesTall)
+	local camera = {screenX = screenX, screenY = screenY, width = width, height = height, centerX = centerX, centerY = centerY, tileWidth = nil, tileHeight = nil, tilesWide = tilesWide, tilesTall = tilesTall, movingCursor = false, cursor = nil, cursorX = 0, cursorY = 0}
 	updateCameraSize(camera, width, height)
 	return camera
 end
@@ -9,8 +9,11 @@ end
 function updateCameraSize(camera, width, height)
 	camera.width = width
 	camera.height = height
-	camera.tilesWide = math.ceil(camera.width/camera.tileWidth) + 1
-	camera.tilesTall = math.ceil(camera.height/camera.tileHeight) + 1
+	camera.tileWidth = math.floor(camera.width/camera.tilesWide)
+	camera.tileHeight = math.floor(camera.height/camera.tilesTall)
+	
+	camera.tileWidth = math.min(camera.tileWidth, camera.tileHeight)
+	camera.tileHeight = math.min(camera.tileWidth, camera.tileHeight)
 end
 
 function initCameraCursor(camera, player, firing)
