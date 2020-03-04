@@ -2,17 +2,17 @@ local controls = {}
 
 --Support for WASD, Keypad, and Vi-keys
 controls["moveBotLeft"] = {"kp1", "z", "b"}
-controls["moveBot"] = {"kp2", "down", "x", "j"}
+controls["moveBot"] = {"kp2", "down", "j"}
 controls["moveBotRight"] = {"kp3", "c", "n"}
 controls["moveRight"] = {"kp6", "right", "d", "l"}
 controls["moveTopRight"] = {"kp9", "e", "u"}
 controls["moveTop"] = {"kp8", "up", "w", "k"}
 controls["moveTopLeft"] = {"kp7", "q", "y"}
 controls["moveLeft"] = {"kp4", "left", "a", "h"}
-controls["moveStay"] = {"kp5", "s", ","}
-controls["sword"] = {"1"}
-controls["examine"] = {"2"}
-controls["shoot"] = {"3"}
+controls["moveStay"] = {"kp5", ","}
+controls["sword"] = {"s"}
+controls["examine"] = {"x"}
+controls["shoot"] = {"f"}
 controls["cancel"] = {"escape"}
 
 local reverseControls = {}
@@ -25,7 +25,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 10, arrows = 3, firing = false, fireRange = 6, dead = false}
+	player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 8, arrows = 3, firing = false, fireRange = 6, dead = false}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 1, 1}), player))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
@@ -218,23 +218,29 @@ function determinePlayerAction(player, dirX, dirY, curRound)
 end
 
 function getPossiblePlayerTiles(player)
-	local getTileInLine = function(dist, angle)
+	local tiles = {}
+	local addTileInLine = function(dist, angle)
 		local tileX = player.character.tile.x + dist*roundFloat(math.cos(angle))
 		local tileY = player.character.tile.y + dist*roundFloat(math.sin(angle))
-		return getMapTile(player.character.map, tileX, tileY)
+		local tile = getMapTile(player.character.map, tileX, tileY)
+		if checkTileWalkable(tile, player.character) then
+			table.insert(tiles, tile)
+		elseif tile.character then
+			if tile.character.id == player.character.id then
+				table.insert(tiles, tile)
+			end
+		end
 	end
 	
-	local tiles = {}
-	
 	--Rest
-	table.insert(tiles, getTileInLine(player.speed, player.character.facing))
+	addTileInLine(player.speed, player.character.facing)
 	--Accelerate
 	if player.speed < player.maxSpeed then
-		table.insert(tiles, getTileInLine(player.speed + 1, player.character.facing))
+		addTileInLine(player.speed + 1, player.character.facing)
 	end
 	--Slow
 	if player.speed > 0 then
-		table.insert(tiles, getTileInLine(player.speed - 1, player.character.facing))
+		addTileInLine(player.speed - 1, player.character.facing)
 	end
 	
 	return tiles

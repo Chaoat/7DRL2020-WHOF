@@ -49,6 +49,7 @@ function updateRound(player, map, curRound, dt)
 			end 
 			local playerPossibleTiles = getPossiblePlayerTiles(player)
 			determineEnemyAttack(map.enemies, player, playerPossibleTiles)
+			cleanupDeadObjects(map)
 			
 			characterSlash(player.character, nil)
 			

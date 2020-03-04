@@ -19,6 +19,8 @@ require "SimplyTimers"
 require "roundmanager"
 require "particles"
 require "archery"
+require "interface"
+--Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
 	math.randomseed(os.clock())
@@ -30,16 +32,18 @@ function love.load()
 	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 12, 12)
 	
 	Player = initiatePlayer(Map, 0, 0)
+	Interface = initiateInterface(Player)
 
 	CurRound = initiateRound(player, map, 0)
 	
-	spawnFormation(Map, 8, 0, getFormationTemplateInDifficultyRange(0, 0), "right")
+	spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	spawnStructure(Map, 0, -10, "tree", 0)
 	
 	GlobalTime = 0
-	
-	ScreenX = 800
-	ScreenY = 600
+end
+
+function love.resize(x, y)
+	updateCameraSize(Camera, x, y)
 end
 
 function love.update(dt)	
@@ -54,7 +58,14 @@ function love.keypressed(key)
 	playerKeypressed(Player, Camera, key, CurRound)
 end
 
+function love.mousepressed(x, y, button)
+	if button == 1 then
+		checkInterfaceClicked(x, y, Interface, Camera, Player, CurRound)
+	end
+end
+
 function love.draw()
 	drawMap(Map, Camera)
 	drawPlayerBowRangeOverlay(Player, Camera)
+	drawInterface(Interface, Camera)
 end

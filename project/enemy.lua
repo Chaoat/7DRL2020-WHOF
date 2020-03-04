@@ -208,6 +208,13 @@ function determineEnemyAttack(enemies, player, possiblePlayerTiles)
 				end
 			end
 		end
+		
+		if enemy.bow then
+			if enemy.reloading > 0 then
+				enemy.reloading = enemy.reloading - 1
+			end
+		end
+		
 		if enemy.stance == "shooting" then
 			if enemy.reloading <= 0 and not enemy.firing then
 				if #possiblePlayerTiles > 0 then
@@ -223,8 +230,6 @@ function determineEnemyAttack(enemies, player, possiblePlayerTiles)
 					
 					table.remove(possiblePlayerTiles, 1)
 				end
-			else
-				enemy.reloading = enemy.reloading - 1
 			end
 		end
 	end

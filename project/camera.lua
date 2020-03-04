@@ -7,6 +7,8 @@ end
 
 --Updates the width and height of the camera. Necessary so that dependent variable can also be updated
 function updateCameraSize(camera, width, height)
+	camera.width = width
+	camera.height = height
 	camera.tilesWide = math.ceil(camera.width/camera.tileWidth) + 1
 	camera.tilesTall = math.ceil(camera.height/camera.tileHeight) + 1
 end
@@ -42,4 +44,13 @@ function getDrawPos(x, y, camera)
 	local drawX = camera.screenX + camera.width/2 + (x - camera.centerX)*camera.tileWidth
 	local drawY = camera.screenY + camera.height/2 + (y - camera.centerY)*camera.tileHeight
 	return roundFloat(drawX), roundFloat(drawY)
+end
+
+function mousePosToTilePos(x, y, camera)
+	local xFromCenter = x - camera.width/2
+	local yFromCenter = y - camera.height/2
+	
+	local tileX = math.floor(camera.centerX + xFromCenter/camera.tileWidth)
+	local tileY = math.floor(camera.centerY + yFromCenter/camera.tileHeight)
+	return tileX, tileY
 end

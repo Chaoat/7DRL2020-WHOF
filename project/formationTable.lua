@@ -155,7 +155,7 @@ createFormationTemplate(1, "chase", {
 --S..B.
 --S..B.
 --.S...
-createFormationTemplate(0, "chase", {
+createFormationTemplate(1, "chase", {
 	{kind = "swordsman", x = -2, y = 0},
 	{kind = "swordsman", x = -2, y = -1},
 	{kind = "swordsman", x = -2, y = 1},
@@ -205,7 +205,7 @@ createFormationTemplate(1, "chase", {
 --.....
 --LB...
 --.S.S.
-createFormationTemplate(5, "chase", {
+createFormationTemplate(0, "chase", {
 	{kind = "swordsman", x = -2, y = 2},
 	{kind = "swordsman", x = 0, y = 2},
 	{kind = "bowman", x = -1, y = 1},

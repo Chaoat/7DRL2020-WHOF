@@ -12,6 +12,9 @@ function doFontPreProcessing()
 		addQuadToBank(string.char(65 + i), i%13, math.floor(i/13))
 		addQuadToBank(string.char(97 + i), i%13, 2 + math.floor(i/13))
 	end
+	for i = 0, 9 do
+		addQuadToBank(tostring(i), i, 6)
+	end
 	addQuadToBank("\\", 0, 4)
 	addQuadToBank("|", 1, 4)
 	addQuadToBank("/", 2, 4)
@@ -27,11 +30,24 @@ function doFontPreProcessing()
 	addQuadToBank("@", 0, 5)
 	addQuadToBank(" ", 1, 5)
 	addQuadToBank("#", 2, 5)
+	addQuadToBank(">>", 3, 5)
+	
+	addQuadToBank("uA", 0, 7)
+	addQuadToBank("urA", 1, 7)
+	addQuadToBank("rA", 2, 7)
+	addQuadToBank("drA", 3, 7)
+	addQuadToBank("dA", 4, 7)
+	addQuadToBank("dlA", 5, 7)
+	addQuadToBank("lA", 6, 7)
+	addQuadToBank("ulA", 7, 7)
 end
 
 --Instantiate letter
-function initiateLetter(letter, colour)
-	local letter = {letter = letter, colour = colour, backColour = {0, 0, 0, 0}, facing = 0, momentaryInfluenceColour = {0, 0, 0, 0}, momentaryInfluence = 0}
+function initiateLetter(letter, colour, backColour)
+	if not backColour then
+		backColour = {0, 0, 0, 0}
+	end
+	local letter = {letter = letter, colour = colour, backColour = backColour, facing = 0, momentaryInfluenceColour = {0, 0, 0, 0}, momentaryInfluence = 0}
 	return letter
 end
 

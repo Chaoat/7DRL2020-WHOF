@@ -17,13 +17,13 @@ function drawPlayerBowRangeOverlay(player, camera)
 	if player.firing then
 		love.graphics.setColor(0, 0, 0, 0.8)
 		local topSquareEnd = (0.5*camera.tilesTall*camera.tileHeight) - (camera.tileHeight*(player.fireRange + 0.5))
-		love.graphics.rectangle('fill', 0, 0, ScreenX, topSquareEnd)
+		love.graphics.rectangle('fill', 0, 0, camera.width, topSquareEnd)
 		local botSquareStart = (0.5*camera.tilesTall*camera.tileHeight) + (camera.tileHeight*(player.fireRange + 0.5))
-		love.graphics.rectangle('fill', 0, botSquareStart, ScreenX, ScreenY - botSquareStart)
+		love.graphics.rectangle('fill', 0, botSquareStart, camera.width, camera.height - botSquareStart)
 		
 		local leftSquareEnd = (0.5*camera.tilesWide*camera.tileWidth) - (camera.tileWidth*(player.fireRange + 0.5))
 		love.graphics.rectangle('fill', 0, topSquareEnd, leftSquareEnd, botSquareStart - topSquareEnd)
 		local rightSquareStart = (0.5*camera.tilesWide*camera.tileWidth) + (camera.tileWidth*(player.fireRange + 0.5))
-		love.graphics.rectangle('fill', rightSquareStart, topSquareEnd, ScreenX - rightSquareStart, botSquareStart - topSquareEnd)
+		love.graphics.rectangle('fill', rightSquareStart, topSquareEnd, camera.width - rightSquareStart, botSquareStart - topSquareEnd)
 	end
 end
