@@ -21,14 +21,18 @@ function updateRound(player, map, curRound, dt)
 		--Play a regular turn
 		if curRound.curTurn <= curRound.maxTurns then
 			--print("play turn")
-			checkSlashConnections({player.character})
+			if checkSlashConnections({player.character}) then
+				curRound.addedturndelay = 0.3
+			end
 			resolveTurn(player, map, curRound.curTurn)
 			cleanupDeadObjects(map)
 			advanceRound(curRound, map)
 			resetRoundTime(curRound)
 			return
 		end
-		checkSlashConnections({player.character})
+		if checkSlashConnections({player.character}) then
+			curRound.addedturndelay = 0.3
+		end
 		--Play AI inf turn
 		if not curRound.playedAITurn then
 			--print("ai turn")
@@ -48,7 +52,7 @@ function updateRound(player, map, curRound, dt)
 				curRound.addedturndelay = 0.3
 			end 
 			local playerPossibleTiles = getPossiblePlayerTiles(player)
-			determineEnemyAttack(map.enemies, player, playerPossibleTiles)
+			determineEnemyAttack(map.enemies, player, playerPossibleTiles, curRound)
 			cleanupDeadObjects(map)
 			
 			characterSlash(player.character, nil)

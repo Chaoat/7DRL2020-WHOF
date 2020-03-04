@@ -121,21 +121,30 @@ function drawInterface(interface, camera)
 		end
 	end
 	
-	local healthLetter = initiateLetter("#", {1, 0, 0, 1}, {0.5, 0, 0, 1})
-	for i = 0, interface.player.health do
+	local healthLetter = initiateLetter("#", {1, 0, 0, 1}, {0.5, 0, 0, 0.5})
+	local flash = 1 - (GlobalTime - interface.player.lastHit)
+	local flashHealthLetter = initiateLetter("#", {1, 1, 1, flash}, {0.5, 0, 0, 0.5})
+	local healthBackLetter = initiateLetter(" ", {1, 0, 0, 1}, {0.5, 0, 0, 0.5})
+	for i = 1, interface.player.maxHealth do
 		for j = 0, 3 do
-			drawLetter(healthLetter, left + j + interface.healthBar.x + 1, top - i - 1 + interface.healthBar.y, camera)
+			if i <= interface.player.health then
+				drawLetter(healthLetter, left + j + interface.healthBar.x + 1, top - i + interface.healthBar.y, camera)
+			elseif i <= interface.player.lastHealth then
+				drawLetter(flashHealthLetter, left + j + interface.healthBar.x + 1, top - i + interface.healthBar.y, camera)
+			else
+				drawLetter(healthBackLetter, left + j + interface.healthBar.x + 1, top - i + interface.healthBar.y, camera)
+			end
 		end
 	end
 	
 	local arrowLetter1 = initiateLetter(">>", interface.frontColour, interface.backColour)
 	local arrowLetter2 = initiateLetter("-", interface.frontColour, interface.backColour)
 	local arrowLetter3 = initiateLetter("rA", interface.frontColour, interface.backColour)
-	for i = 0, interface.player.arrows do
-		drawLetter(arrowLetter1, left + interface.arrowBar.x + 1, top - i - 1 + interface.arrowBar.y, camera)
-		drawLetter(arrowLetter2, left + interface.arrowBar.x + 2, top - i - 1 + interface.arrowBar.y, camera)
-		drawLetter(arrowLetter2, left + interface.arrowBar.x + 3, top - i - 1 + interface.arrowBar.y, camera)
-		drawLetter(arrowLetter3, left + interface.arrowBar.x + 4, top - i - 1 + interface.arrowBar.y, camera)
+	for i = 1, interface.player.arrows do
+		drawLetter(arrowLetter1, left + interface.arrowBar.x + 1, top - i + interface.arrowBar.y, camera)
+		drawLetter(arrowLetter2, left + interface.arrowBar.x + 2, top - i + interface.arrowBar.y, camera)
+		drawLetter(arrowLetter2, left + interface.arrowBar.x + 3, top - i + interface.arrowBar.y, camera)
+		drawLetter(arrowLetter3, left + interface.arrowBar.x + 4, top - i + interface.arrowBar.y, camera)
 	end
 end
 

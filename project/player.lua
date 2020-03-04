@@ -25,7 +25,9 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 8, arrows = 3, firing = false, fireRange = 6, dead = false}
+	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, firing = false, fireRange = 6, dead = false}
+	player.health = player.maxHealth
+	player.lastHealth = player.maxHealth
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 1, 1}), player))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
@@ -37,6 +39,11 @@ function updatePlayer(player, camera, dt)
 end
 
 function damagePlayer(player, amount)
+	if GlobalTime - player.lastHit >= 1 then
+		player.lastHealth = player.health
+	end
+	player.lastHit = GlobalTime
+		
 	player.health = player.health - amount
 	if player.health <= 0 then
 		killPlayer(player)

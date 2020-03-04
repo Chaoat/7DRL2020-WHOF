@@ -188,6 +188,7 @@ function characterStartSlashing(character)
 	character.letter.shaking = 0.2
 end
 function checkSlashConnections(characters)
+	local characterHit = false
 	for i = 1, #characters do
 		local character = characters[i]
 		local map = character.map
@@ -199,13 +200,14 @@ function checkSlashConnections(characters)
 				if targetChar.side ~= character.side then
 					if orthogDistance(character.tile.x, character.tile.y, targetChar.tile.x, targetChar.tile.y) == 1 then
 						characterSlash(character, targetChar)
-						return true
+						characterHit = true
+						break
 					end
 				end
 			end
 		end
 	end
-	return false
+	return characterHit
 end
 function characterSlash(character, targetCharacter)
 	if targetCharacter then
@@ -215,6 +217,10 @@ function characterSlash(character, targetCharacter)
 			speed = speed + character.master.speed/2
 		end
 		damageCharacter(targetCharacter, 5, findAngleBetween(character.facing, angleBetween, 0.8), speed)
+		
+		local shiftX, shiftY = getRelativeGridPositionFromAngle(angleBetween)
+		character.x = character.x + shiftX/2
+		character.y = character.y + shiftY/2
 	end
 	
 	character.swording = false

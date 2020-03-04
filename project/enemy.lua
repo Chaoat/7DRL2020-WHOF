@@ -193,7 +193,7 @@ function enemyAct(enemy, player)
 	end
 end
 
-function determineEnemyAttack(enemies, player, possiblePlayerTiles)
+function determineEnemyAttack(enemies, player, possiblePlayerTiles, curRound)
 	for i = 1, #enemies do
 		local enemy = enemies[i]
 		
@@ -201,6 +201,8 @@ function determineEnemyAttack(enemies, player, possiblePlayerTiles)
 			if enemy.character.swording then
 				if not checkSlashConnections({enemy.character}) then
 					characterSlash(enemy.character, nil)
+				else
+					curRound.addedturndelay = 0.3
 				end
 			else
 				if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, player.character.tile.x, player.character.tile.y) == 1 then
