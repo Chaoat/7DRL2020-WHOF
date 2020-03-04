@@ -10,15 +10,20 @@ enemyKinds["swordsman"]= {
 			enemy.stance = "formation"
 		end
 	end,
-	lance = false
+	lance = false,
+	sword = true
 }
 enemyKinds["lancer"]= {
 	letter = initiateLetter("L", enemyColour),
 	decideAction = function(enemy, target)
-		if enemy.formation.order == "disperse" then
-			enemy.stance = "chase"
+		if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y) <= 4 then
+			enemy.stance = "hold"
 		else
-			enemy.stance = "formation"
+			if enemy.formation.order == "disperse" then
+				enemy.stance = "chase"
+			else
+				enemy.stance = "formation"
+			end
 		end
 	end,
 	lance = true
@@ -26,13 +31,25 @@ enemyKinds["lancer"]= {
 enemyKinds["bowman"]= {
 	letter = initiateLetter("B", enemyColour),
 	decideAction = function(enemy, target)
-		if enemy.formation.order == "disperse" then
-			enemy.stance = "chase"
+		local distance = orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y)
+		
+		
+		
+		if distance <= enemy.fleeRange then
+			enemy.stance = "flee"
+		elseif distance <= enemy.bow.shootRange + 2 then
+			enemy.stance = "shooting"
 		else
-			enemy.stance = "formation"
+			if enemy.formation.order == "disperse" then
+				enemy.stance = "chase"
+			else
+				enemy.stance = "formation"
+			end
 		end
 	end,
-	lance = false
+	lance = false,
+	bow = {shootRange = 9, reloadTime = 3},
+	fleeRange = 4
 }
 enemyKinds["messenger"]= {
 	letter = initiateLetter("M", enemyColour),
@@ -50,8 +67,13 @@ enemyKinds["messenger"]= {
 function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]
 	
-	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, formationX = 0, formationY = 0, formationFacing = 0}
+	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0}
 	enemy.character = activateCharacter(initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy))
+	
+	if enemy.bow then
+		enemy.reloading = 0
+		enemy.firing = false
+	end
 	
 	if enemyKind.lance then
 		initiateLance(map, enemy.character, enemyKind.letter.colour)
@@ -118,13 +140,25 @@ local enemyRotate = function(enemy, targetFacing)
 end
 
 
-local enemyRotateThenMoveToPoint = function(enemy, x, y)
+local enemyRotateToPoint = function(enemy, x, y)
 	local angleToTarget = cardinalRound(math.atan2(y - enemy.character.tile.y, x - enemy.character.tile.x))
 	if distanceBetweenAngles(angleToTarget, enemy.character.facing) > 0 and enemy.character.lance then
 		enemyRotate(enemy, angleToTarget)
-	elseif x ~= enemy.character.tile.x or y ~= enemy.character.tile.y then
+		return true
+	end
+	return false
+end
+
+local enemyRotateThenMoveToPoint = function(enemy, x, y)
+	if not enemyRotateToPoint(enemy, x, y) and x ~= enemy.character.tile.x or y ~= enemy.character.tile.y then
 		enemyMoveToPos(enemy, x, y)
 	end
+end
+
+local enemyFlee = function(enemy, target)
+	local angleAway = math.atan2(enemy.character.tile.y - target.character.tile.y, enemy.character.tile.x - target.character.tile.x)
+	local awayX, awayY = getRelativeGridPositionFromAngle(angleAway)
+	enemyMoveToPos(enemy, enemy.character.tile.x + awayX, enemy.character.tile.y + awayY)
 end
 
 local enemyChase = function(enemy, target)
@@ -141,10 +175,45 @@ local enemyFollowFormation = function(enemy)
 end
 
 function enemyAct(enemy, player)
-	if enemy.stance == "chase" then
-		enemyChase(enemy, player)
-	elseif enemy.stance == "formation" then
-		enemyFollowFormation(enemy)
+	if enemy.firing then
+		enemy.firing = false
+		enemy.reloading = enemy.bow.reloadTime
+	elseif not enemy.character.swording then
+		if enemy.stance == "chase" then
+			enemyChase(enemy, player)
+		elseif enemy.stance == "formation" then
+			enemyFollowFormation(enemy)
+		elseif enemy.stance == "hold" then
+			enemyRotateToPoint(enemy, player.character.tile.x, player.character.tile.y)
+		elseif enemy.stance == "flee" then
+			enemyFlee(enemy, player)
+		end
+	end
+end
+
+function determineEnemyAttack(enemies, player, possiblePlayerTiles)
+	for i = 1, #enemies do
+		local enemy = enemies[i]
+		
+		if enemy.sword then
+			if enemy.character.swording then
+				if not checkSlashConnections({enemy.character}) then
+					characterSlash(enemy.character, nil)
+				end
+			else
+				if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, player.character.tile.x, player.character.tile.y) == 1 then
+					characterStartSlashing(enemy.character)
+				end
+			end
+		end
+		if enemy.stance == "shooting" then
+			if enemy.reloading <= 0 then
+				local decal = initiateDecal(enemy.character.map, possiblePlayerTiles[1].x, possiblePlayerTiles[1].y, "square")
+				enemy.firing = true
+			else
+				enemy.reloading = enemy.reloading - 1
+			end
+		end
 	end
 end
 

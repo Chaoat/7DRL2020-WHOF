@@ -18,6 +18,7 @@ require "decal"
 require "SimplyTimers"
 require "roundmanager"
 require "particles"
+require "archery"
 
 function love.load()
 	math.randomseed(os.clock())

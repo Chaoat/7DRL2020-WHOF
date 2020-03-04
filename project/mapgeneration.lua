@@ -26,7 +26,7 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 		enemy.character.facing = enemy.character.facing + rotation
 		
 		if enemy.character.lance then
-			updateLancePos(enemy.character.lance)
+			rotateLanceToPos(enemy.character.lance, enemy.character.facing)
 		end
 		
 		table.insert(enemyList, enemy)

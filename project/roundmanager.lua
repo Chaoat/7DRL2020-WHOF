@@ -21,22 +21,38 @@ function updateRound(player, map, curRound, dt)
 		--Play a regular turn
 		if curRound.curTurn <= curRound.maxTurns then
 			--print("play turn")
+			checkSlashConnections({player.character})
 			resolveTurn(player, map, curRound.curTurn)
+			cleanupDeadObjects(map)
 			advanceRound(curRound, map)
 			resetRoundTime(curRound)
 			return
 		end
+		checkSlashConnections({player.character})
 		--Play AI inf turn
 		if not curRound.playedAITurn then
 			--print("ai turn")
 			resolveAIRound(player, map)
 			curRound.playedAITurn = true
 			resetRoundTime(curRound)
+			cleanupDeadObjects(map)
 		--Round is over
 		elseif not curRound.finished then
 			--print("round finished")
 		    curRound.finished = true
 		    updateCharacterPositions(map.activeCharacters)
+			
+			--Check enemy hitting player
+			if checkLanceCollisions(map.activeCharacters) then
+				--Add to the turn delay when hitting a unit
+				curRound.addedturndelay = 0.3
+			end 
+			local playerPossibleTiles = getPossiblePlayerTiles(player)
+			determineEnemyAttack(map.enemies, player, playerPossibleTiles)
+			
+			characterSlash(player.character, nil)
+			
+			--endRoundCleanup(map)
 			createPlayerDecals(player)
 		end
 	else
@@ -49,8 +65,6 @@ function advanceRound(curRound, map)
 		--Add to the turn delay when hitting a unit
 		curRound.addedturndelay = 0.3
 	end 
-
-	cleanupDeadObjects(map)
 	
 	curRound.curTurn = curRound.curTurn + 1
 end
@@ -61,6 +75,17 @@ function cleanupDeadObjects(map)
 	cleanupDeadCharacters(map.activeCharacters)
 	cleanupDeadLances(map.lances)
 	cleanupFormations(map.formations)
+end
+
+function endRoundCleanup(map)
+	--Clear up slashing characters
+	for i = 1, #map.activeCharacters do
+		local character = map.activeCharacters[i]
+		
+		if character.swording then
+			characterSlash(character, nil)
+		end
+	end
 end
 
 function resetRoundTime(curRound)

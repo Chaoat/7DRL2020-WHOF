@@ -11,6 +11,9 @@ controls["moveTopLeft"] = {"kp7", "q", "y"}
 controls["moveLeft"] = {"kp4", "left", "a", "h"}
 controls["moveStay"] = {"kp5", "s", ","}
 controls["sword"] = {"1"}
+controls["examine"] = {"2"}
+controls["shoot"] = {"3"}
+controls["cancel"] = {"escape"}
 
 local reverseControls = {}
 
@@ -22,7 +25,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 100, arrows = 3}
+	player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, health = 10, arrows = 3, firing = false, fireRange = 6, dead = false}
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 1, 1}), player))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
@@ -36,8 +39,13 @@ end
 function damagePlayer(player, amount)
 	player.health = player.health - amount
 	if player.health <= 0 then
-		--TODO: Trigger Game Over
+		killPlayer(player)
 	end
+end
+
+function killPlayer(player)
+	player.dead = true
+	player.character.dead = true
 end
 
 --Shifts the player 1 space
@@ -86,20 +94,67 @@ function playerKeypressed(player, camera, key, curRound)
 		dirY = 0
 	elseif action == "moveStay" then
 		kind = "rest"
+	elseif action == "sword" then
+		kind = "sword"
+	elseif action == "examine" then
+		if not player.firing then
+			if camera.movingCursor then
+				camera.movingCursor = false
+				camera.cursor.remove = true
+			else
+				camera.movingCursor = true
+				initCameraCursor(camera, player, false)
+			end
+		else
+			playerCancelFiring(player, camera)
+		end
+	elseif action == "shoot" then
+		if player.firing then
+			fireArrow(player.character, camera.cursorX, camera.cursorY)
+			playerCancelFiring(player, camera)
+			startRound(player, player.character.map, curRound)
+		else
+			if camera.movingCursor then
+				camera.cursor.remove = true
+			end
+			
+			camera.movingCursor = true
+			initCameraCursor(camera, player, true)
+			player.firing = true
+		end
+	elseif action == "cancel" then
+		if player.firing then
+			playerCancelFiring(player, camera)
+		end
+		if camera.movingCursor then
+			camera.movingCursor = false
+			camera.cursor.remove = true
+		end
 	end
 	
 	--Player made an input change
-	if kind == "movement" then
+	if kind == "movement" and not player.dead then
 		--print(curRound.finished)
 		if curRound.finished then
-			determinePlayerAction(player, dirX, dirY, curRound)
+			if not camera.movingCursor then
+				determinePlayerAction(player, dirX, dirY, curRound)
+			else
+				moveCameraCursor(camera, dirX, dirY, player.firing, player)
+			end
 		end
-	end
-
-	if kind == "rest" then
+	elseif kind == "rest" then
 		--Player made a blank move with no input then just start the round
 		startRound(player, player.character.map, curRound)
+	elseif kind == "sword" then
+		characterStartSlashing(player.character)
+		startRound(player, player.character.map, curRound)
 	end
+end
+
+function playerCancelFiring(player, camera)
+	camera.movingCursor = false
+	camera.cursor.remove = true
+	player.firing = false
 end
 
 --changes the player's facing and speed depending on input then starts a round
@@ -159,6 +214,21 @@ function determinePlayerAction(player, dirX, dirY, curRound)
 	startRound(player, player.character.map, curRound)
 end
 
+function getPossiblePlayerTiles(player)
+	local getTileInLine = function(dist, angle)
+		local tileX = player.character.tile.x + dist*roundFloat(math.cos(angle))
+		local tileY = player.character.tile.y + dist*roundFloat(math.sin(angle))
+		return getMapTile(player.character.map, tileX, tileY)
+	end
+	
+	local tiles = {}
+	
+	--Rest
+	table.insert(tiles, getTileInLine(player.speed, player.character.facing))
+	
+	return tiles
+end
+
 --Clamps the speed
 function modifySpeed(player, speedChange)
 	player.speed = player.speed + speedChange
@@ -172,36 +242,38 @@ end
 
 --Creates player arrow decals
 function createPlayerDecals(player)
-	local arrowColour = {1, 1, 1, 0.5}
-	local localArrowCreate = function(facing, imageFacing, dist)
-		local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, facing, dist)
-		local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
-		arrow.colour = arrowColour
-		arrow.flashing = 0.3
-		table.insert(player.decals, arrow)
-	end
-	
-	if player.speed > 0 then
-		localArrowCreate(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
-		
-		localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/4, player.speed)
-		
-		localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/4, player.speed)
-		
-		if player.speed > 1 then
-			localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/2, player.speed - 1)
-			
-			localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/2, player.speed - 1)
-			
-			localArrowCreate(player.character.facing, player.character.facing - math.pi, player.speed - 1)
+	if not player.dead then
+		local arrowColour = {1, 1, 1, 0.5}
+		local localArrowCreate = function(facing, imageFacing, dist)
+			local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, facing, dist)
+			local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
+			arrow.colour = arrowColour
+			arrow.flashing = 0.3
+			table.insert(player.decals, arrow)
 		end
 		
-		if player.speed < player.maxSpeed then
-			local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, player.speed)
-			local restDot = initiateDecal(Map, tileX, tileY, "dot")
-			restDot.colour = arrowColour
-			restDot.flashing = 0.3
-			table.insert(player.decals, restDot)
+		if player.speed > 0 then
+			localArrowCreate(player.character.facing, player.character.facing, math.min(player.speed + 1, player.maxSpeed))
+			
+			localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/4, player.speed)
+			
+			localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/4, player.speed)
+			
+			if player.speed > 1 then
+				localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/2, player.speed - 1)
+				
+				localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/2, player.speed - 1)
+				
+				localArrowCreate(player.character.facing, player.character.facing - math.pi, player.speed - 1)
+			end
+			
+			if player.speed < player.maxSpeed then
+				local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, player.speed)
+				local restDot = initiateDecal(Map, tileX, tileY, "dot")
+				restDot.colour = arrowColour
+				restDot.flashing = 0.3
+				table.insert(player.decals, restDot)
+			end
 		end
 	end
 end

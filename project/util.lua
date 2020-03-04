@@ -93,6 +93,10 @@ function findAngleDirection(rawangle1, rawangle2)
 	end
 end
 
+function findAngleBetween(a1, a2, ratio)
+	return a1 + ratio*findAngleDirection(a1, a2)*distanceBetweenAngles(a1, a2)
+end
+
 function randBetween(n1, n2)
 	local diff = n2 - n1
 	return n1 + diff*math.random()

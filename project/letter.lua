@@ -42,7 +42,14 @@ end
 
 --Draw a letter at tile[x][y] on camera
 function drawLetter(letter, x, y, camera)
-	local drawX, drawY = getDrawPos(x, y, camera)
+	local actualX = x
+	local actualY = y
+	if letter.shaking then
+		actualX = actualX + randBetween(-letter.shaking, letter.shaking)
+		actualY = actualY + randBetween(-letter.shaking, letter.shaking)
+	end
+	
+	local drawX, drawY = getDrawPos(actualX, actualY, camera)
 	
 	if not quadBank[letter.letter] then
 		print("Letter missing: " .. letter.letter)

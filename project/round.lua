@@ -37,8 +37,10 @@ end
 
 --resolve all the infintry
 function resolveAITurn(enemy, player)
-	enemy.decideAction(enemy, player)
-	enemyAct(enemy, player)
+	if not enemy.dead then
+		enemy.decideAction(enemy, player)
+		enemyAct(enemy, player)
+	end
 end
 
 function getRoundLength(player, map)

@@ -8,7 +8,11 @@ kindProperties["blood"] = function(particle)
 	particle.trailStrength = 0.4
 	particle.trailFade = particle.trailStrength/particle.timeLeft
 	
-	friction = 4
+	--particle.friction = 4
+end
+kindProperties["arrowTrail"] = function(particle)
+	particle.infColour = {0.8, 0.8, 1, 1}
+	particle.influence = 1
 end
 
 function initiateParticle(map, x, y, speed, angle, duration, kind)

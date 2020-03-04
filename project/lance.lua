@@ -33,10 +33,26 @@ function placeLanceOnTile(lance, tile)
 	lance.tile = tile
 end
 
-function updateLancePos(lance)
+function rotateLanceToPos(lance, targetAngle)
 	local character = lance.character
-	local tile = getTileFromPoint(character.map, character.tile.x, character.tile.y, character.facing)
-	placeLanceOnTile(lance, tile)
+	local tile = getTileFromPoint(character.map, character.tile.x, character.tile.y, targetAngle)
+	
+	local placeable = checkTileWalkable(tile, character)
+	
+	if not placeable then
+		if tile.character then
+			if tile.character.side == character.side then
+				placeable = true
+			end
+		end
+	end
+	
+	if placeable then
+		placeLanceOnTile(lance, tile)
+		return true
+	else
+		return false
+	end
 end
 
 function cleanupDeadLances(lances)
@@ -53,6 +69,7 @@ function cleanupDeadLances(lances)
 end
 
 function checkLanceCollisions(characters)
+	local lanceCollision = false
 	for i = 1, #characters do
 		local character = characters[i]
 		local cTile = character.tile
@@ -71,12 +88,12 @@ function checkLanceCollisions(characters)
 				
 				damageCharacter(character, 10, angle, speed + 1)
 				-- There was a collision
-				return true
+				lanceCollision = true
 			end
 		end
 	end
 	-- There wasnt a collision
-	return false
+	return lanceCollision
 end
 
 function drawLances(lances, camera)

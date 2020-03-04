@@ -62,6 +62,13 @@ function checkTileWalkable(tile, character)
 			if character then
 				for i = 1, #tile.lances do
 					local lance = tile.lances[i]
+					
+					if character.master.speed then
+						if character.master.speed > 0 then
+							return true
+						end
+					end
+					
 					if lance.character.side ~= character.side then
 						return false
 					end

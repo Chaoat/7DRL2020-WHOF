@@ -7,7 +7,7 @@ function initiateCharacter(map, x, y, letter, master)
 	if master then
 		side = master.side
 	end
-	local character = {id = charID, x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false, blockedBy = nil, forceMove = false}
+	local character = {id = charID, x = x, y = y, facing = 0, tile = tile, letter = letter, map = map, approachingTile = tile, moving = false, lance = nil, side = side, master = master, active = false, blockedBy = nil, forceMove = false, swording = false}
 	--x and tile.x can be unequal, same with y. character.x determines draw pos, can be used for animation
 	
 	charID = charID + 1
@@ -35,6 +35,10 @@ function cleanupDeadCharacters(characters)
 	while i <= #characters do
 		local character = characters[i]
 		if character.dead then
+			local tileLetter = getMapTile(character.map, character.tile.x, character.tile.y).letter
+			tileLetter.letter = "x"
+			tileLetter.colour = {1, 0, 0, 1}
+			
 			removeCharFromTile(character)
 			character.tile.waitingForCharacter = false
 			if character.lance then
@@ -178,6 +182,45 @@ function multiSlide(character, targetX, targetY)
 	end
 end
 
+--Begin slashing process for a character
+function characterStartSlashing(character)
+	character.swording = true
+	character.letter.shaking = 0.2
+end
+function checkSlashConnections(characters)
+	for i = 1, #characters do
+		local character = characters[i]
+		local map = character.map
+		
+		if character.swording then
+			for j = 1, #map.activeCharacters do
+				local targetChar = map.activeCharacters[j]
+				
+				if targetChar.side ~= character.side then
+					if orthogDistance(character.tile.x, character.tile.y, targetChar.tile.x, targetChar.tile.y) == 1 then
+						characterSlash(character, targetChar)
+						return true
+					end
+				end
+			end
+		end
+	end
+	return false
+end
+function characterSlash(character, targetCharacter)
+	if targetCharacter then
+		local angleBetween = math.atan2(targetCharacter.tile.y - character.tile.y, targetCharacter.tile.x - character.tile.x)
+		local speed = 2
+		if character.master.speed then
+			speed = speed + character.master.speed/2
+		end
+		damageCharacter(targetCharacter, 5, findAngleBetween(character.facing, angleBetween, 0.8), speed)
+	end
+	
+	character.swording = false
+	character.letter.shaking = 0
+end
+
 --Given a character table and a camera, draw all the characters on the camera
 function drawCharacters(characters, camera)
 	for i = 1, #characters do
@@ -194,15 +237,18 @@ end
 function damageCharacter(character, damage, angle, speed)
 	if character.side == "enemy" then
 		damageEnemy(character.master, damage)
+	elseif character.side == "player" then
+		damagePlayer(character.master, damage)
 	end
 	
 	if character.master then
-		if character.master.dead then
-			local tileLetter = getMapTile(character.map, character.tile.x, character.tile.y).letter
-			tileLetter.letter = "x"
-			tileLetter.colour = {1, 0, 0, 1}
-			spawnBloodBurst(character.map, character.tile.x + 0.5, character.tile.y + 0.5, 5*speed, angle)
+		if character.master.speed then
+			local speedRatio = speed/(speed + character.master.speed)
+			speed = (1 - speedRatio)*character.master.speed + speedRatio*speed
+			angle = findAngleBetween(character.facing, angle, speedRatio)
 		end
+		
+		spawnBloodBurst(character.map, character.tile.x + 0.5, character.tile.y + 0.5, 5*speed, angle)
 	end
 end
 
@@ -218,10 +264,14 @@ function shiftClockwise(character)
 	if degFacing >= 360 then
 		degFacing = degFacing - 360
 	end
-	character.facing = math.rad(degFacing)
 	
+	local blocked = false
 	if character.lance then
-		updateLancePos(character.lance)
+		blocked = not rotateLanceToPos(character.lance, math.rad(degFacing))
+	end
+	
+	if not blocked then
+		character.facing = math.rad(degFacing)
 	end
 end
 
@@ -232,9 +282,13 @@ function shiftAnticlockwise(character)
 	if degFacing <= 0 then
 		degFacing = degFacing + 360
 	end
-	character.facing = math.rad(degFacing)
 	
+	local blocked = false
 	if character.lance then
-		updateLancePos(character.lance)
+		blocked = not rotateLanceToPos(character.lance, math.rad(degFacing))
+	end
+	
+	if not blocked then
+		character.facing = math.rad(degFacing)
 	end
 end
