@@ -37,6 +37,9 @@ function love.load()
 	spawnStructure(Map, 0, -10, "tree", 0)
 	
 	GlobalTime = 0
+	
+	ScreenX = 800
+	ScreenY = 600
 end
 
 function love.update(dt)	
@@ -53,4 +56,5 @@ end
 
 function love.draw()
 	drawMap(Map, Camera)
+	drawPlayerBowRangeOverlay(Player, Camera)
 end

@@ -112,7 +112,7 @@ function drawTiles(map, camera)
 				drawBackdrop(tile.letter, i, j, camera)
 			else
 				drawLetter(tile.letter, i, j, camera)
-			end
+			end			
 			
 			tile.letter.momentaryInfluence = 0
 		end

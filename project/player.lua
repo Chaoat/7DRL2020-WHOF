@@ -109,18 +109,21 @@ function playerKeypressed(player, camera, key, curRound)
 			playerCancelFiring(player, camera)
 		end
 	elseif action == "shoot" then
-		if player.firing then
-			fireArrow(player.character, camera.cursorX, camera.cursorY)
-			playerCancelFiring(player, camera)
-			startRound(player, player.character.map, curRound)
-		else
-			if camera.movingCursor then
-				camera.cursor.remove = true
+		if player.arrows > 0 then
+			if player.firing then
+				player.arrows = player.arrows - 1
+				fireArrow(player.character, camera.cursorX, camera.cursorY)
+				playerCancelFiring(player, camera)
+				startRound(player, player.character.map, curRound)
+			else
+				if camera.movingCursor then
+					camera.cursor.remove = true
+				end
+				
+				camera.movingCursor = true
+				initCameraCursor(camera, player, true)
+				player.firing = true
 			end
-			
-			camera.movingCursor = true
-			initCameraCursor(camera, player, true)
-			player.firing = true
 		end
 	elseif action == "cancel" then
 		if player.firing then
@@ -225,6 +228,14 @@ function getPossiblePlayerTiles(player)
 	
 	--Rest
 	table.insert(tiles, getTileInLine(player.speed, player.character.facing))
+	--Accelerate
+	if player.speed < player.maxSpeed then
+		table.insert(tiles, getTileInLine(player.speed + 1, player.character.facing))
+	end
+	--Slow
+	if player.speed > 0 then
+		table.insert(tiles, getTileInLine(player.speed - 1, player.character.facing))
+	end
 	
 	return tiles
 end

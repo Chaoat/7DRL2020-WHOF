@@ -12,3 +12,18 @@ function fireArrow(character, targetX, targetY)
 		damageCharacter(targetTile.character, 2, math.atan2(targetY - character.tile.y, targetX - character.tile.x), 4)
 	end
 end
+
+function drawPlayerBowRangeOverlay(player, camera)
+	if player.firing then
+		love.graphics.setColor(0, 0, 0, 0.8)
+		local topSquareEnd = (0.5*camera.tilesTall*camera.tileHeight) - (camera.tileHeight*(player.fireRange + 0.5))
+		love.graphics.rectangle('fill', 0, 0, ScreenX, topSquareEnd)
+		local botSquareStart = (0.5*camera.tilesTall*camera.tileHeight) + (camera.tileHeight*(player.fireRange + 0.5))
+		love.graphics.rectangle('fill', 0, botSquareStart, ScreenX, ScreenY - botSquareStart)
+		
+		local leftSquareEnd = (0.5*camera.tilesWide*camera.tileWidth) - (camera.tileWidth*(player.fireRange + 0.5))
+		love.graphics.rectangle('fill', 0, topSquareEnd, leftSquareEnd, botSquareStart - topSquareEnd)
+		local rightSquareStart = (0.5*camera.tilesWide*camera.tileWidth) + (camera.tileWidth*(player.fireRange + 0.5))
+		love.graphics.rectangle('fill', rightSquareStart, topSquareEnd, ScreenX - rightSquareStart, botSquareStart - topSquareEnd)
+	end
+end

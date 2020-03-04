@@ -176,6 +176,8 @@ end
 
 function enemyAct(enemy, player)
 	if enemy.firing then
+		fireArrow(enemy.character, enemy.targetX, enemy.targetY)
+		enemy.firingdecal.remove = true
 		enemy.firing = false
 		enemy.reloading = enemy.bow.reloadTime
 	elseif not enemy.character.swording then
@@ -207,9 +209,20 @@ function determineEnemyAttack(enemies, player, possiblePlayerTiles)
 			end
 		end
 		if enemy.stance == "shooting" then
-			if enemy.reloading <= 0 then
-				local decal = initiateDecal(enemy.character.map, possiblePlayerTiles[1].x, possiblePlayerTiles[1].y, "square")
-				enemy.firing = true
+			if enemy.reloading <= 0 and not enemy.firing then
+				if #possiblePlayerTiles > 0 then
+					enemy.targetX = possiblePlayerTiles[1].x
+					enemy.targetY = possiblePlayerTiles[1].y
+					local decal = initiateDecal(enemy.character.map, possiblePlayerTiles[1].x, possiblePlayerTiles[1].y, "square")
+					
+					decal.colour = {1, 1, 0, 0.8}
+					decal.flashing = 0.1
+					
+					enemy.firingdecal = decal
+					enemy.firing = true
+					
+					table.remove(possiblePlayerTiles, 1)
+				end
 			else
 				enemy.reloading = enemy.reloading - 1
 			end
