@@ -13,6 +13,7 @@ end
 kindProperties["arrowTrail"] = function(particle)
 	particle.infColour = {0.8, 0.8, 1, 1}
 	particle.influence = 1
+	particle.infFade = 1
 end
 
 function initiateParticle(map, x, y, speed, angle, duration, kind)

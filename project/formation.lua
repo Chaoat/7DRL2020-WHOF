@@ -1,18 +1,22 @@
 --Create a formation from a list of enemies
-function initiateFormation(map, enemyList, x, y, template, facing)
-	local formation = {map = map, members = {}, x = x, y = y, size = template.size, order = "follow", facing = facing, behaviour = template.behaviour, leniency = template.leniency}
+function initiateFormation(map, enemyList, x, y, template, formFacing)
+	local formation = {map = map, members = {}, x = x, y = y, size = template.size, order = "follow", facing = formFacing, behaviour = template.behaviour, leniency = template.leniency}
 	for i = 1, #enemyList do
 		local enemy = enemyList[i]
+		local templateEntry = template.positions[i]
 		
-		local posX = enemy.character.x - x
-		local posY = enemy.character.y - y
-		local facing = enemy.character.facing - facing
+		local posX = templateEntry.x
+		local posY = templateEntry.y
+		local facing = templateEntry.facing
+		if not facing then
+			facing = 0
+		end
 		table.insert(formation.members, {enemy = enemy, posX = posX, posY = posY, facing = facing})
 		
 		enemy.formation = formation
 		enemy.formationX = x + posX
 		enemy.formationY = y + posY
-		enemy.formationFacing = facing + enemy.character.facing
+		enemy.formationFacing = formFacing + facing
 	end
 	
 	table.insert(map.formations, formation)
@@ -84,10 +88,15 @@ function determineFormationAction(map, player, formation)
 	
 	local action = "none"
 	if formation.behaviour == "chase" then
-		targetX = player.character.x
-		targetY = player.character.y
+		targetX = player.character.tile.x
+		targetY = player.character.tile.y
 		if membersNotReady <= #formation.members*formation.leniency then 
 			local angleToTarget = math.atan2(targetY - formation.y, targetX - formation.x)
+			
+			if formation.facing == nil then
+				error("wat")
+			end
+			
 			if distanceBetweenAngles(formation.facing, angleToTarget) >= math.pi/2 then
 				targetFacing = cardinalRound(angleToTarget)
 				action = "rotate"
@@ -97,10 +106,12 @@ function determineFormationAction(map, player, formation)
 		end
 		
 		if orthogDistance(targetX, targetY, formation.x, formation.y) <= formation.size/2 + 3 then
-			formation.order = "disperse"
+			formation.order = "chase"
 		else
-			formation.order = "follow"
+			formation.order = "formation"
 		end
+	elseif formation.behaviour == "guard" then
+		formation.order = "hold"
 	end
 	
 	--print("formation members not ready: " .. membersNotReady)

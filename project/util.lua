@@ -12,8 +12,16 @@ function angleBetweenVectors(a, b, x, y)
 end
 	
 function randomFromTable(list)
+	if #list == 0 then
+		return nil, nil
+	end
+	
 	local i = math.ceil(math.random()*#list)
 	return list[i], i
+end
+
+function randomPointInArea(x1, y1, x2, y2)
+	return math.floor(randBetween(x1, x2 + 1)), math.floor(randBetween(y1, y2 + 1))
 end
 
 function distanceBetweenAngles(rawangle1, rawangle2)

@@ -66,6 +66,16 @@ function getTilesInLine(map, x1, y1, x2, y2)
 	return tileList
 end
 
+function getTilesFromPoint(map, x1, y1, angle, dist)
+	local tileList = {getMapTile(map, x1, y1)}
+	for i = 1, dist do
+		local dirX, dirY = orthogRotate(i, 0, angle)
+		table.insert(tileList, getMapTile(map, x1 + dirX, y1 + dirY))
+	end
+	
+	return tileList
+end
+
 function drawMap(map, camera)
 	applyParticleInfluence(map, map.particles)
 	local visibleCharacters, visibleLances = drawTiles(map, camera)

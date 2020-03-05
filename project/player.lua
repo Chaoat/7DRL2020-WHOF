@@ -62,102 +62,104 @@ end
 
 --Detects player input to start a new round
 function playerKeypressed(player, camera, key, curRound)
-	local action = reverseControls[key]
-	
-	local dirX = 0
-	local dirY = 0
-	local kind = "none"
-	if action == "moveBotLeft" then
-		kind = "movement"
-		dirX = -1
-		dirY = 1
-	elseif action == "moveBot" then
-		kind = "movement"
-		dirX = 0
-		dirY = 1
-	elseif action == "moveBotRight" then
-		kind = "movement"
-		dirX = 1
-		dirY = 1
-	elseif action == "moveRight" then
-		kind = "movement"
-		dirX = 1
-		dirY = 0
-	elseif action == "moveTopRight" then
-		kind = "movement"
-		dirX = 1
-		dirY = -1
-	elseif action == "moveTop" then
-		kind = "movement"
-		dirX = 0
-		dirY = -1
-	elseif action == "moveTopLeft" then
-		kind = "movement"
-		dirX = -1
-		dirY = -1
-	elseif action == "moveLeft" then
-		kind = "movement"
-		dirX = -1
-		dirY = 0
-	elseif action == "moveStay" then
-		kind = "rest"
-	elseif action == "sword" then
-		kind = "sword"
-	elseif action == "examine" then
-		if not player.firing then
+	if not player.dead then
+		local action = reverseControls[key]
+		
+		local dirX = 0
+		local dirY = 0
+		local kind = "none"
+		if action == "moveBotLeft" then
+			kind = "movement"
+			dirX = -1
+			dirY = 1
+		elseif action == "moveBot" then
+			kind = "movement"
+			dirX = 0
+			dirY = 1
+		elseif action == "moveBotRight" then
+			kind = "movement"
+			dirX = 1
+			dirY = 1
+		elseif action == "moveRight" then
+			kind = "movement"
+			dirX = 1
+			dirY = 0
+		elseif action == "moveTopRight" then
+			kind = "movement"
+			dirX = 1
+			dirY = -1
+		elseif action == "moveTop" then
+			kind = "movement"
+			dirX = 0
+			dirY = -1
+		elseif action == "moveTopLeft" then
+			kind = "movement"
+			dirX = -1
+			dirY = -1
+		elseif action == "moveLeft" then
+			kind = "movement"
+			dirX = -1
+			dirY = 0
+		elseif action == "moveStay" then
+			kind = "rest"
+		elseif action == "sword" then
+			kind = "sword"
+		elseif action == "examine" then
+			if not player.firing then
+				if camera.movingCursor then
+					camera.movingCursor = false
+					camera.cursor.remove = true
+				else
+					camera.movingCursor = true
+					initCameraCursor(camera, player, false)
+				end
+			else
+				playerCancelFiring(player, camera)
+			end
+		elseif action == "shoot" then
+			if player.arrows > 0 then
+				if player.firing then
+					player.arrows = player.arrows - 1
+					fireArrow(player.character, camera.cursorX, camera.cursorY)
+					playerCancelFiring(player, camera)
+					startRound(player, player.character.map, curRound)
+				else
+					if camera.movingCursor then
+						camera.cursor.remove = true
+					end
+					
+					camera.movingCursor = true
+					initCameraCursor(camera, player, true)
+					player.firing = true
+				end
+			end
+		elseif action == "cancel" then
+			if player.firing then
+				playerCancelFiring(player, camera)
+			end
 			if camera.movingCursor then
 				camera.movingCursor = false
 				camera.cursor.remove = true
-			else
-				camera.movingCursor = true
-				initCameraCursor(camera, player, false)
 			end
-		else
-			playerCancelFiring(player, camera)
 		end
-	elseif action == "shoot" then
-		if player.arrows > 0 then
-			if player.firing then
-				player.arrows = player.arrows - 1
-				fireArrow(player.character, camera.cursorX, camera.cursorY)
-				playerCancelFiring(player, camera)
-				startRound(player, player.character.map, curRound)
-			else
-				if camera.movingCursor then
-					camera.cursor.remove = true
+		
+		--Player made an input change
+		if kind == "movement" then
+			--print(curRound.finished)
+			if curRound.finished then
+				if not camera.movingCursor then
+					determinePlayerAction(player, dirX, dirY, curRound)
+				else
+					moveCameraCursor(camera, dirX, dirY, player.firing, player)
 				end
-				
-				camera.movingCursor = true
-				initCameraCursor(camera, player, true)
-				player.firing = true
 			end
+		elseif kind == "rest" then
+			--Player made a blank move with no input then just start the round
+			startRound(player, player.character.map, curRound)
+		elseif kind == "sword" then
+			characterStartSlashing(player.character)
+			startRound(player, player.character.map, curRound)
 		end
-	elseif action == "cancel" then
-		if player.firing then
-			playerCancelFiring(player, camera)
-		end
-		if camera.movingCursor then
-			camera.movingCursor = false
-			camera.cursor.remove = true
-		end
-	end
-	
-	--Player made an input change
-	if kind == "movement" and not player.dead then
-		--print(curRound.finished)
-		if curRound.finished then
-			if not camera.movingCursor then
-				determinePlayerAction(player, dirX, dirY, curRound)
-			else
-				moveCameraCursor(camera, dirX, dirY, player.firing, player)
-			end
-		end
-	elseif kind == "rest" then
-		--Player made a blank move with no input then just start the round
-		startRound(player, player.character.map, curRound)
-	elseif kind == "sword" then
-		characterStartSlashing(player.character)
-		startRound(player, player.character.map, curRound)
 	end
 end
 

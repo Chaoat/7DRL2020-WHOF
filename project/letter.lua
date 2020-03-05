@@ -20,6 +20,7 @@ function doFontPreProcessing()
 	addQuadToBank("/", 2, 4)
 	addQuadToBank("-", 3, 4)
 	addQuadToBank("+", 4, 4)
+	addQuadToBank("=", 6, 4)
 	
 	addQuadToBank(";", 8, 4)
 	addQuadToBank(",", 9, 4)
@@ -67,8 +68,8 @@ function drawLetter(letter, x, y, camera)
 	
 	local drawX, drawY = getDrawPos(actualX, actualY, camera)
 	
-	if not quadBank[letter.letter] then
-		print("Letter missing: " .. letter.letter)
+	if quadBank[letter.letter] == nil then
+		error("Letter missing: " .. letter.letter)
 	end
 	
 	if letter.backColour then

@@ -1,7 +1,34 @@
 local structureTemplates = {}
+local constructionList = {}
+
+function getRandomConstructionName()
+	return randomFromTable(constructionList)
+end
+
+function getStructureSize(name)
+	return structureTemplates[name].size
+end
 
 function spawnStructure(map, x, y, structureName, direction)
 	local template = structureTemplates[structureName]
+	
+	if not template.rotatable then
+		direction = 0
+	end
+	
+	--CheckWillFit
+	for i = 1, template.size do
+		for j = 1, template.size do
+			local offX = i - math.ceil(template.size/2)
+			local offY = j - math.ceil(template.size/2)
+			
+			local targetX = x + offX
+			local targetY = y + offY
+			if not checkTileWalkable(getMapTile(map, targetX, targetY)) then
+				return false
+			end
+		end
+	end
 	
 	for i = 1, template.size do
 		for j = 1, template.size do
@@ -17,11 +44,12 @@ function spawnStructure(map, x, y, structureName, direction)
 			end
 		end
 	end
+	return true
 end
 
-local function newStructureTemplate(name, rotatable, colours, tiles, symbols, tileColours)
+local function newStructureTemplate(name, natural, rotatable, colours, tiles, symbols, tileColours)
 	local size = #tiles
-	local template = {name = name, size = size, rotatable = rotatable, colours = {}, tiles = {}, symbols = {}}
+	local template = {name = name, size = size, natural = natural, rotatable = rotatable, colours = {}, tiles = {}, symbols = {}}
 	for i = 1, size do
 		template.colours[i] = {}
 		template.tiles[i] = {}
@@ -47,10 +75,13 @@ local function newStructureTemplate(name, rotatable, colours, tiles, symbols, ti
 	end
 	
 	structureTemplates[name] = template
+	if not natural then
+		table.insert(constructionList, name)
+	end
 end
 
 --Tree
-newStructureTemplate("tree", false, {
+newStructureTemplate("tree", true, false, {
 	a = {80/255, 1, 0, 1},
 	b = {72/255, 229/255, 0, 1},
 	c = {55/255, 175/255, 0, 1},
@@ -77,7 +108,7 @@ newStructureTemplate("tree", false, {
 )
 
 --Small Wall
-newStructureTemplate("smallwall", true, {
+newStructureTemplate("smallwall", false, true, {
 	a = {51/255, 51/255, 51/255, 1},
 	b = {77/255, 77/255, 77/255, 1}
 }, {
@@ -102,7 +133,7 @@ newStructureTemplate("smallwall", true, {
 )
 
 --Small Campfire
-newStructureTemplate("smallfire", false, {
+newStructureTemplate("smallfire", false, false, {
 	a = {217/255, 0, 0, 1},
 	b = {51/255, 51/255, 51/255, 1}
 }, {
@@ -121,7 +152,7 @@ newStructureTemplate("smallfire", false, {
 )
 
 --Small tall wall
-newStructureTemplate("smalltallwall", true, {
+newStructureTemplate("smalltallwall", false, true, {
 	a = {51/255, 51/255, 51/255, 1},
 	b = {77/255, 77/255, 77/255, 1}
 }, {
@@ -146,7 +177,7 @@ newStructureTemplate("smalltallwall", true, {
 )
 
 --Small tent
-newStructureTemplate("smalltent", true, {
+newStructureTemplate("smalltent", false, true, {
 	a = {1, 1, 1, 1},
 	b = {121/255, 121/255, 121/255, 1},
 	c = {51/255, 51/255, 51/255, 1}

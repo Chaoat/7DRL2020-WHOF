@@ -4,10 +4,10 @@ local enemyColour = {0.5, 0.5, 1, 1}
 enemyKinds["swordsman"]= {
 	letter = initiateLetter("S", enemyColour),
 	decideAction = function(enemy, target)
-		if enemy.formation.order == "disperse" then
+		if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y) <= 4 then
 			enemy.stance = "chase"
 		else
-			enemy.stance = "formation"
+			enemy.stance = enemy.formation.order
 		end
 	end,
 	lance = false,
@@ -17,14 +17,10 @@ enemyKinds["swordsman"]= {
 enemyKinds["lancer"]= {
 	letter = initiateLetter("L", enemyColour),
 	decideAction = function(enemy, target)
-		if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y) <= 4 then
+		if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y) <= 2 then
 			enemy.stance = "hold"
 		else
-			if enemy.formation.order == "disperse" then
-				enemy.stance = "chase"
-			else
-				enemy.stance = "formation"
-			end
+			enemy.stance = enemy.formation.order
 		end
 	end,
 	lance = true,
@@ -34,19 +30,12 @@ enemyKinds["bowman"]= {
 	letter = initiateLetter("B", enemyColour),
 	decideAction = function(enemy, target)
 		local distance = orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y)
-		
-		
-		
 		if distance <= enemy.fleeRange then
 			enemy.stance = "flee"
 		elseif distance <= enemy.bow.shootRange + 2 then
 			enemy.stance = "shooting"
 		else
-			if enemy.formation.order == "disperse" then
-				enemy.stance = "chase"
-			else
-				enemy.stance = "formation"
-			end
+			enemy.stance = enemy.formation.order
 		end
 	end,
 	lance = false,
@@ -57,11 +46,7 @@ enemyKinds["bowman"]= {
 enemyKinds["messenger"]= {
 	letter = initiateLetter("M", enemyColour),
 	decideAction = function(enemy, target)
-		if enemy.formation.order == "disperse" then
-			enemy.stance = "chase"
-		else
-			enemy.stance = "formation"
-		end
+		enemy.stance = enemy.formation.order
 	end,
 	lance = false,
 	bleeds = true
@@ -178,6 +163,21 @@ local enemyChase = function(enemy, target)
 	enemyRotateThenMoveToPoint(enemy, target.character.tile.x, target.character.tile.y)
 end
 
+local enemyHold = function(enemy, target)
+	if enemy.character.lance then
+		local playerTiles = getTilesFromPoint(target.character.map, target.character.tile.x, target.character.tile.y, target.character.facing, 3*target.speed)
+		for i = 1, #playerTiles do
+			local tile = playerTiles[i]
+			
+			if orthogDistance(enemy.character.tile.x, enemy.character.tile.y, tile.x, tile.y) <= 1 then
+				enemyRotateToPoint(enemy, tile.x, tile.y)
+				return
+			end
+		end
+		enemyRotateToPoint(enemy, target.character.tile.x, target.character.tile.y)
+	end
+end
+
 local enemyFollowFormation = function(enemy)
 	if distanceBetweenAngles(enemy.formationFacing, enemy.character.facing) > 0 and enemy.character.lance then
 		enemyRotate(enemy, enemy.formationFacing)
@@ -199,7 +199,7 @@ function enemyAct(enemy, player)
 		elseif enemy.stance == "formation" then
 			enemyFollowFormation(enemy)
 		elseif enemy.stance == "hold" then
-			enemyRotateToPoint(enemy, player.character.tile.x, player.character.tile.y)
+			enemyHold(enemy, player)
 		elseif enemy.stance == "flee" then
 			enemyFlee(enemy, player)
 		end

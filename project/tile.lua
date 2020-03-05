@@ -103,14 +103,19 @@ function drawTiles(map, camera)
 	for i = startX, startX + tilesWide do
 		for j = startY, startY + tilesTall do
 			local tile = getMapTile(map, i, j)
+			local occupied = false
 			if tile.character then
 				table.insert(visibleCharacters, tile.character)
 				--drawLetter(initiateLetter("#", {1, 1, 0, 1}), i, j, camera)
 				drawBackdrop(tile.letter, i, j, camera)
-			elseif tileHasLance(tile) then
+				occupied = true
+			end
+			if tileHasLance(tile) then
 				table.insert(visibleLances, tileHasLance(tile))
 				drawBackdrop(tile.letter, i, j, camera)
-			else
+				occupied = true
+			end
+			if not occupied then
 				drawLetter(tile.letter, i, j, camera)
 			end			
 			

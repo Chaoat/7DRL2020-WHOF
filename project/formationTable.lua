@@ -1,5 +1,14 @@
 local formations = {}
 
+function preProcessFormations()
+	for i = 1, #formations do
+		local formation = formations[i]
+		for j = 1, #formation.positions do
+			formation.positions[j].x = -formation.positions[j].x
+		end
+	end
+end
+
 function getFormationTemplateInDifficultyRange(minDiff, maxDiff)
 	local possibleFormations = {}
 	for i = 1, #formations do
@@ -21,9 +30,7 @@ end
 local function createFormationTemplate(difficulty, behaviour, positions, leniency)
 	local radius = 0
 	for i = 1, #positions do
-		positions[i].x = -positions[i].x
-		
-		radius = math.max(math.abs(positions[i].x), math.abs(positions[i].y))
+		radius = math.max(radius, math.max(math.abs(positions[i].x), math.abs(positions[i].y)))
 	end
 	
 	if not leniency then

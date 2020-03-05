@@ -1,5 +1,5 @@
 function initiateInterface(player)
-	local interface = {tilesWide = 50, tilesHigh = 14, frontColour = {1, 1, 1, 1}, backColour = {0, 0, 0, 0.8}, buttons = {}, buttonTiles = {}, text = {}, player = player, healthBar = {x = 29, y = 11}, arrowBar = {x = 17, y = 8}}
+	local interface = {tilesWide = 50, tilesHigh = 12, frontColour = {1, 1, 1, 1}, backColour = {0, 0, 0, 0.8}, buttons = {}, buttonTiles = {}, text = {}, player = player, healthBar = {x = 29, y = 10}, arrowBar = {x = 17, y = 8}}
 	for i = 0, interface.tilesWide do
 		interface.buttonTiles[i] = {}
 	end

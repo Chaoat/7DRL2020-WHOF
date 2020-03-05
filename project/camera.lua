@@ -1,19 +1,28 @@
 --creates a camera
-function initiateCamera(screenX, screenY, width, height, centerX, centerY, tilesWide, tilesTall)
-	local camera = {screenX = screenX, screenY = screenY, width = width, height = height, centerX = centerX, centerY = centerY, tileWidth = nil, tileHeight = nil, tilesWide = tilesWide, tilesTall = tilesTall, movingCursor = false, cursor = nil, cursorX = 0, cursorY = 0}
+function initiateCamera(screenX, screenY, width, height, centerX, centerY, tilesWide, tilesTall, minTileWidth, minTileHeight)
+	local camera = {screenX = screenX, screenY = screenY, width = width, height = height, centerX = centerX, centerY = centerY, tileWidth = nil, tileHeight = nil, targetTilesWide = tilesWide, tilesWide = nil, targetTilesTall = tilesTall, tilesTall = nil, minTileWidth = minTileWidth, minTileHeight = minTileHeight, movingCursor = false, cursor = nil, cursorX = 0, cursorY = 0}
 	updateCameraSize(camera, width, height)
 	return camera
 end
 
 --Updates the width and height of the camera. Necessary so that dependent variable can also be updated
 function updateCameraSize(camera, width, height)
+	camera.tilesWide = camera.targetTilesWide
+	camera.tilesTall = camera.targetTilesTall
+	
 	camera.width = width
 	camera.height = height
-	camera.tileWidth = math.floor(camera.width/camera.tilesWide)
-	camera.tileHeight = math.floor(camera.height/camera.tilesTall)
+	camera.tileWidth = math.min(math.floor(camera.width/camera.tilesWide), math.floor(camera.height/camera.tilesTall))
+	camera.tileHeight = camera.tileWidth
 	
-	camera.tileWidth = math.min(camera.tileWidth, camera.tileHeight)
-	camera.tileHeight = math.min(camera.tileWidth, camera.tileHeight)
+	if camera.tileWidth < camera.minTileWidth then
+		camera.tileWidth = camera.minTileWidth
+		camera.tilesWide = math.ceil(camera.width/camera.tileWidth)
+	end
+	if camera.tileHeight < camera.minTileHeight then
+		camera.tileHeight = camera.minTileHeight
+		camera.tilesTall = math.ceil(camera.height/camera.tileHeight)
+	end
 end
 
 function initCameraCursor(camera, player, firing)
