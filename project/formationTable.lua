@@ -1,3 +1,9 @@
+local enemyDifficulties = {}
+enemyDifficulties["swordsman"] = 1
+enemyDifficulties["lancer"] = 2
+enemyDifficulties["bowman"] = 3
+enemyDifficulties["barrier"] = 0.5
+
 local formations = {}
 
 function preProcessFormations()
@@ -28,9 +34,19 @@ end
 --Hold: Do not move from formation
 --Loose: Spawn in formation then split up into individual
 local function createFormationTemplate(difficulty, behaviour, positions, leniency)
+	local countDifficulty = false
+	if difficulty == nil then
+		countDifficulty = true
+		difficulty = 0
+	end
+	
 	local radius = 0
 	for i = 1, #positions do
 		radius = math.max(radius, math.max(math.abs(positions[i].x), math.abs(positions[i].y)))
+		
+		if countDifficulty then
+			difficulty = difficulty + enemyDifficulties[positions[i].kind]
+		end
 	end
 	
 	if not leniency then
@@ -45,10 +61,18 @@ local function createFormationTemplate(difficulty, behaviour, positions, lenienc
 	table.insert(formations, formation)
 end
 
+--..B
+--.S.
+--...
+createFormationTemplate(nil, "chase", {
+	{kind = "swordsman", x = 0, y = 0},
+	{kind = "bowman", x = -1, y = -1},
+})
+
 --.S.
 --..S
 --.S.
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = 1, y = 0},
 	{kind = "swordsman", x = 0, y = -1},
 	{kind = "swordsman", x = 0, y = 1}
@@ -57,7 +81,7 @@ createFormationTemplate(1, "chase", {
 --S.S
 --.B.
 --S.S
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = 1, y = 1},
 	{kind = "swordsman", x = 1, y = -1},
 	{kind = "bowman", x = 0, y = 0},
@@ -68,7 +92,7 @@ createFormationTemplate(1, "chase", {
 --...
 --LBL
 --.L.
-createFormationTemplate(2, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = -1, y = 0},
 	{kind = "lancer", x = 1, y = 0},
 	{kind = "lancer", x = 0, y = -1},
@@ -78,7 +102,7 @@ createFormationTemplate(2, "chase", {
 --.L.
 --.L.
 --.L.
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = 0, y = 0},
 	{kind = "lancer", x = 0, y = -1},
 	{kind = "lancer", x = 0, y = 1}
@@ -87,7 +111,7 @@ createFormationTemplate(1, "chase", {
 --.B.
 --.B.
 --.B.
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "bowman", x = 0, y = 0},
 	{kind = "bowman", x = 0, y = -1},
 	{kind = "bowman", x = 0, y = 1}
@@ -96,7 +120,7 @@ createFormationTemplate(1, "chase", {
 --.S.
 --L..
 --.S.
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = 0, y = -1},
 	{kind = "lancer", x = -1, y = 0},
 	{kind = "swordsman", x = 0, y = 1}
@@ -105,7 +129,7 @@ createFormationTemplate(1, "chase", {
 --.S.
 --S.B
 --.S.
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = 0, y = -1},
 	{kind = "swordsman", x = -1, y = 0},
 	{kind = "bowman", x = 1, y = 0},
@@ -115,7 +139,7 @@ createFormationTemplate(1, "chase", {
 --...
 --LSB
 --...
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = -1, y = 0},
 	{kind = "swordsman", x = 0, y = 0},
 	{kind = "bowman", x = 1, y = 0}
@@ -124,7 +148,7 @@ createFormationTemplate(1, "chase", {
 --S..
 --L.B
 --S..
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = -1, y = 0},
 	{kind = "swordsman", x = -1, y = -1},
 	{kind = "swordsman", x = -1, y = 1},
@@ -136,7 +160,7 @@ createFormationTemplate(1, "chase", {
 --L.S.L
 --..S..
 --.....
-createFormationTemplate(3, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = 2, y = 0},
 	{kind = "swordsman", x = 0, y = -1},
 	{kind = "swordsman", x = 0, y = 0},
@@ -149,7 +173,7 @@ createFormationTemplate(3, "chase", {
 --L.B.L
 --.....
 --..L..
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = -2, y = 0},
 	{kind = "lancer", x = 0, y = -2},
 	{kind = "bowman", x = 0, y = 0},
@@ -162,7 +186,7 @@ createFormationTemplate(1, "chase", {
 --S..B.
 --S..B.
 --.S...
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = -2, y = 0},
 	{kind = "swordsman", x = -2, y = -1},
 	{kind = "swordsman", x = -2, y = 1},
@@ -178,7 +202,7 @@ createFormationTemplate(1, "chase", {
 --.L.S.
 --.S.L.
 --.L.S.
-createFormationTemplate(6, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = -1, y = 2},
 	{kind = "lancer", x = -1, y = 1},
 	{kind = "swordsman", x = -1, y = 0},
@@ -196,7 +220,7 @@ createFormationTemplate(6, "chase", {
 --.LB..
 --.LB..
 --..L..
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = 0, y = 2},
 	{kind = "lancer", x = -1, y = 1},
 	{kind = "lancer", x = -1, y = 0},
@@ -212,7 +236,7 @@ createFormationTemplate(1, "chase", {
 --.....
 --LB...
 --.S.S.
-createFormationTemplate(1, "chase", {
+createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = -2, y = 2},
 	{kind = "swordsman", x = 0, y = 2},
 	{kind = "bowman", x = -1, y = 1},
@@ -228,7 +252,7 @@ createFormationTemplate(1, "chase", {
 --.#...
 --.#B..
 --.L...
-createFormationTemplate(1, "guard", {
+createFormationTemplate(nil, "guard", {
 	{kind = "lancer", x = -1, y = 2},
 	{kind = "lancer", x = -1, y = -2},
 	{kind = "bowman", x = 0, y = 1},
@@ -238,6 +262,6 @@ createFormationTemplate(1, "guard", {
 	{kind = "barrier", x = -1, y = 1}
 })
 
-createFormationTemplate(0, "intercept", {
-	{kind = "lancer", x = 0, y = 0}
+createFormationTemplate(0, "chase", {
+	{kind = "swordsman", x = 0, y = 0}
 })

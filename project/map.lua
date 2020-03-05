@@ -1,56 +1,7 @@
-local treeList = {"tree"}
-
-function initiateMap()
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}, treeNoiseMult = 0.004, treeNoiseXOff = math.random(), treeNoiseYOff = math.random()}
-	fillMapArea(map, "ground", -200, -200, 200, 200)
+function initiateMap(chunkSize)
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, inactiveEnemies = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}, treeNoiseMult = 0.004, treeNoiseXOff = math.random(), treeNoiseYOff = math.random(), chunkSize = chunkSize}
+	fillMapArea(map, "ground", -chunkSize/2, -chunkSize/2, chunkSize/2, chunkSize/2)
 	return map
-end
-
-function expandMap(map, tileKind, newTileX, newTileY)
-	if map.minX > newTileX then
-		map.minX = newTileX
-	elseif map.maxX < newTileX then
-		map.maxX = newTileX
-	end
-	if map.minY > newTileY then
-		map.minY = newTileY
-	elseif map.maxY < newTileY then
-		map.maxY = newTileY
-	end
-	
-	for i = map.minX, map.maxX do
-		if map.tiles[i] == nil then
-			map.tiles[i] = {}
-		end
-		
-		for j = map.minY, map.maxY do
-			if map.tiles[i][j] == nil then
-				map.tiles[i][j] = initiateTile(i, j, "ground")
-				forestVal = love.math.noise(map.treeNoiseMult*i + map.treeNoiseXOff, map.treeNoiseMult*j + map.treeNoiseYOff)
-				
-				local cutoffVal = 0.7
-				local treeChance = ((forestVal - (1 - cutoffVal))/cutoffVal)*0.01
-				if math.random() < treeChance then
-					map.tiles[i][j].spawnTree = true
-				end
-			end
-		end
-	end
-	
-	for i = map.minX, map.maxX do
-		for j = map.minY, map.maxY do
-			local tile = getMapTile(map, i, j)
-			if tile.spawnTree then
-				if spawnTree(map, i, j) then
-					tile.spawnTree = false 
-				end
-			end
-		end
-	end
-end
-
-function spawnTree(map, x, y)
-	return spawnStructure(map, x, y, randomFromTable(treeList), randomFromTable({0, math.pi/2, math.pi, -math.pi/2}))
 end
 
 function fillMapArea(map, tileKind, x1, y1, x2, y2)
@@ -62,6 +13,20 @@ function updateMap(map, dt)
 	updateActiveCharacters(map.activeCharacters, dt)
 	updateParticles(map, map.particles, dt)
 	updateDecals(map.decals, dt)
+end
+
+function checkChunkExpansion(map, x, y)
+	if map.maxX - x <= map.chunkSize/2 then
+		expandMap(map, "ground", x + map.chunkSize, y)
+	elseif x - map.minX <= map.chunkSize/2 then
+		expandMap(map, "ground", x - map.chunkSize, y)
+	end
+	
+	if map.maxY - y <= map.chunkSize/2 then
+		expandMap(map, "ground", x, y + map.chunkSize)
+	elseif y - map.minY <= map.chunkSize/2 then
+		expandMap(map, "ground", x, y - map.chunkSize)
+	end
 end
 
 function getMapTile(map, x, y)
@@ -103,6 +68,21 @@ function getTilesFromPoint(map, x1, y1, angle, dist)
 	end
 	
 	return tileList
+end
+
+function findFreeTileFromPoint(map, x, y, size)
+	local tile = nil
+	while tile == nil do
+		local tileX = x + roundFloat(randBetween(-size, size))
+		local tileY = y + roundFloat(randBetween(-size, size))
+		
+		tile = getMapTile(map, tileX, tileY)
+		if not checkTileWalkable(tile) then
+			tile = nil
+			size = size + 1
+		end
+	end
+	return tile
 end
 
 function drawMap(map, camera)

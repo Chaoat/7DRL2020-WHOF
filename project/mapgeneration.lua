@@ -1,4 +1,122 @@
-function spawnEncounter(map, x, y, difficulty, nStructures)
+local treeList = {"tree"}
+
+local difficultyBrackets = {}
+table.insert(difficultyBrackets, {
+	cutPoint = 10000,
+	
+	patrolFrequency = 20000,
+	patrolStrength = 5,
+	
+	campFrequency = 60000,
+	campStrength = 10,
+	campBuildings = 1,
+	
+	patrolRemainder = 0,
+	campRemainder = 0
+})
+table.insert(difficultyBrackets, {
+	cutPoint = 9999999999999,
+	
+	patrolFrequency = 999,
+	patrolStrength = 0,
+	
+	campFrequency = 999,
+	campStrength = 0,
+	campBuildings = 0,
+	
+	patrolRemainder = 0,
+	campRemainder = 0
+})
+
+function expandMap(map, tileKind, newTileX, newTileY)
+	if map.minX > newTileX then
+		map.minX = newTileX
+	elseif map.maxX < newTileX then
+		map.maxX = newTileX
+	end
+	if map.minY > newTileY then
+		map.minY = newTileY
+	elseif map.maxY < newTileY then
+		map.maxY = newTileY
+	end
+	
+	local cDiffBracket = 1
+	local tilesInBrackets = {{}}
+	local campTilesInBrackets = {{}}
+	
+	for i = map.minX, map.maxX do
+		while difficultyBrackets[cDiffBracket].cutPoint < i do
+			cDiffBracket = cDiffBracket + 1
+			tilesInBrackets[cDiffBracket] = {}
+			campTilesInBrackets[cDiffBracket] = {}
+		end
+		
+		if map.tiles[i] == nil then
+			map.tiles[i] = {}
+		end
+		
+		for j = map.minY, map.maxY do
+			if map.tiles[i][j] == nil then
+				map.tiles[i][j] = initiateTile(i, j, "ground")
+				forestVal = love.math.noise(map.treeNoiseMult*i + map.treeNoiseXOff, map.treeNoiseMult*j + map.treeNoiseYOff)
+				
+				local cutoffVal = 0.7
+				local treeChance = ((forestVal - (1 - cutoffVal))/cutoffVal)*0.01
+				if math.random() < treeChance then
+					map.tiles[i][j].spawnTree = true
+				end
+				table.insert(tilesInBrackets[cDiffBracket], {i, j})
+				if treeChance <= 0.005 then
+					table.insert(campTilesInBrackets[cDiffBracket], {i, j})
+				end
+			end
+		end
+	end
+	
+	for i = map.minX, map.maxX do
+		for j = map.minY, map.maxY do
+			local tile = getMapTile(map, i, j)
+			if tile.spawnTree then
+				if spawnTree(map, i, j) then
+					tile.spawnTree = false 
+				end
+			end
+		end
+	end
+	
+	for i = 1, #tilesInBrackets do
+		populateNewChunkWithEncounters(map, i, tilesInBrackets[i], campTilesInBrackets[i])
+	end
+end
+
+function spawnTree(map, x, y)
+	return spawnStructure(map, x, y, randomFromTable(treeList), randomFromTable({0, math.pi/2, math.pi, -math.pi/2}))
+end
+
+function populateNewChunkWithEncounters(map, bracketI, tiles, campTiles)
+	local bracket = difficultyBrackets[bracketI]
+	
+	local patrolTileCount = #tiles + bracket.patrolRemainder
+	local campTileCount = #campTiles + bracket.campRemainder
+	
+	while patrolTileCount >= bracket.patrolFrequency do
+		local tile, i = randomFromTable(tiles)
+		spawnEncounter(map, tile[1], tile[2], bracket.patrolStrength, 0, true)
+		table.remove(tiles, i)
+		patrolTileCount = patrolTileCount - bracket.patrolFrequency
+	end
+	bracket.patrolRemainder = patrolTileCount
+	
+	while campTileCount >= bracket.campFrequency do
+		local tile, i = randomFromTable(campTiles)
+		spawnEncounter(map, tile[1], tile[2], bracket.campStrength, bracket.campBuildings, false)
+		table.remove(campTiles, i)
+		campTileCount = campTileCount - bracket.campFrequency
+	end
+	bracket.campRemainder = campTileCount
+end
+
+function spawnEncounter(map, x, y, difficulty, nStructures, patrol)
 	local spaceNeeded = 0
 	
 	local formationsChosen = {}
@@ -23,6 +141,14 @@ function spawnEncounter(map, x, y, difficulty, nStructures)
 	
 	spaceNeeded = 1.5*math.sqrt(spaceNeeded)
 	
+	local possibleFormationAngles = {0, math.pi/2, math.pi, -math.pi/2}
+	if patrol then
+		possibleFormationAngles = {math.pi}
+	end
+	
+	local messengerTile = findFreeTileFromPoint(map, x, y, 2)
+	local messenger = initiateEnemy(map, messengerTile.x, messengerTile.y, "messenger")
+	
 	local i = 1
 	while #formationsChosen > 0 or #structuresChosen > 0 do
 		if #structuresChosen > 0 then
@@ -36,7 +162,12 @@ function spawnEncounter(map, x, y, difficulty, nStructures)
 			local formation = formationsChosen[i]
 			local pointX, pointY = randomPointInArea(x - math.ceil(spaceNeeded/2), y - math.ceil(spaceNeeded/2), x + math.ceil(spaceNeeded/2), y + math.ceil(spaceNeeded/2))
 			
-			if spawnFormation(map, pointX, pointY, formation, randomFromTable({0, math.pi/2, math.pi, -math.pi/2})) then
+			local formationSpawned = spawnFormation(map, pointX, pointY, formation, randomFromTable(possibleFormationAngles))
+			if formationSpawned then
+				if messenger.formation == nil then
+					attachMessenger(formationSpawned, messenger)
+				end
+				
 				table.remove(formationsChosen, i)
 			else
 				i = i + 1
@@ -96,6 +227,5 @@ function spawnFormation(map, x, y, formationTemplate, direction)
 		table.insert(enemyList, enemy)
 	end
 	
-	initiateFormation(map, enemyList, x, y, formationTemplate, rotation)
-	return true
+	return initiateFormation(map, enemyList, x, y, formationTemplate, rotation)
 end

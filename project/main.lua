@@ -29,7 +29,7 @@ function love.load()
 	doFontPreProcessing()
 	preProcessFormations()
 	
-	Map = initiateMap()
+	Map = initiateMap(150)
 	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 70, 70, 12, 12)
 	--Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 999, 999, 4, 4)
 	
@@ -38,7 +38,7 @@ function love.load()
 
 	CurRound = initiateRound(player, map, 0)
 	
-	spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
+	--spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnStructure(Map, 0, -10, "smallfire", 0)
 	
 	--spawnEncounter(Map, 20, 0, 10, 2)
@@ -50,7 +50,11 @@ function love.resize(x, y)
 	updateCameraSize(Camera, x, y)
 end
 
-function love.update(dt)	
+function love.update(dt)
+	if dt > 0.1 then
+		dt = 1/60
+	end
+	
 	GlobalTime = GlobalTime + dt
 	
 	--print(dt*60)

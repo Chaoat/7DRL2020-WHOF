@@ -18,7 +18,8 @@ function initiateCharacter(map, x, y, letter, master)
 end
 
 function updateActiveCharacters(charList, dt)
-	for i = 1, #charList do
+	local i = 1
+	while i <= #charList do
 		local speed = 20
 		local character = charList[i]
 		
@@ -27,6 +28,12 @@ function updateActiveCharacters(charList, dt)
 		
 		character.x = character.x + speed*xMoveDiff*dt
 		character.y = character.y + speed*yMoveDiff*dt
+		
+		if character.active == false then
+			table.remove(charList, i)
+		else
+			i = i + 1
+		end
 	end
 end
 
@@ -58,6 +65,11 @@ end
 function activateCharacter(character)
 	character.active = true
 	table.insert(character.map.activeCharacters, character)
+	return character
+end
+
+function deactivateCharacter(character)
+	character.active = false
 	return character
 end
 
@@ -99,7 +111,7 @@ function updateCharacterPositions(characterList)
 		while character.blockedBy do
 			table.insert(blockedList, character)
 			idEncountered[character.id] = true
-			print(character.id)
+			--print(character.id)
 			
 			if idEncountered[character.blockedBy.id] then
 				return true
@@ -193,7 +205,7 @@ end
 --Begin slashing process for a character
 function characterStartSlashing(character)
 	character.swording = true
-	character.letter.shaking = 0.2
+	character.letter.shaking = 0.1
 end
 function checkSlashConnections(characters)
 	local characterHit = false

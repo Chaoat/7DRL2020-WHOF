@@ -46,7 +46,12 @@ enemyKinds["bowman"]= {
 enemyKinds["messenger"]= {
 	letter = initiateLetter("M", enemyColour),
 	decideAction = function(enemy, target)
-		enemy.stance = enemy.formation.order
+		local distance = orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y)
+		if distance <= 5 or #enemy.formation.members == 0 then
+			enemy.stance = "flee"
+		else
+			enemy.stance = "formation"
+		end
 	end,
 	lance = false,
 	bleeds = true
@@ -65,7 +70,7 @@ function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]
 	
 	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0}
-	enemy.character = activateCharacter(initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy))
+	enemy.character = initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy)
 	enemy.character.bleeds = enemyKind.bleeds
 	
 	if enemy.bow then
@@ -77,9 +82,27 @@ function initiateEnemy(map, x, y, kind)
 		initiateLance(map, enemy.character, enemyKind.letter.colour)
 	end
 	
-	table.insert(map.enemies, enemy)
+	table.insert(map.inactiveEnemies, enemy)
 	
 	return enemy
+end
+
+function activateEnemy(enemy)
+	local decal = initiateDecal(enemy.character.map, enemy.character.tile.x, enemy.character.tile.y - 0.5, "exclamation")
+	local timeLeft = math.random()
+	decal.timeLeft = timeLeft
+	decal.colour = {1, 1, 0, 1}
+	decal.fade = 1/timeLeft
+	decal.yspeed = -3
+	
+	enemy.active = true
+	table.insert(enemy.character.map.enemies, enemy)
+	activateCharacter(enemy.character)
+end
+
+function deactivateEnemy(enemy)
+	enemy.active = false
+	deactivateCharacter(enemy.character)
 end
 
 local enemyMoveToPos = function(enemy, x, y)
@@ -192,6 +215,7 @@ function enemyAct(enemy, player)
 		fireArrow(enemy.character, enemy.targetX, enemy.targetY)
 		enemy.firingdecal.remove = true
 		enemy.firing = false
+		enemy.character.letter.shaking = 0
 		enemy.reloading = enemy.bow.reloadTime
 	elseif not enemy.character.swording then
 		if enemy.stance == "chase" then
@@ -235,13 +259,14 @@ function determineEnemyAttack(enemies, player, possiblePlayerTiles, curRound)
 				if #possiblePlayerTiles > 0 then
 					enemy.targetX = possiblePlayerTiles[1].x
 					enemy.targetY = possiblePlayerTiles[1].y
-					local decal = initiateDecal(enemy.character.map, possiblePlayerTiles[1].x, possiblePlayerTiles[1].y, "square")
+					local decal = initiateDecal(enemy.character.map, possiblePlayerTiles[1].x, possiblePlayerTiles[1].y, "bullseye")
 					
-					decal.colour = {1, 1, 0, 0.8}
+					decal.colour = {1, 0, 0, 0.8}
 					decal.flashing = 0.1
 					
 					enemy.firingdecal = decal
 					enemy.firing = true
+					enemy.character.letter.shaking = 0.1
 					
 					table.remove(possiblePlayerTiles, 1)
 				end
@@ -284,6 +309,11 @@ function cleanupDeadEnemies(enemies)
 				enemy.firingdecal.remove = true
 			end
 			enemy.character.dead = true
+			table.remove(enemies, i)
+		elseif enemy.active == false then
+			if enemy.firingdecal then
+				enemy.firingdecal.remove = true
+			end
 			table.remove(enemies, i)
 		else
 			i = i + 1

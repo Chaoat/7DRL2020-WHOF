@@ -6,7 +6,7 @@ function initiateDecal(map, x, y, imageName)
 		--decalBank[imageName]:setFilter("nearest", "nearest")
 	end
 	
-	local decal = {map = map, x = x, y = y, image = decalBank[imageName], imageWidth = decalBank[imageName]:getWidth(), imageHeight = decalBank[imageName]:getHeight(), colour = {1, 1, 1, 1}, facing = 0}
+	local decal = {map = map, x = x, y = y, image = decalBank[imageName], imageWidth = decalBank[imageName]:getWidth(), imageHeight = decalBank[imageName]:getHeight(), colour = {1, 1, 1, 1}, facing = 0, timeLeft = 0}
 	table.insert(map.decals, decal)
 	return decal
 end
@@ -18,6 +18,21 @@ function updateDecals(decals, dt)
 		
 		if decal.flashing then
 			decal.flashCycle = (math.cos(GlobalTime/decal.flashing) + 1)*0.4 + 0.2
+		end
+		
+		if decal.fade then
+			decal.colour[4] = decal.colour[4] - decal.fade*dt
+		end
+		
+		if decal.yspeed then
+			decal.y = decal.y + dt*decal.yspeed
+		end
+		
+		if decal.timeLeft > 0 then
+			decal.timeLeft = decal.timeLeft - dt
+			if decal.timeLeft <= 0 then
+				decal.remove = true
+			end
 		end
 		
 		if decal.remove then

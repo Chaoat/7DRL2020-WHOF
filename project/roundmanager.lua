@@ -53,11 +53,13 @@ function updateRound(player, map, curRound, dt)
 			end 
 			local playerPossibleTiles = getPossiblePlayerTiles(player)
 			determineEnemyAttack(map.enemies, player, playerPossibleTiles, curRound)
+			checkFormationAgro(map, player.character.tile, 0)
 			cleanupDeadObjects(map)
 			
 			characterSlash(player.character, nil)
 			
 			--endRoundCleanup(map)
+			checkChunkExpansion(player.character.map, player.character.tile.x, player.character.tile.y)
 			createPlayerDecals(player)
 		end
 	else
