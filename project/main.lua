@@ -31,16 +31,17 @@ function love.load()
 	
 	Map = initiateMap()
 	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 70, 70, 12, 12)
+	--Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 999, 999, 4, 4)
 	
 	Player = initiatePlayer(Map, 0, 0)
 	Interface = initiateInterface(Player)
 
 	CurRound = initiateRound(player, map, 0)
 	
-	--spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
+	spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnStructure(Map, 0, -10, "smallfire", 0)
 	
-	spawnEncounter(Map, 20, 0, 10, 2)
+	--spawnEncounter(Map, 20, 0, 10, 2)
 	
 	GlobalTime = 0
 end

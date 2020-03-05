@@ -228,7 +228,7 @@ createFormationTemplate(1, "chase", {
 --.#...
 --.#B..
 --.L...
-createFormationTemplate(0, "guard", {
+createFormationTemplate(1, "guard", {
 	{kind = "lancer", x = -1, y = 2},
 	{kind = "lancer", x = -1, y = -2},
 	{kind = "bowman", x = 0, y = 1},
@@ -236,4 +236,8 @@ createFormationTemplate(0, "guard", {
 	{kind = "barrier", x = -1, y = -1},
 	{kind = "barrier", x = -1, y = 0},
 	{kind = "barrier", x = -1, y = 1}
+})
+
+createFormationTemplate(0, "intercept", {
+	{kind = "lancer", x = 0, y = 0}
 })

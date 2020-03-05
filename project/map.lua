@@ -1,6 +1,8 @@
+local treeList = {"tree"}
+
 function initiateMap()
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}}
-	fillMapArea(map, "ground", -100, -100, 100, 100)
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}, treeNoiseMult = 0.004, treeNoiseXOff = math.random(), treeNoiseYOff = math.random()}
+	fillMapArea(map, "ground", -200, -200, 200, 200)
 	return map
 end
 
@@ -24,9 +26,31 @@ function expandMap(map, tileKind, newTileX, newTileY)
 		for j = map.minY, map.maxY do
 			if map.tiles[i][j] == nil then
 				map.tiles[i][j] = initiateTile(i, j, "ground")
+				forestVal = love.math.noise(map.treeNoiseMult*i + map.treeNoiseXOff, map.treeNoiseMult*j + map.treeNoiseYOff)
+				
+				local cutoffVal = 0.7
+				local treeChance = ((forestVal - (1 - cutoffVal))/cutoffVal)*0.01
+				if math.random() < treeChance then
+					map.tiles[i][j].spawnTree = true
+				end
 			end
 		end
 	end
+	
+	for i = map.minX, map.maxX do
+		for j = map.minY, map.maxY do
+			local tile = getMapTile(map, i, j)
+			if tile.spawnTree then
+				if spawnTree(map, i, j) then
+					tile.spawnTree = false 
+				end
+			end
+		end
+	end
+end
+
+function spawnTree(map, x, y)
+	return spawnStructure(map, x, y, randomFromTable(treeList), randomFromTable({0, math.pi/2, math.pi, -math.pi/2}))
 end
 
 function fillMapArea(map, tileKind, x1, y1, x2, y2)
@@ -51,6 +75,11 @@ end
 function getTileFromPoint(map, x, y, angle)
 	local xDir, yDir = getRelativeGridPositionFromAngle(angle)
 	return getMapTile(map, x + xDir, y + yDir)
+end
+
+function getTileFromPointAtDistance(map, x, y, angle, dist)
+	local tX, tY = orthogRotate(dist, 0, angle)
+	return getMapTile(map, x + tX, y + tY)
 end
 
 function getTilesInLine(map, x1, y1, x2, y2)

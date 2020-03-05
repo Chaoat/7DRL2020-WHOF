@@ -255,6 +255,11 @@ function getPossiblePlayerTiles(player)
 	return tiles
 end
 
+function findPlayerPositionInXTurns(player, x)
+	local targetTile = getTileFromPointAtDistance(player.character.map, player.character.tile.x, player.character.tile.y, player.character.facing, x*player.speed)
+	return targetTile
+end
+
 --Clamps the speed
 function modifySpeed(player, speedChange)
 	player.speed = player.speed + speedChange
