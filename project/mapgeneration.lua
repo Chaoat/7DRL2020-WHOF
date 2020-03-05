@@ -146,8 +146,12 @@ function spawnEncounter(map, x, y, difficulty, nStructures, patrol)
 		possibleFormationAngles = {math.pi}
 	end
 	
-	local messengerTile = findFreeTileFromPoint(map, x, y, 2)
-	local messenger = initiateEnemy(map, messengerTile.x, messengerTile.y, "messenger")
+	
+	local messenger = nil
+	if math.random() < 0.5 or not patrol then
+		local messengerTile = findFreeTileFromPoint(map, x, y, 2)
+		messenger = initiateEnemy(map, messengerTile.x, messengerTile.y, "messenger")
+	end
 	
 	local i = 1
 	while #formationsChosen > 0 or #structuresChosen > 0 do
@@ -164,8 +168,9 @@ function spawnEncounter(map, x, y, difficulty, nStructures, patrol)
 			
 			local formationSpawned = spawnFormation(map, pointX, pointY, formation, randomFromTable(possibleFormationAngles))
 			if formationSpawned then
-				if messenger.formation == nil then
+				if messenger then
 					attachMessenger(formationSpawned, messenger)
+					messenger = nil
 				end
 				
 				table.remove(formationsChosen, i)
