@@ -158,6 +158,14 @@ function drawExamineScreen(map, interface, camera, player)
 		local title = nil
 		local text = nil
 		
+		local examinedTile = getMapTile(map, camera.cursorX, camera.cursorY)
+		if examinedTile.character then
+			if examinedTile.character.master.title then
+				title = examinedTile.character.master.title
+				text = examinedTile.character.master.description
+			end
+		end
+		
 		if title then
 			local left = camera.centerX - camera.tilesWide/2 + 2
 			local top = camera.centerY - camera.tilesTall/2 + interface.topTilesHigh + 2
@@ -194,11 +202,16 @@ function drawExamineScreen(map, interface, camera, player)
 					else
 						drawLetter(backLetter, x, y, camera)
 					end
-					
-					setFont("clacon", 20)
-					love.graphics.printf(title, left + 15, top + 15)
 				end
 			end
+			
+			love.graphics.setColor(1, 1, 1, 1)
+			setFont("clacon", 30)
+			local drawX, drawY = getDrawPos(left + 2, top + 2, camera)
+			love.graphics.printf(title, drawX, drawY, width*camera.tileWidth - 30, "left")
+			setFont("clacon", 20)
+			drawX, drawY = getDrawPos(left + 2, top + 5, camera)
+			love.graphics.printf(text, drawX, drawY, width*camera.tileWidth - 30, "left")
 		end
 	end
 end

@@ -22,6 +22,7 @@ function doFontPreProcessing()
 	addQuadToBank("/", 2, 4)
 	addQuadToBank("-", 3, 4)
 	addQuadToBank("+", 4, 4)
+	addQuadToBank("||", 5, 4)
 	addQuadToBank("=", 6, 4)
 	
 	addQuadToBank(";", 8, 4)

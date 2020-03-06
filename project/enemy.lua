@@ -12,7 +12,10 @@ enemyKinds["swordsman"]= {
 	end,
 	lance = false,
 	sword = true,
-	bleeds = true
+	bleeds = true,
+	
+	title = "Swordsman",
+	description = "A cowardly foot soldier of the Atagan legions, equipped with the simplest killing blade. Farmers torn from their native lands by the usurper's captains, they have little to no combat training, knowing barely more than to march in a straight line. Despite their inexperience they show surprising bravery in combat, likely due to the iron fist of their commanders.\n\nTheir danger lies only in their numbers advantage, and they are particularly effective against generals in the habit of fleeing from larger forces. If the Atagani ancestors could see the tactics employed by their forebears they would surely renounce their clan name and bar their halls from their children. It is a tragic sign of our times that such strategy could be so shamelessly exploited, but it is yet more tragic still that so many of our riders have been lost to forces such as these.\n\n\nSloth and recklessness typify this opponent.",
 }
 enemyKinds["lancer"]= {
 	letter = initiateLetter("L", enemyColour),
@@ -24,7 +27,10 @@ enemyKinds["lancer"]= {
 		end
 	end,
 	lance = true,
-	bleeds = true
+	bleeds = true,
+	
+	title = "Lancer",
+	description = "A soldier equipped with a horse killing spear. A corruption of the heavy lance used traditionally by our ancestors, this foot spear is the fuel in the ravaging bonfire of the Atagan advance. Few know precisely where the Atagan usurper obtained these dishonourable weapons, or where he learned how to use them to such great effect, but they are likely an import from the weak southern nations.\n\nHeavy as the spear is, it is difficult to manoeuvre on the battlefield, let alone thrust. These soldiers prefer rather to use the momentum of their opponents in their strikes, simply letting them run themselves through on their outstretched spear heads. It is most fortunate that the First Horse is no longer with us, for to see his folk so barbarically slaughtered would surely drive him mad.\n\n\nCunning and forethought typify this opponent"
 }
 enemyKinds["bowman"]= {
 	letter = initiateLetter("B", enemyColour),
@@ -41,7 +47,10 @@ enemyKinds["bowman"]= {
 	lance = false,
 	bow = {shootRange = 9, reloadTime = 3},
 	fleeRange = 4,
-	bleeds = true
+	bleeds = true,
+	
+	title = "Bowman",
+	description = "An unmounted Atagan warrior equipped with a large straight bow. Such bows are common amongst hunters and other poorer folk who can hardly afford the cost of a riding horse, but the smaller re-curve bow more suited to fire from horseback is the true warriors weapon. The Atagan war machine hungers for fresh meat though, especially that with killing experience, and many woodsmen and poachers have found themselves pressed into service.\n\nDespite the simpler build of their weapon, the stationary footing of these men allows them an accuracy that gives them a greater killing range than could be expected from a mounted archer. Such free men are hard to chain down and are often wiser than to expect reward from a tyrant however, so they are well known to flee before the hooves of a charging warhorse rather than stand and fight."
 }
 enemyKinds["rider"]= {
 	letter = initiateLetter("H", enemyColour),
@@ -80,7 +89,7 @@ enemyKinds["barrier"]= {
 function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]
 	
-	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0}
+	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0, title = enemyKind.title, description = enemyKind.description}
 	enemy.character = initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy)
 	enemy.character.bleeds = enemyKind.bleeds
 	
