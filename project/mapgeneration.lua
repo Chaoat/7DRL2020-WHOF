@@ -3,7 +3,7 @@ local treeList = {"pineTree", "birchTree", "aspenTree", "oakTree"}
 local difficultyBrackets = {}
 --difficulty 1
 table.insert(difficultyBrackets, {
-	cutPoint = 50,
+	cutPoint = 150,
 	
 	patrolFrequency = 20000,
 	patrolStrength = 5,
@@ -33,7 +33,7 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 1,
-	treeSpawnChance = 0.03
+	treeSpawnChance = 0.02
 })
 --difficulty 3
 table.insert(difficultyBrackets, {
@@ -50,7 +50,7 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 1,
-	treeSpawnChance = 0.01
+	treeSpawnChance = 0.005
 })
 --difficulty 4
 table.insert(difficultyBrackets, {
@@ -67,7 +67,7 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 2,
-	treeSpawnChance = 0.04
+	treeSpawnChance = 0.03
 })
 --difficulty 5
 table.insert(difficultyBrackets, {
@@ -84,7 +84,7 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 3,
-	treeSpawnChance = 0.02
+	treeSpawnChance = 0.01
 })
 --difficulty 6
 table.insert(difficultyBrackets, {
@@ -101,7 +101,7 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 5,
-	treeSpawnChance = 0.01
+	treeSpawnChance = 0.005
 })
 --difficulty 6
 table.insert(difficultyBrackets, {
@@ -263,6 +263,8 @@ function spawnEncounter(map, x, y, difficulty, nStructures, patrol, messengerCav
 	if math.random() < 0.5 or not patrol then
 		local messengerTile = findFreeTileFromPoint(map, x, y, 2)
 		messenger = initiateEnemy(map, messengerTile.x, messengerTile.y, "messenger")
+		print("spawning messenger that can call")
+		print(messengerCavCount)
 		messenger.cavCount = messengerCavCount
 	end
 	
