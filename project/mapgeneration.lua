@@ -1,13 +1,14 @@
 local treeList = {"tree"}
 
 local difficultyBrackets = {}
+--difficulty 1
 table.insert(difficultyBrackets, {
-	cutPoint = 10000,
+	cutPoint = 50,
 	
 	patrolFrequency = 20000,
 	patrolStrength = 5,
 	
-	campFrequency = 60000,
+	campFrequency = 30000,
 	campStrength = 10,
 	campBuildings = 1,
 	
@@ -17,13 +18,116 @@ table.insert(difficultyBrackets, {
 	messengerCavCount = 1,
 	treeSpawnChance = 0.02
 })
+--difficulty 2
+table.insert(difficultyBrackets, {
+	cutPoint = 250,
+	
+	patrolFrequency = 10000,
+	patrolStrength = 5,
+	
+	campFrequency = 25000,
+	campStrength = 5,
+	campBuildings = 1,
+	
+	patrolRemainder = 0,
+	campRemainder = 0,
+	
+	messengerCavCount = 1,
+	treeSpawnChance = 0.03
+})
+--difficulty 3
+table.insert(difficultyBrackets, {
+	cutPoint = 500,
+	
+	patrolFrequency = 5000,
+	patrolStrength = 7,
+	
+	campFrequency = 20000,
+	campStrength = 15,
+	campBuildings = 1,
+	
+	patrolRemainder = 0,
+	campRemainder = 0,
+	
+	messengerCavCount = 1,
+	treeSpawnChance = 0.01
+})
+--difficulty 4
+table.insert(difficultyBrackets, {
+	cutPoint = 1000,
+	
+	patrolFrequency = 3000,
+	patrolStrength = 11,
+	
+	campFrequency = 10000,
+	campStrength = 20,
+	campBuildings = 2,
+	
+	patrolRemainder = 0,
+	campRemainder = 0,
+	
+	messengerCavCount = 2,
+	treeSpawnChance = 0.04
+})
+--difficulty 5
+table.insert(difficultyBrackets, {
+	cutPoint = 2000,
+	
+	patrolFrequency = 2000,
+	patrolStrength = 15,
+	
+	campFrequency = 5000,
+	campStrength = 25,
+	campBuildings = 4,
+	
+	patrolRemainder = 0,
+	campRemainder = 0,
+	
+	messengerCavCount = 3,
+	treeSpawnChance = 0.02
+})
+--difficulty 6
+table.insert(difficultyBrackets, {
+	cutPoint = 2500,
+	
+	patrolFrequency = 1000,
+	patrolStrength = 25,
+	
+	campFrequency = 5000,
+	campStrength = 40,
+	campBuildings = 2,
+	
+	patrolRemainder = 0,
+	campRemainder = 0,
+	
+	messengerCavCount = 5,
+	treeSpawnChance = 0.01
+})
+--difficulty 6
+table.insert(difficultyBrackets, {
+	cutPoint = 2740,
+	
+	patrolFrequency = 500,
+	patrolStrength = 25,
+	
+	campFrequency = 1000,
+	campStrength = 50,
+	campBuildings = 2,
+	
+	patrolRemainder = 0,
+	campRemainder = 0,
+	
+	messengerCavCount = 5,
+	treeSpawnChance = 0.005
+})
+--difficulty final
 table.insert(difficultyBrackets, {
 	cutPoint = 9999999999999,
 	
-	patrolFrequency = 999,
+	patrolFrequency = 500,
 	patrolStrength = 0,
 	
-	campFrequency = 999,
+	campFrequency = 500,
 	campStrength = 0,
 	campBuildings = 0,
 	
@@ -52,7 +156,9 @@ function expandMap(map, tileKind, newTileX, newTileY)
 	
 	for i = map.minX, map.maxX do
 		while difficultyBrackets[cDiffBracket].cutPoint < i do
+			print("increasing difficulty to: ")
 			cDiffBracket = cDiffBracket + 1
+			print(cDiffBracket)
 			tilesInBrackets[cDiffBracket] = {}
 			campTilesInBrackets[cDiffBracket] = {}
 		end
