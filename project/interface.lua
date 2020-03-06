@@ -151,8 +151,10 @@ end
 
 function drawTopInterface(interface, camera, player)
 	local dist = tostring(player.travelDist)
-	dist = dist .. "      "
-	local topText = {"d", "i", "s", "t", "a", "n", "c", "e", " ", "t", "r", "a", "v", "e", "l", "l", "e", "d", " ", string.sub(dist, 1, 1), string.sub(dist, 2, 2), string.sub(dist, 3, 3), string.sub(dist, 4, 4), string.sub(dist, 5, 5)}
+	--converting to percentage
+	dist = math.ceil(dist / 3000 * 100)
+	dist = dist .. "%     "
+	local topText = {"d", "i", "s", "t", "a", "n", "c", "e", " ", "t", "r", "a", "v", "e", "l", "l", "e", "d", ":", string.sub(dist, 1, 1), string.sub(dist, 2, 2), string.sub(dist, 3, 3), string.sub(dist, 4, 4)}
 
 	--HACK: Top interface is nasty
 	local left = camera.centerX - interface.tilesWide/4
