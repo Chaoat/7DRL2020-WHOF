@@ -28,7 +28,9 @@ function initiatePlayer(map, x, y)
 	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, firing = false, fireRange = 6, dead = false, travelDist = 0}
 	player.health = player.maxHealth
 	player.lastHealth = player.maxHealth
-	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 1, 1}), player))
+	
+	local spawnTile = findFreeTileFromPoint(map, x, y, 0)
+	player.character = activateCharacter(initiateCharacter(map, spawnTile.x, spawnTile.y, initiateLetter("@", {1, 1, 1, 1}), player))
 	initiateLance(map, player.character, {1, 1, 1, 1})
 	return player
 end

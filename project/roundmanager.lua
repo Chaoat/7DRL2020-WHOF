@@ -33,6 +33,7 @@ function updateRound(player, map, curRound, dt)
 		if checkSlashConnections({player.character}) then
 			curRound.addedturndelay = 0.3
 		end
+		
 		--Play AI inf turn
 		if not curRound.playedAITurn then
 			--print("ai turn")
@@ -61,6 +62,7 @@ function updateRound(player, map, curRound, dt)
 			--endRoundCleanup(map)
 			checkChunkExpansion(player.character.map, player.character.tile.x, player.character.tile.y)
 			createPlayerDecals(player)
+			createEnemyDecals(map.enemies)
 		end
 	else
 	    --Wait until the timer is done
