@@ -23,6 +23,7 @@ function updateRound(player, map, curRound, dt)
 			--print("play turn")
 			if checkSlashConnections({player.character}) then
 				curRound.addedturndelay = 0.3
+				modifySpeed(player, -1)
 			end
 			resolveTurn(player, map, curRound.curTurn)
 			cleanupDeadObjects(map)
@@ -32,6 +33,7 @@ function updateRound(player, map, curRound, dt)
 		end
 		if checkSlashConnections({player.character}) then
 			curRound.addedturndelay = 0.3
+			modifySpeed(player, -1)
 		end
 		
 		--Play AI inf turn

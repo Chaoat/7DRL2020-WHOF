@@ -151,7 +151,6 @@ end
 
 function drawTopInterface(interface, camera, player)
 	local dist = tostring(player.travelDist)
-	print(player.travelDist)
 	dist = dist .. "      "
 	local topText = {"d", "i", "s", "t", "a", "n", "c", "e", " ", "t", "r", "a", "v", "e", "l", "l", "e", "d", " ", string.sub(dist, 1, 1), string.sub(dist, 2, 2), string.sub(dist, 3, 3), string.sub(dist, 4, 4), string.sub(dist, 5, 5)}
 
@@ -182,7 +181,6 @@ function drawTopInterface(interface, camera, player)
 				drawLetter(sideLetter, x, y, camera)
 			elseif y == top+1 then
 				local x2 = math.floor(i)
-				print(topText[x2])
 				if topText[x2] then
 					drawLetter(initiateLetter(topText[x2], interface.frontColour, interface.backColour), x, y, camera)
 				else
