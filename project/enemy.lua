@@ -54,7 +54,7 @@ enemyKinds["rider"]= {
 	bow = {shootRange = 7, reloadTime = 4},
 }
 enemyKinds["messenger"]= {
-	letter = initiateLetter("M", enemyColour),
+	letter = initiateLetter("M", {1, 0.5, 1, 1}),
 	decideAction = function(enemy, target)
 		local distance = orthogDistance(enemy.character.tile.x, enemy.character.tile.y, target.character.tile.x, target.character.tile.y)
 		if distance <= 5 or #enemy.formation.members == 0 then

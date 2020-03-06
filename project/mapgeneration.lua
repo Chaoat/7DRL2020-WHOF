@@ -1,4 +1,4 @@
-local treeList = {"tree"}
+local treeList = {"pineTree", "birchTree", "aspenTree", "oakTree"}
 
 local difficultyBrackets = {}
 --difficulty 1
@@ -178,7 +178,7 @@ function expandMap(map, tileKind, newTileX, newTileY)
 					map.tiles[i][j].spawnTree = true
 				end
 				table.insert(tilesInBrackets[cDiffBracket], {i, j})
-				if treeChance <= 0.1 then
+				if treeChance <= 0.005 then
 					table.insert(campTilesInBrackets[cDiffBracket], {i, j})
 				end
 			end
@@ -295,7 +295,18 @@ function spawnEncounter(map, x, y, difficulty, nStructures, patrol, messengerCav
 		if i > #formationsChosen then
 			i = 1
 			spaceNeeded = spaceNeeded + 2
-			print(spaceNeeded)
+		end
+	end
+	
+	if not patrol then
+		local consumables = 3
+		while consumables > 0 do
+			local radius = 1
+			local tile = findFreeTileFromPoint(map, x, y, radius)
+			if checkTileWalkable(tile) and tile.consumable == nil then
+				initiateConsumable(map, tile.x, tile.y, randomFromTable({"health", "arrows"}))
+				consumables = consumables - 1
+			end
 		end
 	end
 end

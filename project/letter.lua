@@ -4,6 +4,8 @@ local letterTileWidth = 12
 local letterTileHeight = 12
 
 function doFontPreProcessing()
+	fontImage:setFilter("nearest", "nearest")
+	
 	local addQuadToBank = function(letter, x, y)
 		quadBank[letter] = love.graphics.newQuad(1 + (letterTileWidth + 1)*x, 1 + (letterTileHeight + 1)*y, letterTileWidth, letterTileHeight, fontImage:getWidth(), fontImage:getHeight())
 	end
@@ -34,6 +36,8 @@ function doFontPreProcessing()
 	addQuadToBank(">>", 3, 5)
 	addQuadToBank("%", 4, 5)
 	addQuadToBank(":", 5, 5)
+	addQuadToBank("*", 6, 5)
+	addQuadToBank("\"", 7, 5)
 	
 	addQuadToBank("uA", 0, 7)
 	addQuadToBank("urA", 1, 7)
@@ -66,6 +70,12 @@ function drawLetter(letter, x, y, camera)
 	if letter.shaking then
 		actualX = actualX + randBetween(-letter.shaking, letter.shaking)
 		actualY = actualY + randBetween(-letter.shaking, letter.shaking)
+	end
+	
+	if letter.windWave then
+		local windX, windY = getWindAtPoint(letter.windWave, x, y)
+		actualX = actualX + windX
+		actualY = actualY + windY
 	end
 	
 	local drawX, drawY = getDrawPos(actualX, actualY, camera)

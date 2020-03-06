@@ -328,7 +328,7 @@ function removePlayerDecals(player)
 end
 
 function collectPlayerPickups(map, player)
-	if player.speed == 0 then
+	if player.speed <= player.maxSpeed then
 		local collectibles = collectPickupsInRange(map, player.character.tile.x, player.character.tile.y, 1)
 		
 		if collectibles["health"] then

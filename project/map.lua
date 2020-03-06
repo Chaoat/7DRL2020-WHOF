@@ -87,8 +87,9 @@ end
 
 function drawMap(map, camera)
 	applyParticleInfluence(map, map.particles)
-	local visibleCharacters, visibleLances = drawTiles(map, camera)
+	local visibleCharacters, visibleLances, foliageTiles = drawTiles(map, camera)
 	drawCharacters(visibleCharacters, camera)
 	drawLances(visibleLances, camera)
+	drawFoliage(foliageTiles, camera)
 	drawDecals(map.decals, camera)
 end

@@ -264,14 +264,8 @@ createFormationTemplate(nil, "guard", {
 })
 
 --TestFormation
-createFormationTemplate(0, "chase", {
-	{kind = "rider", x = -1, y = -1},
-	{kind = "rider", x = 0, y = -1},
-	{kind = "rider", x = 1, y = -1},
-	{kind = "rider", x = 1, y = 0},
-	{kind = "rider", x = 1, y = 1},
-	{kind = "rider", x = 0, y = 1},
-	{kind = "rider", x = -1, y = 1},
-	{kind = "rider", x = -1, y = 0},
-	{kind = "rider", x = 0, y = 0},
+createFormationTemplate(0, "intercept", {
+	{kind = "lancer", x = 0, y = -1},
+	{kind = "lancer", x = 0, y = 0},
+	{kind = "lancer", x = 0, y = 1},
 })

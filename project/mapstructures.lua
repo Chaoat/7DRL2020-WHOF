@@ -19,13 +19,13 @@ function spawnStructure(map, x, y, structureName, direction)
 	--CheckWillFit
 	for i = 1, template.size do
 		for j = 1, template.size do
-			local offX = i - math.ceil(template.size/2)
-			local offY = j - math.ceil(template.size/2)
-			
-			local targetX = x + offX
-			local targetY = y + offY
-			if not checkTileWalkable(getMapTile(map, targetX, targetY)) then
-				return false
+			local offX, offY = orthogRotate(i - math.ceil(template.size/2), j - math.ceil(template.size/2), direction)
+			if template.tiles[i][j] then
+				local targetX = x + offX
+				local targetY = y + offY
+				if not checkTileWalkable(getMapTile(map, targetX, targetY)) then
+					return false
+				end
 			end
 		end
 	end
@@ -44,12 +44,40 @@ function spawnStructure(map, x, y, structureName, direction)
 			end
 		end
 	end
+	
+	if template.foliage then
+		for i = -math.ceil(template.foliage.size/2), math.floor(template.foliage.size/2) do
+			for j = -math.ceil(template.foliage.size/2), math.floor(template.foliage.size/2) do
+				local distFromCenter = math.sqrt(i^2 + j^2)
+				if distFromCenter <= template.foliage.size/2 then
+					local tile = getMapTile(map, x + i, y + j)
+					local distRatio = distFromCenter/(template.foliage.size/2)
+					local height = (1 - distRatio)*template.foliage.maxHeight + distRatio*template.foliage.minHeight
+					
+					local spawn = true
+					if tile.foliage then
+						if tile.foliage.windWave > height then
+							spawn = false
+						end
+					end
+					if math.random() >= (1 - distRatio) + distRatio*template.foliage.density then
+						spawn = false
+					end
+					
+					if spawn then
+						tile.foliage = initiateFoliage(template.foliage.character, blendColours(template.foliage.outerColour, template.foliage.innerColour, distRatio), height)
+					end
+				end
+			end
+		end
+	end
+	
 	return true
 end
 
-local function newStructureTemplate(name, natural, rotatable, colours, tiles, symbols, tileColours)
+local function newStructureTemplate(name, natural, rotatable, colours, tiles, symbols, tileColours, foliage)
 	local size = #tiles
-	local template = {name = name, size = size, natural = natural, rotatable = rotatable, colours = {}, tiles = {}, symbols = {}}
+	local template = {name = name, size = size, natural = natural, rotatable = rotatable, colours = {}, tiles = {}, symbols = {}, foliage = foliage}
 	for i = 1, size do
 		template.colours[i] = {}
 		template.tiles[i] = {}
@@ -80,8 +108,58 @@ local function newStructureTemplate(name, natural, rotatable, colours, tiles, sy
 	end
 end
 
---Tree
-newStructureTemplate("tree", true, false, {
+
+--oakTree
+newStructureTemplate("oakTree", true, false, {
+	a = {166/255, 143/255, 96/255, 1}
+}, {
+	{"n", "t", "n"},
+	{"t", "t", "t"},
+	{"n", "t", "n"}
+}, {
+	{" ", "n", " "},
+	{"n", "0", "n"},
+	{" ", "n", " "}
+}, {
+	{" ", "a", " "},
+	{"a", "a", "a"},
+	{" ", "a", " "}
+}, {size = 8, character = "O", density = 0.8, minHeight = 0.8, maxHeight = 1.3, innerColour = {167/255, 167/255, 86/255, 0.5}, outerColour = {72/255, 72/255, 32/255, 0.5}}
+)
+--aspenTree
+newStructureTemplate("aspenTree", true, false, {
+	a = {134/255, 158/255, 145/255, 1}
+}, {
+	{"t"}
+}, {
+	{"o"}
+}, {
+	{"a"}
+}, {size = 4, character = "*", density = 0.5, minHeight = 0.5, maxHeight = 1, innerColour = {129/255, 207/255, 36/255, 0.5}, outerColour = {70/255, 180/255, 30/255, 0.5}}
+)
+--birchTree
+newStructureTemplate("birchTree", true, false, {
+	a = {130/255, 150/255, 124/255, 1}
+}, {
+	{"t"}
+}, {
+	{"0"}
+}, {
+	{"a"}
+}, {size = 5, character = "#", density = 0.7, minHeight = 0.4, maxHeight = 1.5, innerColour = {148/255, 214/255, 51/255, 0.5}, outerColour = {51/255, 106/255, 3/255, 0.5}}
+)
+--pineTree
+newStructureTemplate("pineTree", true, false, {
+	a = {67/255, 55/255, 39/255, 1}
+}, {
+	{"t"}
+}, {
+	{"0"}
+}, {
+	{"a"}
+}, {size = 6, character = "+", density = 1, minHeight = 0.4, maxHeight = 1.2, innerColour = {187/255, 218/255, 121/255, 0.5}, outerColour = {25/255, 38/255, 11/255, 0.5}}
+)
+newStructureTemplate("oldTree", true, false, {
 	a = {80/255, 1, 0, 1},
 	b = {72/255, 229/255, 0, 1},
 	c = {55/255, 175/255, 0, 1},

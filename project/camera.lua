@@ -7,22 +7,30 @@ end
 
 --Updates the width and height of the camera. Necessary so that dependent variable can also be updated
 function updateCameraSize(camera, width, height)
-	camera.tilesWide = camera.targetTilesWide
-	camera.tilesTall = camera.targetTilesTall
+	--camera.tilesWide = camera.targetTilesWide
+	--camera.tilesTall = camera.targetTilesTall
+	--
+	--camera.width = width
+	--camera.height = height
+	--camera.tileWidth = camera.minTileWidth--math.min(math.floor(camera.width/camera.tilesWide), math.floor(camera.height/camera.tilesTall))
+	--camera.tileHeight = camera.minTileHeight--camera.tileWidth
+	--
+	--if camera.tileWidth < camera.minTileWidth then
+	--	camera.tileWidth = camera.minTileWidth
+	--	camera.tilesWide = math.ceil(camera.width/camera.tileWidth)
+	--end
+	--if camera.tileHeight < camera.minTileHeight then
+	--	camera.tileHeight = camera.minTileHeight
+	--	camera.tilesTall = math.ceil(camera.height/camera.tileHeight)
+	--end
 	
 	camera.width = width
 	camera.height = height
-	camera.tileWidth = math.min(math.floor(camera.width/camera.tilesWide), math.floor(camera.height/camera.tilesTall))
-	camera.tileHeight = camera.tileWidth
+	camera.tileWidth = camera.minTileWidth
+	camera.tileHeight = camera.minTileHeight
 	
-	if camera.tileWidth < camera.minTileWidth then
-		camera.tileWidth = camera.minTileWidth
-		camera.tilesWide = math.ceil(camera.width/camera.tileWidth)
-	end
-	if camera.tileHeight < camera.minTileHeight then
-		camera.tileHeight = camera.minTileHeight
-		camera.tilesTall = math.ceil(camera.height/camera.tileHeight)
-	end
+	camera.tilesWide = math.min(camera.targetTilesWide, math.floor(camera.width/camera.minTileWidth))
+	camera.tilesTall = math.min(camera.targetTilesTall, math.floor(camera.height/camera.minTileHeight))
 end
 
 function initCameraCursor(camera, player, firing)

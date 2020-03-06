@@ -21,34 +21,61 @@ tileProperties['tree'] = {walkable = false, blockVision = true}
 tileCharacters['tree'] = {
 {tile = " ", chance = 1}}
 
+grassTiles = {
+	{targetRegion = 0.125, tile = "~", colour = {100/255, 112/255, 55/255, 1}, windWave = 0},
+	{targetRegion = 0.375, tile = ",", colour = {85/255, 102/255, 57/255, 1}, windWave = 0.05},
+	{targetRegion = 0.625, tile = "'", colour = {54/255, 62/255, 14/255, 1}, windWave = 0.1},
+	{targetRegion = 0.875, tile = "\"", colour = {68/255, 76/255, 35/255, 1}, windWave = 0.15},
+}
+
 function initiateTile(x, y, kind, letter)
-	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, particleInfluence = 0, partInfColour = {0, 0, 0, 0}, character = nil, waitingForCharacter = false, consumable = nil, lances = {}}
+	local tile = {x = x, y = y, kind = tileKind, properties = tileProperties[kind], letter = nil, particleInfluence = 0, partInfColour = {0, 0, 0, 0}, character = nil, waitingForCharacter = false, consumable = nil, foliage = nil, lances = {}}
+	--tile.foliage = initiateFoliage("O", {0, 1, 0, 0.3}, 1)
 	
 	if letter == nil then
 		local chosenChar = ""
+		local windWave = nil
 		local colour = {1, 1, 1, 1}
 		local totalChance = 0
 		for i = 1, #tileCharacters[kind] do
 			totalChance = totalChance + tileCharacters[kind][i].chance
 		end
-		local randChoice = math.random()*totalChance
-		for i = 1, #tileCharacters[kind] do
-			randChoice = randChoice - tileCharacters[kind][i].chance
-			if randChoice < 0 then
-				chosenChar = tileCharacters[kind][i].tile
-				
-				if tileCharacters[kind][i].colour1 then
-					local c1 = tileCharacters[kind][i].colour1
-					local c2 = tileCharacters[kind][i].colour2
-					local spot = math.random()
-					colour = {c1[1]*spot + c2[1]*(1 - spot), c1[2]*spot + c2[2]*(1 - spot), c1[3]*spot + c2[3]*(1 - spot), c1[4]*spot + c2[4]*(1 - spot)}
-				end
-				
+		--local randChoice = math.random()*totalChance
+		--for i = 1, #tileCharacters[kind] do
+		--	randChoice = randChoice - tileCharacters[kind][i].chance
+		--	if randChoice < 0 then
+		--		chosenChar = tileCharacters[kind][i].tile
+		--		windWave = tileCharacters[kind][i].windWave
+		--		
+		--		if tileCharacters[kind][i].colour1 then
+		--			local c1 = tileCharacters[kind][i].colour1
+		--			local c2 = tileCharacters[kind][i].colour2
+		--			local spot = math.random()
+		--			colour = {c1[1]*spot + c2[1]*(1 - spot), c1[2]*spot + c2[2]*(1 - spot), c1[3]*spot + c2[3]*(1 - spot), c1[4]*spot + c2[4]*(1 - spot)}
+		--		end
+		--		
+		--		break
+		--	end
+		--end
+		
+		local grassNoisePoint = love.math.noise(0.15*x, 0.15*y) + randBetween(-0.2, 0.2)
+		local chosenTile = grassTiles[1]
+		for i = 2, #grassTiles do
+			local newTile = grassTiles[i]
+			if math.abs(newTile.targetRegion - grassNoisePoint) <= math.abs(chosenTile.targetRegion - grassNoisePoint) then
+				chosenTile = newTile
+			else
 				break
 			end
 		end
+		chosenChar = chosenTile.tile
+		colour = chosenTile.colour
+		windWave = chosenTile.windWave
 		
 		letter = initiateLetter(chosenChar, colour)
+		if windWave then
+			letter.windWave = windWave
+		end
 	end
 	
 	tile.letter = letter
@@ -93,6 +120,7 @@ end
 function drawTiles(map, camera)
 	local visibleCharacters = {}
 	local visibleLances = {}
+	local foliageTiles = {}
 	
 	local tilesWide = camera.tilesWide
 	local tilesTall = camera.tilesTall
@@ -121,11 +149,15 @@ function drawTiles(map, camera)
 				else
 					drawLetter(tile.letter, i, j, camera)
 				end
-			end			
+			end		
+
+			if tile.foliage then
+				table.insert(foliageTiles, tile)
+			end
 			
 			tile.letter.momentaryInfluence = 0
 		end
 	end
 	
-	return visibleCharacters, visibleLances
+	return visibleCharacters, visibleLances, foliageTiles
 end

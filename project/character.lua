@@ -143,7 +143,7 @@ function updateCharacterPositions(characterList)
 			
 			character.tile.waitingForCharacter = false
 			character.moving = false
-			if walkable or character.forceMove then
+			if (walkable and not forceNoMove) or character.forceMove then
 				placeCharOnTile(character, character.approachingTile)
 				character.forceMove = false
 			else

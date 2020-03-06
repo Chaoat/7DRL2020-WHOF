@@ -21,16 +21,18 @@ require "particles"
 require "archery"
 require "interface"
 require "consumable"
+require "foliage"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
 	math.randomseed(os.clock())
 	love.keyboard.setKeyRepeat(true)
 	
+	initWind()
 	doFontPreProcessing()
 	preProcessFormations()
 	
-	Map = initiateMap(130)
+	Map = initiateMap(120)
 	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 60, 60, 12, 12)
 	--Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 999, 999, 4, 4)
 	
@@ -46,9 +48,6 @@ function love.load()
 	
 	--spawnEncounter(Map, 20, 0, 10, 2)
 	
-	initiateConsumable(Map, 5, 0, "health")
-	initiateConsumable(Map, 5, 2, "arrows")
-	
 	GlobalTime = 0
 end
 
@@ -57,17 +56,18 @@ function love.resize(x, y)
 end
 
 function love.update(dt)
+	print(dt*60)
+	
 	if dt > 0.1 then
 		dt = 1/60
 	end
 	
 	GlobalTime = GlobalTime + dt
 	
-	--print(dt*60)
-	
 	updateMap(Map, dt)
 	updatePlayer(Player, Camera, dt)
 	updateRound(Player, Map, CurRound, dt)
+	updateWind(dt)
 end
 
 function love.keypressed(key)

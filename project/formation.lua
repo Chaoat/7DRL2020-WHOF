@@ -69,7 +69,7 @@ function checkFormationAgro(map, target, layers)
 		if not formation.active then
 			if distance < formation.triggerDistance then
 				activateFormation(formation, true)
-				checkFormationAgro(map, formation, layers + 1)
+				--checkFormationAgro(map, formation, layers + 1)
 			end
 		end
 	end
@@ -106,6 +106,8 @@ function updateFormationMembers(formation)
 		member.enemy.formationX = formation.x + member.posX
 		member.enemy.formationY = formation.y + member.posY
 		member.enemy.formationFacing = formation.facing + member.facing
+		
+		--initiateParticle(member.enemy.character.map, member.enemy.formationX, member.enemy.formationY, 0, 0, 1, "collect")
 	end
 	
 	if formation.messenger then
@@ -188,14 +190,30 @@ function determineFormationAction(map, player, formation)
 			local angleToTarget = math.atan2(player.character.tile.y - formation.y, player.character.tile.x - formation.x)
 			local distanceToTarget = orthogDistance(player.character.tile.x, player.character.tile.y, formation.x, formation.y)
 			
-			if distanceToTarget <= formation.size/2 + 8 then
-				targetFacing = cardinalRound(angleToTarget)
-				action = "rotate"
-			else
-				local xOff, yOff = getRelativeGridPositionFromAngle(angleToTarget + math.pi)
-				targetX = formation.x + xOff
-				targetY = formation.y + yOff
-				action = "move"
+			if membersNotReady <= #formation.members*formation.leniency then
+				if distanceToTarget <= formation.size/2 + 8 then
+					targetFacing = cardinalRound(angleToTarget)
+					action = "rotate"
+				else
+					local xOff, yOff = getRelativeGridPositionFromAngle(angleToTarget + math.pi)
+					targetX = formation.x + xOff
+					targetY = formation.y + yOff
+					action = "move"
+				end
+			end
+			
+			formation.order = "formation"
+		elseif formation.behaviour == "intercept" then
+			if membersNotReady <= #formation.members*formation.leniency then 
+				if distanceBetweenAngles(formation.facing, player.character.facing + math.pi) ~= 0 then
+					targetFacing = player.character.facing + math.pi
+					action = "rotate"
+				else
+					local targetTile = getTileFromPointAtDistance(map, player.character.tile.x, player.character.tile.y, player.character.facing, 3*player.speed)
+					targetX = targetTile.x
+					targetY = targetTile.y
+					action = "move"
+				end
 			end
 			
 			formation.order = "formation"

@@ -26,6 +26,7 @@ function updateRound(player, map, curRound, dt)
 				modifySpeed(player, -1)
 			end
 			resolveTurn(player, map, curRound.curTurn)
+			collectPlayerPickups(map, player)
 			cleanupDeadObjects(map)
 			advanceRound(curRound, map)
 			resetRoundTime(curRound)
@@ -60,7 +61,6 @@ function updateRound(player, map, curRound, dt)
 			cleanupDeadObjects(map)
 			
 			characterSlash(player.character, nil)
-			collectPlayerPickups(map, player)
 			
 			--endRoundCleanup(map)
 			checkChunkExpansion(player.character.map, player.character.tile.x, player.character.tile.y)
