@@ -91,6 +91,7 @@ function drawInterface(interface, camera)
 	local left = camera.centerX - interface.tilesWide/2
 	local top = camera.centerY + (camera.tilesTall/2 - interface.tilesHigh)
 	
+	-- Drawing the bottom interface box
 	local backLetter = initiateLetter(" ", {0, 0, 0, 0}, interface.backColour)
 	local sideLetter = initiateLetter("|", interface.frontColour, interface.backColour)
 	local topLetter = initiateLetter("-", interface.frontColour, interface.backColour)
@@ -147,6 +148,53 @@ function drawInterface(interface, camera)
 		drawLetter(arrowLetter3, left + interface.arrowBar.x + 4, top - i + interface.arrowBar.y, camera)
 	end
 end
+
+function drawTopInterface(interface, camera, player)
+	local dist = tostring(player.travelDist)
+	print(player.travelDist)
+	dist = dist .. "      "
+	local topText = {"d", "i", "s", "t", "a", "n", "c", "e", " ", "t", "r", "a", "v", "e", "l", "l", "e", "d", " ", string.sub(dist, 1, 1), string.sub(dist, 2, 2), string.sub(dist, 3, 3), string.sub(dist, 4, 4), string.sub(dist, 5, 5)}
+
+	--HACK: Top interface is nasty
+	local left = camera.centerX - interface.tilesWide/4
+	local top = camera.centerY - (camera.tilesTall/2 - interface.tilesHigh) - 12
+	local topTilesHigh = interface.tilesHigh / 3 - 1
+	local bottom = top + topTilesHigh
+	
+	-- Drawing the top interface box
+	local backLetter = initiateLetter(" ", {0, 0, 0, 0}, interface.backColour)
+	local sideLetter = initiateLetter("|", interface.frontColour, interface.backColour)
+	local topLetter = initiateLetter("-", interface.frontColour, interface.backColour)
+	for i = 0, interface.tilesWide /2 do
+		for j = 0, topTilesHigh do
+			local x = i + left
+			local y = j + top
+			
+			if y == bottom then
+				if x == left then
+					drawLetter(initiateLetter("\\", interface.frontColour, interface.backColour), x, y, camera)
+				elseif x == left + interface.tilesWide / 2 then
+					drawLetter(initiateLetter("/", interface.frontColour, interface.backColour), x, y, camera)
+				else
+					drawLetter(topLetter, x, y, camera)
+				end
+			elseif x == left or x == left + interface.tilesWide / 2 then
+				drawLetter(sideLetter, x, y, camera)
+			elseif y == top+1 then
+				local x2 = math.floor(i)
+				print(topText[x2])
+				if topText[x2] then
+					drawLetter(initiateLetter(topText[x2], interface.frontColour, interface.backColour), x, y, camera)
+				else
+    				drawLetter(backLetter, x, y, camera)
+				end
+			else
+				drawLetter(backLetter, x, y, camera)
+			end
+		end
+	end
+end
+
 
 function checkInterfaceClicked(x, y, interface, camera, player, curRound)
 	local tileX, tileY = mousePosToTilePos(x, y, camera)
