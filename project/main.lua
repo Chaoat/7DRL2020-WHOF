@@ -56,7 +56,7 @@ function love.resize(x, y)
 end
 
 function love.update(dt)
-	print(dt*60)
+	--print(dt*60)
 	
 	if dt > 0.1 then
 		dt = 1/60
@@ -83,6 +83,7 @@ end
 function love.draw()
 	drawMap(Map, Camera)
 	drawPlayerBowRangeOverlay(Player, Camera)
+	drawExamineScreen(Map, Interface, Camera, Player)
 	drawInterface(Interface, Camera)
 	drawTopInterface(Interface, Camera, Player)
 	

@@ -26,7 +26,7 @@ end
 function attachMessenger(formation, messenger)
 	formation.messenger = messenger
 	messenger.formation = formation
-	formation.leniency = 0.5
+	formation.leniency = 0
 	formation.behaviour = "escort"
 end
 

@@ -1,5 +1,5 @@
 function initiateInterface(player)
-	local interface = {tilesWide = 50, tilesHigh = 12, frontColour = {1, 1, 1, 1}, backColour = {0, 0, 0, 0.8}, buttons = {}, buttonTiles = {}, text = {}, player = player, healthBar = {x = 29, y = 10}, arrowBar = {x = 17, y = 8}}
+	local interface = {tilesWide = 50, tilesHigh = 12, topTilesHigh = 3, frontColour = {1, 1, 1, 1}, backColour = {0, 0, 0, 0.8}, buttons = {}, buttonTiles = {}, text = {}, player = player, healthBar = {x = 29, y = 10}, arrowBar = {x = 17, y = 8}}
 	for i = 0, interface.tilesWide do
 		interface.buttonTiles[i] = {}
 	end
@@ -12,13 +12,13 @@ function initiateInterface(player)
 	addTextToInterface(interface, 6, 2, {"-", " ", "b", "a", "c", "k"})
 	
 	--Sword
-	addButtonToInterface(interface, 2, 10, "s", "s", size)
+	addButtonToInterface(interface, 2, 10, "5", "5", size)
 	addTextToInterface(interface, 4, 10, {"-", " ", "s", "w", "o", "r", "d"})
 	--Bow
 	addButtonToInterface(interface, 2, 6, "f", "f", size)
 	addTextToInterface(interface, 4, 6, {"-", " ", "s", "h", "o", "o", "t"})
 	--Examine
-	addButtonToInterface(interface, 13, 10, "x", "x", size)
+	addButtonToInterface(interface, 13, 10, "v", "v", size)
 	addTextToInterface(interface, 15, 10, {"-", " ", "e", "x", "a", "m", "i", "n", "e"})
 	
 	local keyPadX = 38
@@ -153,6 +153,56 @@ function drawInterface(interface, camera)
 	end
 end
 
+function drawExamineScreen(map, interface, camera, player)
+	if camera.movingCursor and not player.firing then
+		local title = nil
+		local text = nil
+		
+		if title then
+			local left = camera.centerX - camera.tilesWide/2 + 2
+			local top = camera.centerY - camera.tilesTall/2 + interface.topTilesHigh + 2
+			
+			local width = camera.tilesWide - 5
+			local height = camera.tilesTall - interface.topTilesHigh - interface.tilesHigh - 4
+			
+			local backLetter = initiateLetter(" ", {0, 0, 0, 0}, interface.backColour)
+			local sideLetter = initiateLetter("|", interface.frontColour, interface.backColour)
+			local topLetter = initiateLetter("-", interface.frontColour, interface.backColour)
+			for i = 0, width do
+				for j = 0, height do
+					local x = i + left
+					local y = j + top
+					
+					if y == top then
+						if x == left then
+							drawLetter(initiateLetter("/", interface.frontColour, interface.backColour), x, y, camera)
+						elseif x == left + width then
+							drawLetter(initiateLetter("\\", interface.frontColour, interface.backColour), x, y, camera)
+						else
+							drawLetter(topLetter, x, y, camera)
+						end
+					elseif y == top + height then
+						if x == left then
+							drawLetter(initiateLetter("\\", interface.frontColour, interface.backColour), x, y, camera)
+						elseif x == left + width then
+							drawLetter(initiateLetter("/", interface.frontColour, interface.backColour), x, y, camera)
+						else
+							drawLetter(topLetter, x, y, camera)
+						end
+					elseif x == left or x == left + width then
+						drawLetter(sideLetter, x, y, camera)
+					else
+						drawLetter(backLetter, x, y, camera)
+					end
+					
+					setFont("clacon", 20)
+					love.graphics.printf(title, left + 15, top + 15)
+				end
+			end
+		end
+	end
+end
+
 function drawTopInterface(interface, camera, player)
 	local dist = tostring(player.travelDist)
 	--converting to percentage
@@ -163,7 +213,7 @@ function drawTopInterface(interface, camera, player)
 	--HACK: Top interface is nasty
 	local left = camera.centerX - interface.tilesWide/4
 	local top = camera.centerY - (camera.tilesTall/2 - interface.tilesHigh) - 12
-	local topTilesHigh = interface.tilesHigh / 3 - 1
+	local topTilesHigh = interface.topTilesHigh
 	local bottom = top + topTilesHigh
 	
 	-- Drawing the top interface box

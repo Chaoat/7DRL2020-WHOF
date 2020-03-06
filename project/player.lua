@@ -1,17 +1,17 @@
 local controls = {}
 
 --Support for WASD, Keypad, and Vi-keys
-controls["moveBotLeft"] = {"kp1", "z", "b"}
-controls["moveBot"] = {"kp2", "down", "j"}
-controls["moveBotRight"] = {"kp3", "c", "n"}
-controls["moveRight"] = {"kp6", "right", "d", "l"}
-controls["moveTopRight"] = {"kp9", "e", "u"}
-controls["moveTop"] = {"kp8", "up", "w", "k"}
-controls["moveTopLeft"] = {"kp7", "q", "y"}
-controls["moveLeft"] = {"kp4", "left", "a", "h"}
-controls["moveStay"] = {"kp5", ","}
-controls["sword"] = {"s"}
-controls["examine"] = {"x"}
+controls["moveBotLeft"] = {"kp1", "z"}
+controls["moveBot"] = {"kp2", "x"}
+controls["moveBotRight"] = {"kp3", "c"}
+controls["moveRight"] = {"kp6", "d"}
+controls["moveTopRight"] = {"kp9", "e"}
+controls["moveTop"] = {"kp8", "w"}
+controls["moveTopLeft"] = {"kp7", "q"}
+controls["moveLeft"] = {"kp4", "a"}
+controls["moveStay"] = {}
+controls["sword"] = {"s", "kp5", "space"}
+controls["examine"] = {"v"}
 controls["shoot"] = {"f"}
 controls["cancel"] = {"escape"}
 
@@ -130,10 +130,14 @@ function playerKeypressed(player, camera, key, curRound)
 		elseif action == "shoot" then
 			if player.arrows > 0 then
 				if player.firing then
-					player.arrows = player.arrows - 1
-					fireArrow(player.character, camera.cursorX, camera.cursorY)
-					playerCancelFiring(player, camera)
-					startRound(player, player.character.map, curRound)
+					if camera.cursorX == player.character.tile.x and camera.cursorY == player.character.tile.y then
+						playerCancelFiring(player, camera)
+					else
+						player.arrows = player.arrows - 1
+						fireArrow(player.character, camera.cursorX, camera.cursorY)
+						playerCancelFiring(player, camera)
+						startRound(player, player.character.map, curRound)
+					end
 				else
 					if camera.movingCursor then
 						camera.cursor.remove = true

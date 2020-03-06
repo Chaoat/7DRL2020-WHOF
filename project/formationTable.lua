@@ -103,7 +103,7 @@ createFormationTemplate(nil, "chase", {
 --.L.
 --.L.
 --.L.
-createFormationTemplate(nil, "chase", {
+createFormationTemplate(nil, "intercept", {
 	{kind = "lancer", x = 0, y = 0},
 	{kind = "lancer", x = 0, y = -1},
 	{kind = "lancer", x = 0, y = 1}
@@ -112,7 +112,7 @@ createFormationTemplate(nil, "chase", {
 --.B.
 --.B.
 --.B.
-createFormationTemplate(nil, "chase", {
+createFormationTemplate(nil, "intercept", {
 	{kind = "bowman", x = 0, y = 0},
 	{kind = "bowman", x = 0, y = -1},
 	{kind = "bowman", x = 0, y = 1}
@@ -140,7 +140,7 @@ createFormationTemplate(nil, "chase", {
 --...
 --LSB
 --...
-createFormationTemplate(nil, "chase", {
+createFormationTemplate(nil, "intercept", {
 	{kind = "lancer", x = -1, y = 0},
 	{kind = "swordsman", x = 0, y = 0},
 	{kind = "bowman", x = 1, y = 0}
@@ -221,7 +221,7 @@ createFormationTemplate(nil, "chase", {
 --.LB..
 --.LB..
 --..L..
-createFormationTemplate(nil, "chase", {
+createFormationTemplate(nil, "intercept", {
 	{kind = "lancer", x = 0, y = 2},
 	{kind = "lancer", x = -1, y = 1},
 	{kind = "lancer", x = -1, y = 0},

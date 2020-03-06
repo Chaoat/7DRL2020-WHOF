@@ -72,7 +72,8 @@ enemyKinds["barrier"]= {
 		enemy.stance = "hold"
 	end,
 	lance = false,
-	bleeds = false
+	bleeds = false,
+	lance = true
 }
 
 
