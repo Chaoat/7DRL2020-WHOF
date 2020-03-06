@@ -307,7 +307,6 @@ local enemyRide = function(enemy, player)
 					end
 				end
 				
-				print(angleDist)
 				if angleDist >= math.pi/2 then
 					acceleration = -1
 				end
@@ -341,6 +340,19 @@ function enemyAct(enemy, player)
 			enemyFlee(enemy, player)
 		elseif enemy.stance == "ride" then
 			enemyRide(enemy, player)
+		end
+	end
+	
+	if enemy.cavCount then
+		local distance = orthogDistance(enemy.character.tile.x, enemy.character.tile.y, player.character.tile.x, player.character.tile.y)
+		
+		if distance >= 2*enemy.formation.triggerDistance then
+			for i = 1, enemy.cavCount do
+				local spawnTile = findFreeTileFromPoint(enemy.character.map, enemy.character.tile.x, enemy.character.tile.y, 3)
+				activateEnemy(initiateEnemy(enemy.character.map, spawnTile.x, spawnTile.y, "rider"))
+			end
+			enemy.cavCount = nil
+			detachMessenger(enemy.formation)
 		end
 	end
 end

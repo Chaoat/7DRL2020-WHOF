@@ -168,18 +168,18 @@ function updateCharacterPositions(characterList)
 			 if not moved then
 				forceNoMove = true
 				
-				--for j = 1, #movingCharacters do
-				--	local character = movingCharacters[j]
-				--	if character.moving and not character.forceMove then
-				--		local blockedList = {}
-				--		if checkIfCircularBlockage(character, blockedList) then
-				--			for k = 1, #blockedList do
-				--				blockedList[k].forceMove = true
-				--				print("WOW IT ACTUALLY HAPPENED")
-				--			end
-				--		end
-				--	end
-				--end
+				for j = 1, #movingCharacters do
+					local character = movingCharacters[j]
+					if character.moving and not character.forceMove then
+						local blockedList = {}
+						if checkIfCircularBlockage(character, blockedList) then
+							for k = 1, #blockedList do
+								blockedList[k].forceMove = true
+								print("WOW IT ACTUALLY HAPPENED")
+							end
+						end
+					end
+				end
 				
 				print("Fix Move Stalemate")
 			 end

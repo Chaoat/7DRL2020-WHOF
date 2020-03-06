@@ -62,7 +62,7 @@ function checkFormationAgro(map, target, layers)
 		
 		local distance = orthogDistance(formation.x, formation.y, target.x, target.y)
 		if formation.active then
-			if distance > 4*formation.triggerDistance then
+			if distance > 5*formation.triggerDistance then
 				deactivateFormation(formation)
 			end
 		end

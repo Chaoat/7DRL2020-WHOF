@@ -12,7 +12,9 @@ table.insert(difficultyBrackets, {
 	campBuildings = 1,
 	
 	patrolRemainder = 0,
-	campRemainder = 0
+	campRemainder = 0,
+	
+	messengerCavCount = 1
 })
 table.insert(difficultyBrackets, {
 	cutPoint = 9999999999999,
@@ -25,7 +27,9 @@ table.insert(difficultyBrackets, {
 	campBuildings = 0,
 	
 	patrolRemainder = 0,
-	campRemainder = 0
+	campRemainder = 0,
+	
+	messengerCavCount = 0
 })
 
 function expandMap(map, tileKind, newTileX, newTileY)
@@ -101,7 +105,7 @@ function populateNewChunkWithEncounters(map, bracketI, tiles, campTiles)
 	
 	while patrolTileCount >= bracket.patrolFrequency do
 		local tile, i = randomFromTable(tiles)
-		spawnEncounter(map, tile[1], tile[2], bracket.patrolStrength, 0, true)
+		spawnEncounter(map, tile[1], tile[2], bracket.patrolStrength, 0, true, bracket.messengerCavCount)
 		table.remove(tiles, i)
 		patrolTileCount = patrolTileCount - bracket.patrolFrequency
 	end
@@ -109,14 +113,14 @@ function populateNewChunkWithEncounters(map, bracketI, tiles, campTiles)
 	
 	while campTileCount >= bracket.campFrequency do
 		local tile, i = randomFromTable(campTiles)
-		spawnEncounter(map, tile[1], tile[2], bracket.campStrength, bracket.campBuildings, false)
+		spawnEncounter(map, tile[1], tile[2], bracket.campStrength, bracket.campBuildings, false, bracket.messengerCavCount)
 		table.remove(campTiles, i)
 		campTileCount = campTileCount - bracket.campFrequency
 	end
 	bracket.campRemainder = campTileCount
 end
 
-function spawnEncounter(map, x, y, difficulty, nStructures, patrol)
+function spawnEncounter(map, x, y, difficulty, nStructures, patrol, messengerCavCount)
 	local spaceNeeded = 0
 	
 	local formationsChosen = {}
@@ -151,6 +155,7 @@ function spawnEncounter(map, x, y, difficulty, nStructures, patrol)
 	if math.random() < 0.5 or not patrol then
 		local messengerTile = findFreeTileFromPoint(map, x, y, 2)
 		messenger = initiateEnemy(map, messengerTile.x, messengerTile.y, "messenger")
+		messenger.cavCount = messengerCavCount
 	end
 	
 	local i = 1
