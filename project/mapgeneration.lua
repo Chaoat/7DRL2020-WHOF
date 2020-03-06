@@ -14,7 +14,8 @@ table.insert(difficultyBrackets, {
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
-	messengerCavCount = 1
+	messengerCavCount = 1,
+	treeSpawnChance = 0.02
 })
 table.insert(difficultyBrackets, {
 	cutPoint = 9999999999999,
@@ -29,7 +30,8 @@ table.insert(difficultyBrackets, {
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
-	messengerCavCount = 0
+	messengerCavCount = 0,
+	treeSpawnChance = 0
 })
 
 function expandMap(map, tileKind, newTileX, newTileY)
@@ -65,12 +67,12 @@ function expandMap(map, tileKind, newTileX, newTileY)
 				forestVal = love.math.noise(map.treeNoiseMult*i + map.treeNoiseXOff, map.treeNoiseMult*j + map.treeNoiseYOff)
 				
 				local cutoffVal = 0.7
-				local treeChance = ((forestVal - (1 - cutoffVal))/cutoffVal)*0.01
+				local treeChance = ((forestVal - (1 - cutoffVal))/cutoffVal)*difficultyBrackets[cDiffBracket].treeSpawnChance
 				if math.random() < treeChance then
 					map.tiles[i][j].spawnTree = true
 				end
 				table.insert(tilesInBrackets[cDiffBracket], {i, j})
-				if treeChance <= 0.005 then
+				if treeChance <= 0.002 then
 					table.insert(campTilesInBrackets[cDiffBracket], {i, j})
 				end
 			end
