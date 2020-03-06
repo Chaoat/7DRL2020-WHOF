@@ -5,13 +5,13 @@ function initiateFormation(map, enemyList, x, y, template, formFacing)
 		local enemy = enemyList[i]
 		local templateEntry = template.positions[i]
 		
-		local posX = templateEntry.x
-		local posY = templateEntry.y
+		local posX, posY = orthogRotate(templateEntry.x, templateEntry.y, formFacing)
 		local facing = templateEntry.facing
 		if not facing then
 			facing = 0
 		end
 		table.insert(formation.members, {enemy = enemy, posX = posX, posY = posY, facing = facing})
+		
 		
 		enemy.formation = formation
 		enemy.formationX = x + posX
@@ -28,6 +28,10 @@ function attachMessenger(formation, messenger)
 	messenger.formation = formation
 	formation.leniency = 0
 	formation.behaviour = "escort"
+	
+	messenger.formationX = formation.x
+	messenger.formationY = formation.y
+	messenger.formationFacing = 0
 end
 
 function detachMessenger(formation)
@@ -190,6 +194,7 @@ function determineFormationAction(map, player, formation)
 			local angleToTarget = math.atan2(player.character.tile.y - formation.y, player.character.tile.x - formation.x)
 			local distanceToTarget = orthogDistance(player.character.tile.x, player.character.tile.y, formation.x, formation.y)
 			
+			print(membersNotReady .. ":" .. #formation.members*formation.leniency)
 			if membersNotReady <= #formation.members*formation.leniency then
 				if distanceToTarget <= formation.size/2 + 8 then
 					targetFacing = cardinalRound(angleToTarget)

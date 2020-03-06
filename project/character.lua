@@ -109,11 +109,15 @@ function updateCharacterPositions(characterList)
 	local checkIfCircularBlockage = function(character, blockedList)
 		local idEncountered = {}
 		while character.blockedBy do
+			if idEncountered[character.id] then
+				break
+			end
+			
 			table.insert(blockedList, character)
 			idEncountered[character.id] = true
 			--print(character.id)
 			
-			if idEncountered[character.blockedBy.id] then
+			if blockedList[1].id == character.blockedBy.id then
 				return true
 			else
 				character = character.blockedBy
@@ -138,6 +142,7 @@ function updateCharacterPositions(characterList)
 		local character = movingCharacters[i]
 		--print(character.id)
 		
+		character.blockedBy = nil
 		if not character.approachingTile.waitingForCharacter or forceNoMove then
 			local walkable = checkTileWalkable(character.approachingTile, character)
 			
@@ -160,6 +165,7 @@ function updateCharacterPositions(characterList)
 			moved = true
 		else
 			character.blockedBy = character.approachingTile.waitingForCharacter
+			--initiateParticle(Map, character.approachingTile.x, character.approachingTile.y, 0, 0, 1, "collect")
 			--print(character.id .. " is blocked by " .. character.blockedBy.id)
 			i = i + 1
 		end
@@ -168,18 +174,18 @@ function updateCharacterPositions(characterList)
 			 if not moved then
 				forceNoMove = true
 				
-				--for j = 1, #movingCharacters do
-				--	local character = movingCharacters[j]
-				--	if character.moving and not character.forceMove then
-				--		local blockedList = {}
-				--		if checkIfCircularBlockage(character, blockedList) then
-				--			for k = 1, #blockedList do
-				--				blockedList[k].forceMove = true
-				--				print("WOW IT ACTUALLY HAPPENED")
-				--			end
-				--		end
-				--	end
-				--end
+				for j = 1, #movingCharacters do
+					local character = movingCharacters[j]
+					if character.moving and not character.forceMove then
+						local blockedList = {}
+						if checkIfCircularBlockage(character, blockedList) then
+							for k = 1, #blockedList do
+								blockedList[k].forceMove = true
+								--print("WOW IT ACTUALLY HAPPENED")
+							end
+						end
+					end
+				end
 				
 				print("Fix Move Stalemate")
 			 end

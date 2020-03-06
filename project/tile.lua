@@ -139,7 +139,10 @@ function drawTiles(map, camera)
 				occupied = true
 			end
 			if tileHasLance(tile) then
-				table.insert(visibleLances, tileHasLance(tile))
+				for i = 1, #tile.lances do
+					table.insert(visibleLances, tile.lances[i])
+				end
+				
 				drawBackdrop(tile.letter, i, j, camera)
 				occupied = true
 			end

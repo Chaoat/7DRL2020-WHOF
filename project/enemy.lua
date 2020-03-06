@@ -61,6 +61,9 @@ enemyKinds["rider"]= {
 	mounted = true,
 	bleeds = true,
 	bow = {shootRange = 7, reloadTime = 4},
+	
+	title = "Horseman",
+	description = "A high ranking mounted soldier of the Atagan army. Likely the son of an Atagan noble, or a veteran fighter who remembers the true warrior code. Due to their scarcity in the Atagan legions, they have taken on the role of elite troops roused only for the most important of battles. Luckily for you, this means they are unlikely to stand in your way. Unless roused, of course.\n\nWhile they fight in much the same way as our own warriors, their elevated status has blunted their killing senses, and they have lost much of the fighting skill passed down by the ancestors. Nevertheless, they still remember the ancient art of horseback archery, and will harry you with arrows while they try to strike you down with their lance.\n\n\nHonour and speed typify this opponent"
 }
 enemyKinds["messenger"]= {
 	letter = initiateLetter("M", {1, 0.5, 1, 1}),
@@ -73,7 +76,10 @@ enemyKinds["messenger"]= {
 		end
 	end,
 	lance = false,
-	bleeds = true
+	bleeds = true,
+	
+	title = "Messenger",
+	description = "An Atagan captain tasked with raising the call when hostiles are sighted. The Atagan forces are built on discipline and hierarchy rather than honour and respect, and these men are the finest example of this folly. Dressed in ornate armour, they command small units of men, and are responsible for the messenger pigeons assigned to their company for purposes of communication. They are the only men amongst the soldiery that are trained in the launching of these birds however, and it is a common tactic amongst our warriors to strike down only the captain of a squad and leave the rest of them for dead.\n\nOne would expect that a warrior of such a rank would be a deadly combatant, but it is rather the opposite. These men are picked as leaders not for their prowess as warriors, but as administrators, and are well known to flee at the first sign of conflict. Nevertheless, the threat they pose in summoning the aid of stronger fighters is a real one, and should not be underestimated.\n\n\nCowardice and looming danger typify this opponent"
 }
 enemyKinds["barrier"]= {
 	letter = initiateLetter("#", enemyColour),
@@ -82,7 +88,11 @@ enemyKinds["barrier"]= {
 	end,
 	lance = false,
 	bleeds = false,
-	lance = true
+	lance = true,
+	arrowImmune = true,
+	
+	title = "Barrier",
+	description = "A hastily assembled stockade with a spear couched in the front. Used to shield bowman or otherwise vulnerable men. While blatantly worse than a soldier, it does have the advantage of being particularly resilient to arrows and swords. A well placed lance on the other hand will shatter the entire shoddy construct."
 }
 
 
@@ -92,6 +102,7 @@ function initiateEnemy(map, x, y, kind)
 	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0, title = enemyKind.title, description = enemyKind.description}
 	enemy.character = initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy)
 	enemy.character.bleeds = enemyKind.bleeds
+	enemy.character.arrowImmune = enemyKind.arrowImmune
 	
 	if enemy.bow then
 		enemy.reloading = 0
