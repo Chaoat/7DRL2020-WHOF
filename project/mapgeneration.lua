@@ -178,7 +178,7 @@ function expandMap(map, tileKind, newTileX, newTileY)
 					map.tiles[i][j].spawnTree = true
 				end
 				table.insert(tilesInBrackets[cDiffBracket], {i, j})
-				if treeChance <= 0.002 then
+				if treeChance <= 0.1 then
 					table.insert(campTilesInBrackets[cDiffBracket], {i, j})
 				end
 			end

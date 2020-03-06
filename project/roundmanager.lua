@@ -60,6 +60,7 @@ function updateRound(player, map, curRound, dt)
 			cleanupDeadObjects(map)
 			
 			characterSlash(player.character, nil)
+			collectPlayerPickups(map, player)
 			
 			--endRoundCleanup(map)
 			checkChunkExpansion(player.character.map, player.character.tile.x, player.character.tile.y)

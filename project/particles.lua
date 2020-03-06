@@ -15,6 +15,11 @@ kindProperties["arrowTrail"] = function(particle)
 	particle.influence = 1
 	particle.infFade = 1
 end
+kindProperties["collect"] = function(particle)
+	particle.infColour = {0.8, 0.8, 1, 1}
+	particle.influence = 1
+	particle.infFade = 1
+end
 
 function initiateParticle(map, x, y, speed, angle, duration, kind)
 	local particle = {map = map, x = x, y = y, angle = angle, speed = speed, timeLeft = duration, kind = kind}

@@ -20,6 +20,7 @@ require "roundmanager"
 require "particles"
 require "archery"
 require "interface"
+require "consumable"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
@@ -44,6 +45,9 @@ function love.load()
 	--spawnStructure(Map, 0, -10, "smallfire", 0)
 	
 	--spawnEncounter(Map, 20, 0, 10, 2)
+	
+	initiateConsumable(Map, 5, 0, "health")
+	initiateConsumable(Map, 5, 2, "arrows")
 	
 	GlobalTime = 0
 end

@@ -125,11 +125,15 @@ function drawInterface(interface, camera)
 	local healthLetter = initiateLetter("#", {1, 0, 0, 1}, {0.5, 0, 0, 0.5})
 	local flash = 1 - (GlobalTime - interface.player.lastHit)
 	local flashHealthLetter = initiateLetter("#", {1, 1, 1, flash}, {0.5, 0, 0, 0.5})
+	local flashInLetter = initiateLetter("#", {1, 1, 1, flash}, {0, 0, 0, 0})
 	local healthBackLetter = initiateLetter(" ", {1, 0, 0, 1}, {0.5, 0, 0, 0.5})
 	for i = 1, interface.player.maxHealth do
 		for j = 0, 3 do
 			if i <= interface.player.health then
 				drawLetter(healthLetter, left + j + interface.healthBar.x + 1, top - i + interface.healthBar.y, camera)
+				if i > interface.player.lastHealth then
+					drawLetter(flashInLetter, left + j + interface.healthBar.x + 1, top - i + interface.healthBar.y, camera)
+				end
 			elseif i <= interface.player.lastHealth then
 				drawLetter(flashHealthLetter, left + j + interface.healthBar.x + 1, top - i + interface.healthBar.y, camera)
 			else
