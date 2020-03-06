@@ -43,6 +43,16 @@ enemyKinds["bowman"]= {
 	fleeRange = 4,
 	bleeds = true
 }
+enemyKinds["rider"]= {
+	letter = initiateLetter("H", enemyColour),
+	decideAction = function(enemy, target)
+		enemy.stance = "ride"
+	end,
+	lance = true,
+	mounted = true,
+	bleeds = true,
+	bow = {shootRange = 7, reloadTime = 4},
+}
 enemyKinds["messenger"]= {
 	letter = initiateLetter("M", enemyColour),
 	decideAction = function(enemy, target)
@@ -82,6 +92,12 @@ function initiateEnemy(map, x, y, kind)
 		initiateLance(map, enemy.character, enemyKind.letter.colour)
 	end
 	
+	if enemyKind.mounted then
+		enemy.speed = 0
+		enemy.maxSpeed = 5
+		enemy.moveDecals = {}
+	end
+	
 	table.insert(map.inactiveEnemies, enemy)
 	
 	return enemy
@@ -101,8 +117,10 @@ function activateEnemy(enemy)
 end
 
 function deactivateEnemy(enemy)
-	enemy.active = false
-	deactivateCharacter(enemy.character)
+	if not enemy.speed then
+		enemy.active = false
+		deactivateCharacter(enemy.character)
+	end
 end
 
 local enemyMoveToPos = function(enemy, x, y)
@@ -210,6 +228,101 @@ local enemyFollowFormation = function(enemy)
 	end
 end
 
+local enemyRide = function(enemy, player)
+	local character = enemy.character
+	--AvoidObstacles
+	local rotation = 0
+	local acceleration = 0
+	
+	local blocked = false
+	if enemy.speed > 0 then
+		blocked = true
+		local i = 1
+		while blocked and i <= 3 do
+			local checkingRotation = 0
+			if i == 2 then
+				checkingRotation = math.pi/4
+			elseif i == 3 then
+				checkingRotation = -math.pi/4
+			end
+			
+			local tilesInPath = getTilesFromPoint(character.map, enemy.character.tile.x, character.tile.y, character.facing + checkingRotation, math.ceil(2*enemy.speed))
+			
+			for j = 2, #tilesInPath do
+				local tile = tilesInPath[j]
+				if checkTileWalkable(tile, character) then
+					if j == #tilesInPath then
+						blocked = false
+						rotation = checkingRotation
+					end
+				else
+					break
+				end
+			end
+			
+			i = i + 1
+		end
+	else
+		local targetX = player.character.tile.x
+		local targetY = player.character.tile.y
+		
+		local angleToTarget = math.atan2(targetY - character.tile.y, targetX - character.tile.x)
+		character.facing = cardinalRound(angleToTarget)
+	end
+	
+	local targetX = player.character.tile.x
+	local targetY = player.character.tile.y
+	local dist = orthogDistance(targetX, targetY, character.tile.x, character.tile.y)
+	if not blocked then
+		if dist <= enemy.bow.shootRange then
+			enemy.stance = "shooting"
+		else
+			local angleToTarget = math.atan2(targetY - character.tile.y, targetX - character.tile.x)
+			--if angleToTarget == nil then
+			--	error()
+			--end
+			
+			local angleDist = distanceBetweenAngles(angleToTarget, character.facing)
+			
+			if angleDist <= math.pi/8 then
+				acceleration = 1
+			else
+				local proposedRotation = 0
+				if findAngleDirection(character.facing, angleToTarget) > 0 then
+					proposedRotation = math.pi/4
+				else
+					proposedRotation = -math.pi/4
+				end
+				
+				local tilesInPath = getTilesFromPoint(character.map, enemy.character.tile.x, character.tile.y, character.facing + proposedRotation, math.ceil(1.5*enemy.speed))
+				
+				for j = 2, #tilesInPath do
+					local tile = tilesInPath[j]
+					if checkTileWalkable(tile, character) then
+						if j == #tilesInPath then
+							rotation = proposedRotation
+						end
+					else
+						break
+					end
+				end
+				
+				print(angleDist)
+				if angleDist >= math.pi/2 then
+					acceleration = -1
+				end
+			end
+		end
+	end
+	
+	modifySpeed(enemy, acceleration)
+	if rotation > 0 then
+		shiftClockwise(character)
+	elseif rotation < 0 then
+		shiftAnticlockwise(character)
+	end
+end
+
 function enemyAct(enemy, player)
 	if enemy.firing then
 		fireArrow(enemy.character, enemy.targetX, enemy.targetY)
@@ -226,6 +339,8 @@ function enemyAct(enemy, player)
 			enemyHold(enemy, player)
 		elseif enemy.stance == "flee" then
 			enemyFlee(enemy, player)
+		elseif enemy.stance == "ride" then
+			enemyRide(enemy, player)
 		end
 	end
 end
@@ -317,6 +432,34 @@ function cleanupDeadEnemies(enemies)
 			table.remove(enemies, i)
 		else
 			i = i + 1
+		end
+	end
+end
+
+function removeEnemyDecals(enemies)
+	for i = 1, #enemies do
+		local enemy = enemies[i]
+		if enemy.speed then
+			for j = 1, #enemy.moveDecals do
+				local moveDecal = enemy.moveDecals[j]
+				moveDecal.remove = true
+			end
+		end
+	end
+end
+
+function createEnemyDecals(enemies)
+	for i = 1, #enemies do
+		local enemy = enemies[i]
+		if enemy.speed then
+			local pathTiles = getTilesFromPoint(enemy.character.map, enemy.character.tile.x, enemy.character.tile.y, enemy.character.facing, enemy.speed)
+			for j = 2, #pathTiles do
+				local pathTile = pathTiles[j]
+				local arrow = createArrowDecal(enemy.character.map, pathTile.x, pathTile.y, enemy.character.facing)
+				arrow.colour = {0.5, 0.5, 1, 0.5}
+				arrow.flashing = 0.3
+				table.insert(enemy.moveDecals, arrow)
+			end
 		end
 	end
 end

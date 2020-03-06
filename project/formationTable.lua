@@ -262,6 +262,7 @@ createFormationTemplate(nil, "guard", {
 	{kind = "barrier", x = -1, y = 1}
 })
 
+--TestFormation
 createFormationTemplate(0, "chase", {
-	{kind = "swordsman", x = 0, y = 0}
+	{kind = "rider", x = 0, y = 0}
 })
