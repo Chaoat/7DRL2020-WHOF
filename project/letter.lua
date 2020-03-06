@@ -92,7 +92,11 @@ function drawLetter(letter, x, y, camera)
 	if letter.momentaryInfluence > 0 then
 		love.graphics.setColor(blendColours(letter.momentaryInfluenceColour, letter.colour, letter.momentaryInfluence))
 	else
-		love.graphics.setColor(letter.colour)
+		if letter.colour == nil then
+			error("Letter color: " .. letter.letter)
+		else
+			love.graphics.setColor(letter.colour)
+		end
 	end
 	
 	love.graphics.draw(fontImage, quadBank[letter.letter], drawX + camera.tileWidth/2, drawY + camera.tileHeight/2, letter.facing, camera.tileWidth/letterTileWidth, camera.tileHeight/letterTileHeight, letterTileWidth/2, letterTileHeight/2)

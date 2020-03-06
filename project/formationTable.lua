@@ -2,7 +2,7 @@ local enemyDifficulties = {}
 enemyDifficulties["swordsman"] = 1
 enemyDifficulties["lancer"] = 2
 enemyDifficulties["bowman"] = 3
-enemyDifficulties["horseman"] = 8
+enemyDifficulties["rider"] = 8
 enemyDifficulties["barrier"] = 0.5
 
 local formations = {}
@@ -97,6 +97,17 @@ createFormationTemplate(nil, "chase", {
 	{kind = "lancer", x = -1, y = 0},
 	{kind = "lancer", x = 1, y = 0},
 	{kind = "lancer", x = 0, y = -1},
+	{kind = "bowman", x = 0, y = 0}
+})
+
+--.L.
+--LBL
+--.L.
+createFormationTemplate(nil, "guard", {
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "lancer", x = 1, y = 0},
+	{kind = "lancer", x = 0, y = -1},
+	{kind = "lancer", x = 0, y = 1},
 	{kind = "bowman", x = 0, y = 0}
 })
 
@@ -261,6 +272,177 @@ createFormationTemplate(nil, "guard", {
 	{kind = "barrier", x = -1, y = -1},
 	{kind = "barrier", x = -1, y = 0},
 	{kind = "barrier", x = -1, y = 1}
+})
+
+--..###
+--.#B.B
+--.#...
+--.#B.B
+--..###
+createFormationTemplate(nil, "guard", {
+	{kind = "bowman", x = 2, y = 1},
+	{kind = "bowman", x = 2, y = -1},
+	{kind = "bowman", x = 0, y = 1},
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "barrier", x = -1, y = -1},
+	{kind = "barrier", x = -1, y = 0},
+	{kind = "barrier", x = -1, y = 1},
+	{kind = "barrier", x = 0, y = -2},
+	{kind = "barrier", x = 1, y = -2},
+	{kind = "barrier", x = 2, y = -2},
+	{kind = "barrier", x = 0, y = 2},
+	{kind = "barrier", x = 1, y = 2},
+	{kind = "barrier", x = 2, y = 2}
+})
+
+--..SSS
+--.SB.B
+--.S...
+--.SB.B
+--..SSS
+createFormationTemplate(nil, "chase", {
+	{kind = "bowman", x = 2, y = 1},
+	{kind = "bowman", x = 2, y = -1},
+	{kind = "bowman", x = 0, y = 1},
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "swordsman", x = -1, y = -1},
+	{kind = "swordsman", x = -1, y = 0},
+	{kind = "swordsman", x = -1, y = 1},
+	{kind = "swordsman", x = 0, y = -2},
+	{kind = "swordsman", x = 1, y = -2},
+	{kind = "swordsman", x = 2, y = -2},
+	{kind = "swordsman", x = 0, y = 2},
+	{kind = "swordsman", x = 1, y = 2},
+	{kind = "swordsman", x = 2, y = 2}
+})
+
+--.L.......
+--.B.......
+--.L.......
+--.......L.
+--.......B.
+--.......L.
+--.L.......
+--.B.......
+--.L.......
+createFormationTemplate(nil, "chase", {
+	{kind = "bowman", x = 4, y = 0},
+	{kind = "bowman", x = -4, y = -3},
+	{kind = "bowman", x = -4, y = 3},
+	{kind = "lancer", x = 4, y = -1},
+	{kind = "lancer", x = 4, y = 1},
+	{kind = "lancer", x = -4, y = 4},
+	{kind = "lancer", x = -4, y = 2},
+	{kind = "lancer", x = -4, y = -2},
+	{kind = "lancer", x = -4, y = -4}
+})
+
+--.........
+--.....H...
+--.........
+--...SSSSS.
+--.........
+--...SSSSS.
+--.........
+--.....H...
+--.........
+createFormationTemplate(nil, "chase", {
+	{kind = "swordsman", x = -1, y = -1},
+	{kind = "swordsman", x = 0, y = -1},
+	{kind = "swordsman", x = 1, y = -1},
+	{kind = "swordsman", x = 2, y = -1},
+	{kind = "swordsman", x = 3, y = 1},
+	{kind = "swordsman", x = -1, y = 1},
+	{kind = "swordsman", x = 0, y = 1},
+	{kind = "swordsman", x = 1, y = 1},
+	{kind = "swordsman", x = 2, y = 1},
+	{kind = "swordsman", x = 3, y = 1},
+	{kind = "rider", x = 1, y = 3},
+	{kind = "rider", x = 1, y = -3}
+})
+
+--.........
+--...L.....
+--..L......
+--.L..B....
+--L..B.....
+--.L..B....
+--..L......
+--...L.....
+--.........
+createFormationTemplate(nil, "guard", {
+	{kind = "bowman", x = 0, y = 1},
+	{kind = "bowman", x = -1, y = 0},
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "lancer", x = -4, y = 0},
+	{kind = "lancer", x = -3, y = -1},
+	{kind = "lancer", x = -3, y = 1},
+	{kind = "lancer", x = -2, y = 2},
+	{kind = "lancer", x = -2, y = -2},
+	{kind = "lancer", x = -1, y = 3},
+	{kind = "lancer", x = -1, y = -3}
+})
+
+--.........
+--...S.....
+--..S......
+--.S..L....
+--S..L...H.
+--.S..L....
+--..S......
+--...S.....
+--.........
+createFormationTemplate(nil, "chase", {
+	{kind = "lancer", x = 0, y = 1},
+	{kind = "lancer", x = -1, y = 0},
+	{kind = "lancer", x = 0, y = -1},
+	{kind = "swordsman", x = -4, y = 0},
+	{kind = "swordsman", x = -3, y = -1},
+	{kind = "swordsman", x = -3, y = 1},
+	{kind = "swordsman", x = -2, y = 2},
+	{kind = "swordsman", x = -2, y = -2},
+	{kind = "swordsman", x = -1, y = 3},
+	{kind = "swordsman", x = -1, y = -3},
+	{kind = "rider", x = 4, y = 0}
+})
+
+--.H.
+--H..
+--.H.
+createFormationTemplate(nil, "chase", {
+	{kind = "rider", x = -1, y = 0},
+	{kind = "rider", x = 0, y = -1},
+	{kind = "rider", x = 0, y = 1}
+})
+
+--..S......
+--.B.......
+--..S......
+--........S
+--.......B.
+--........S
+--..S......
+--.B.......
+--..S......
+createFormationTemplate(nil, "chase", {
+	{kind = "bowman", x = 4, y = 0},
+	{kind = "bowman", x = -4, y = -3},
+	{kind = "bowman", x = -4, y = 3},
+	{kind = "swordsman", x = 5, y = -1},
+	{kind = "swordsman", x = 5, y = 1},
+	{kind = "swordsman", x = -3, y = 4},
+	{kind = "swordsman", x = -3, y = 2},
+	{kind = "swordsman", x = -3, y = -2},
+	{kind = "swordsman", x = -3, y = -4}
+})
+
+--.S.
+--H..
+--.S.
+createFormationTemplate(nil, "intercept", {
+	{kind = "swordsman", x = 0, y = -1},
+	{kind = "rider", x = -1, y = 0},
+	{kind = "swordsman", x = 0, y = 1}
 })
 
 --TestFormation
