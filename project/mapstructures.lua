@@ -38,7 +38,7 @@ function spawnStructure(map, x, y, structureName, direction)
 			local targetY = y + offY
 			local tileKind = template.tiles[i][j]
 			if tileKind then
-				local letter = initiateLetter(template.symbols[i][j], template.colours[i][j])
+				local letter = initiateLetter(template.symbols[i][j], template.colours[i][j], {0.05, 0.05, 0.05, 1})
 				letter.facing = direction
 				map.tiles[targetX][targetY] = initiateTile(targetX, targetY, tileKind, letter)
 			end

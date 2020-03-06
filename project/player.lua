@@ -25,7 +25,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, firing = false, fireRange = 6, dead = false, travelDist = 0}
+	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, maxArrows = 6, firing = false, fireRange = 6, dead = false, travelDist = 0}
 	player.health = player.maxHealth
 	player.lastHealth = player.maxHealth
 	
@@ -50,6 +50,13 @@ function damagePlayer(player, amount)
 	if player.health <= 0 then
 		killPlayer(player)
 	end
+end
+
+function healPlayer(player, amount)
+	player.lastHealth = player.health
+	
+	player.health = math.min(player.health + amount, player.maxHealth)
+	player.lastHit = GlobalTime
 end
 
 function killPlayer(player)
@@ -317,5 +324,18 @@ end
 function removePlayerDecals(player)
 	for i = 1, #player.decals do
 		player.decals[i].remove = true
+	end
+end
+
+function collectPlayerPickups(map, player)
+	if player.speed == 0 then
+		local collectibles = collectPickupsInRange(map, player.character.tile.x, player.character.tile.y, 1)
+		
+		if collectibles["health"] then
+			healPlayer(player, collectibles["health"])
+		end
+		if collectibles["arrows"] then
+			player.arrows = math.min(player.maxArrows, player.arrows + collectibles["arrows"])
+		end
 	end
 end
