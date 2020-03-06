@@ -207,6 +207,7 @@ function characterStartSlashing(character)
 	character.swording = true
 	character.letter.shaking = 0.1
 end
+
 function checkSlashConnections(characters)
 	local characterHit = false
 	for i = 1, #characters do
@@ -229,6 +230,7 @@ function checkSlashConnections(characters)
 	end
 	return characterHit
 end
+
 function characterSlash(character, targetCharacter)
 	if targetCharacter then
 		local angleBetween = math.atan2(targetCharacter.tile.y - character.tile.y, targetCharacter.tile.x - character.tile.x)
