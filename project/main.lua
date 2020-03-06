@@ -39,6 +39,8 @@ function love.load()
 	CurRound = initiateRound(player, map, 0)
 	
 	spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
+	spawnFormation(Map, 15, 5, getFormationTemplateInDifficultyRange(0, 0), "left")
+	spawnFormation(Map, 15, -5, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnStructure(Map, 0, -10, "smallfire", 0)
 	
 	--spawnEncounter(Map, 20, 0, 10, 2)
@@ -78,5 +80,6 @@ function love.draw()
 	drawMap(Map, Camera)
 	drawPlayerBowRangeOverlay(Player, Camera)
 	drawInterface(Interface, Camera)
-	drawTopInterface(Interface, Camera, Player)
+	
+	drawCameraBars(Camera)
 end

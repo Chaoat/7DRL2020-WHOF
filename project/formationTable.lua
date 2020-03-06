@@ -2,6 +2,7 @@ local enemyDifficulties = {}
 enemyDifficulties["swordsman"] = 1
 enemyDifficulties["lancer"] = 2
 enemyDifficulties["bowman"] = 3
+enemyDifficulties["horseman"] = 8
 enemyDifficulties["barrier"] = 0.5
 
 local formations = {}
@@ -264,5 +265,13 @@ createFormationTemplate(nil, "guard", {
 
 --TestFormation
 createFormationTemplate(0, "chase", {
-	{kind = "rider", x = 0, y = 0}
+	{kind = "rider", x = -1, y = -1},
+	{kind = "rider", x = 0, y = -1},
+	{kind = "rider", x = 1, y = -1},
+	{kind = "rider", x = 1, y = 0},
+	{kind = "rider", x = 1, y = 1},
+	{kind = "rider", x = 0, y = 1},
+	{kind = "rider", x = -1, y = 1},
+	{kind = "rider", x = -1, y = 0},
+	{kind = "rider", x = 0, y = 0},
 })

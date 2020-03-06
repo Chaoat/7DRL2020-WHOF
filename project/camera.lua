@@ -66,3 +66,13 @@ function mousePosToTilePos(x, y, camera)
 	local tileY = math.floor(camera.centerY + yFromCenter/camera.tileHeight)
 	return tileX, tileY
 end
+
+function drawCameraBars(camera)
+	local barWidth = camera.width/2 - (camera.tilesWide/2)*camera.tileWidth
+	local barHeight = camera.height/2 - (camera.tilesTall/2)*camera.tileHeight
+	love.graphics.setColor(0, 0, 0, 1)
+	love.graphics.rectangle("fill", camera.screenX, camera.screenY, barWidth, camera.height)
+	love.graphics.rectangle("fill", camera.screenX, camera.screenY, camera.width, barHeight)
+	love.graphics.rectangle("fill", camera.screenX + camera.width, camera.screenY, -barWidth, camera.height)
+	love.graphics.rectangle("fill", camera.screenX, camera.screenY + camera.height, camera.width, -barHeight)
+end
