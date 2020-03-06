@@ -32,6 +32,8 @@ function doFontPreProcessing()
 	addQuadToBank(" ", 1, 5)
 	addQuadToBank("#", 2, 5)
 	addQuadToBank(">>", 3, 5)
+	addQuadToBank("%", 4, 5)
+	addQuadToBank(":", 5, 5)
 	
 	addQuadToBank("uA", 0, 7)
 	addQuadToBank("urA", 1, 7)
