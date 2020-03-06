@@ -2,7 +2,7 @@ local enemyDifficulties = {}
 enemyDifficulties["swordsman"] = 1
 enemyDifficulties["lancer"] = 2
 enemyDifficulties["bowman"] = 3
-enemyDifficulties["horseman"] = 8
+enemyDifficulties["rider"] = 8
 enemyDifficulties["barrier"] = 0.5
 
 local formations = {}
@@ -357,8 +357,8 @@ createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = 1, y = 1},
 	{kind = "swordsman", x = 2, y = 1},
 	{kind = "swordsman", x = 3, y = 1},
-	{kind = "horseman", x = 1, y = 3},
-	{kind = "horseman", x = 1, y = -3}
+	{kind = "rider", x = 1, y = 3},
+	{kind = "rider", x = 1, y = -3}
 })
 
 --.........
@@ -403,16 +403,16 @@ createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = -2, y = -2},
 	{kind = "swordsman", x = -1, y = 3},
 	{kind = "swordsman", x = -1, y = -3},
-	{kind = "horseman", x = 4, y = 0}
+	{kind = "rider", x = 4, y = 0}
 })
 
 --.H.
 --H..
 --.H.
 createFormationTemplate(nil, "chase", {
-	{kind = "horseman", x = -1, y = 0},
-	{kind = "horseman", x = 0, y = -1},
-	{kind = "horseman", x = 0, y = 1}
+	{kind = "rider", x = -1, y = 0},
+	{kind = "rider", x = 0, y = -1},
+	{kind = "rider", x = 0, y = 1}
 })
 
 --..S......
@@ -441,7 +441,7 @@ createFormationTemplate(nil, "chase", {
 --.S.
 createFormationTemplate(nil, "intercept", {
 	{kind = "swordsman", x = 0, y = -1},
-	{kind = "horseman", x = -1, y = 0},
+	{kind = "rider", x = -1, y = 0},
 	{kind = "swordsman", x = 0, y = 1}
 })
 
