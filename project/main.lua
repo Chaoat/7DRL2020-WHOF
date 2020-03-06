@@ -44,7 +44,7 @@ function love.load()
 	--spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnFormation(Map, 15, 5, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnFormation(Map, 15, -5, getFormationTemplateInDifficultyRange(0, 0), "left")
-	--spawnStructure(Map, 0, -10, "smallfire", 0)
+	--spawnStructure(Map, 20, 0, "largetent", 0)
 	
 	--spawnEncounter(Map, 20, 0, 10, 2)
 	

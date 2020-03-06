@@ -134,6 +134,10 @@ end
 
 --Rotates a point by an angle, maintaining square space
 function orthogRotate(x, y, angle)
+	if angle == 0 then
+		return x, y
+	end
+	
 	local curAngle = math.atan2(y, x)
 	local dist = orthogDistance(0, 0, x, y)
 	

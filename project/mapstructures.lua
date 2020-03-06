@@ -39,7 +39,12 @@ function spawnStructure(map, x, y, structureName, direction)
 			local targetY = y + offY
 			local tileKind = template.tiles[i][j]
 			if tileKind then
-				local letter = initiateLetter(template.symbols[i][j], template.colours[i][j], {0.05, 0.05, 0.05, 1})
+				local backColour = {0.05, 0.05, 0.05, 1}
+				if tileKind == "ground" then
+					backColour = {0, 0, 0, 1}
+				end
+				
+				local letter = initiateLetter(template.symbols[i][j], template.colours[i][j], backColour)
 				letter.facing = direction
 				map.tiles[targetX][targetY] = initiateTile(targetX, targetY, tileKind, letter)
 			end
@@ -77,6 +82,8 @@ function spawnStructure(map, x, y, structureName, direction)
 end
 
 local function newStructureTemplate(name, natural, rotatable, colours, tiles, symbols, tileColours, foliage)
+	--local testPrintString = ""
+	
 	local size = #tiles
 	local template = {name = name, size = size, natural = natural, rotatable = rotatable, colours = {}, tiles = {}, symbols = {}, foliage = foliage}
 	for i = 1, size do
@@ -86,6 +93,16 @@ local function newStructureTemplate(name, natural, rotatable, colours, tiles, sy
 		for j = 1, size do
 			template.colours[i][j] = colours[tileColours[j][i]]
 			template.symbols[i][j] = symbols[j][i]
+			
+			--testPrintString = testPrintString .. symbols[j][i]
+			
+			if colours[tileColours[j][i]] == nil then
+				template.colours[i][j] = {0, 0, 0, 1}
+			end
+			
+			--if tiles[j][i] ~= "n" and colours[tileColours[j][i]] == nil then
+			--	error(i .. " " .. j)
+			--end
 			
 			local tile = ""
 
@@ -98,10 +115,16 @@ local function newStructureTemplate(name, natural, rotatable, colours, tiles, sy
 			elseif tiles[j][i] == "b" then
 				--building tile cant be moved through
 				tile = "building"
+			elseif tiles[j][i] == "g" then
+				tile = "ground"
 			end
 			template.tiles[i][j] = tile
 		end
+		
+		--testPrintString = testPrintString .. "\n"
 	end
+	
+	--print(testPrintString)
 	
 	structureTemplates[name] = template
 	if not natural then
@@ -282,7 +305,7 @@ newStructureTemplate("smalltent", false, false, {
 )
 
 --large tent
-newStructureTemplate("largetent", false, flase, {
+newStructureTemplate("largetent", false, false, {
 	a = {1, 1, 1, 1},
 	b = {121/255, 121/255, 121/255, 1},
 	c = {51/255, 51/255, 51/255, 1}
@@ -296,11 +319,11 @@ newStructureTemplate("largetent", false, flase, {
 	{"n", "b", "b", "b", "b", "b", "n"}
 }, {
 	{" ", "/", "-", "-", "-", "\\", " "},
-	{"/", "\\", "-", " ", " ", "/", "\\"},
-	{"|", "-", "\\", "-", "/", " ", "|"},
-	{"|", "-", "|", "O", "|", " ", "|"},
-	{"|", "-", "/", "-", "\\", " ", "|"},
-	{"\\", "/", "-", " ", " ", "\\", "/"},
+	{"/", "\\", " ", " ", " ", "/", "\\"},
+	{"|", " ", "\\", "-", "/", " ", "|"},
+	{"|", " ", "|", "O", "|", " ", "|"},
+	{"|", " ", "/", "-", "\\", " ", "|"},
+	{"\\", "/", " ", " ", " ", "\\", "/"},
 	{" ", "\\", "-", "-", "-", "/", " "}
 }, {
 	{" ", "c", "b", "b", "b", "c", " "},
@@ -319,13 +342,13 @@ newStructureTemplate("hugetent", false, false, {
 	b = {121/255, 121/255, 121/255, 1},
 	c = {51/255, 51/255, 51/255, 1}
 }, {
-	{"n", "n", "b", "b", "b", "b", "n", "n", "n"},
+	{"n", "n", "b", "b", "b", "b", "b", "n", "n"},
 	{"n", "b", "b", "b", "b", "b", "b", "b", "n"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b"},
-	{"b", "b", "b", "b", "b", "b", "n", "b", "b"},
+	{"b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"n", "b", "b", "b", "b", "b", "b", "b", "n"},
 	{"n", "n", "b", "b", "b", "b", "b", "n", "n"}
 }, {
@@ -357,13 +380,13 @@ newStructureTemplate("doublehugetent", false, true, {
 	b = {121/255, 121/255, 121/255, 1},
 	c = {51/255, 51/255, 51/255, 1}
 }, {
-	{"n", "n", "b", "b", "b", "b", "n", "n", "n", "n", "n", "n", "n", "n"},
+	{"n", "n", "b", "b", "b", "b", "b", "n", "n", "n", "n", "n", "n", "n"},
 	{"n", "b", "b", "b", "b", "b", "b", "b", "n", "n", "n", "n", "n", "n"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b", "n", "n", "n", "n", "n"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b", "n", "n", "n", "n", "n"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "b", "n", "n", "n", "n", "n"},
-	{"b", "b", "b", "b", "b", "b", "b", "b", "b", "n", "n", "n", "n", "n"},
-	{"b", "b", "b", "b", "b", "b", "n", "b", "b", "b", "b", "b", "b", "n"},
+	{"b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "n"},
+	{"b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"n", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"n", "n", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b"},
 	{"n", "n", "n", "n", "n", "n", "n", "b", "b", "b", "b", "b", "b", "b"},
@@ -439,11 +462,11 @@ newStructureTemplate("trebuchet", false, true, {
 }, {
 	{"n", "b", "b", "n", "n", "n", "n", "n", "n"},
 	{"n", "b", "n", "n", "n", "n", "n", "n", "n"},
-	{"n", "n", "n", "b", "b", "b", "b", "n", "n"},
-	{"n", "n", "b", "b", "b", "b", "b", "b", "n"},
+	{"n", "n", "n", "g", "g", "b", "g", "n", "n"},
+	{"n", "n", "g", "g", "g", "b", "g", "g", "n"},
 	{"b", "b", "b", "b", "b", "b", "b", "b", "n"},
-	{"n", "n", "b", "b", "b", "b", "b", "b", "n"},
-	{"n", "n", "n", "b", "b", "b", "b", "n", "n"},
+	{"n", "n", "g", "g", "g", "b", "g", "g", "n"},
+	{"n", "n", "n", "g", "g", "b", "g", "n", "n"},
 	{"n", "n", "n", "n", "n", "n", "n", "n", "n"},
 	{"n", "n", "n", "n", "n", "n", "n", "n", "n"}
 }, {
