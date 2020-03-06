@@ -78,4 +78,5 @@ function love.draw()
 	drawMap(Map, Camera)
 	drawPlayerBowRangeOverlay(Player, Camera)
 	drawInterface(Interface, Camera)
+	drawTopInterface(Interface, Camera, Player)
 end

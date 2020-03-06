@@ -4,16 +4,9 @@ function startRound(player, map, curRound)
 	removePlayerDecals(player)
 	local roundLength = getRoundLength(player)
 
-	aiInput()
-
 	curRound = resetRound(player, map, roundLength, curRound)
 	
 	return round
-end
-
---The AI select their actions for the turn
-function aiInput()
-	--TODO
 end
 
 function resolveAIRound(player, map)

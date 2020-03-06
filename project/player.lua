@@ -25,7 +25,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, firing = false, fireRange = 6, dead = false}
+	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, firing = false, fireRange = 6, dead = false, travelDist = 0}
 	player.health = player.maxHealth
 	player.lastHealth = player.maxHealth
 	player.character = activateCharacter(initiateCharacter(map, x, y, initiateLetter("@", {1, 1, 1, 1}), player))
@@ -56,8 +56,10 @@ function killPlayer(player)
 end
 
 --Shifts the player 1 space
-function movePlayer(player, xdir, ydir)
-	shiftCharacter(player.character, xdir, ydir)
+function movePlayer(player, xDir, yDir)
+	shiftCharacter(player.character, xDir, yDir)
+	-- Increase the disance travelled
+	player.travelDist = player.travelDist + xDir
 end
 
 --Detects player input to start a new round
