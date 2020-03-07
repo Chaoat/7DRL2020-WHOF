@@ -221,16 +221,25 @@ function checkSlashConnections(characters)
 		local map = character.map
 		
 		if character.swording then
+			local lastTarget = nil
 			for j = 1, #map.activeCharacters do
 				local targetChar = map.activeCharacters[j]
 				
 				if targetChar.side ~= character.side and targetChar.bleeds then
 					if orthogDistance(character.tile.x, character.tile.y, targetChar.tile.x, targetChar.tile.y) == 1 then
-						characterSlash(character, targetChar)
-						characterHit = true
+						lastTarget = targetChar
+						if targetChar.swording then
+							characterSlash(character, targetChar)
+							characterHit = true
+						end
 						break
 					end
 				end
+			end
+			
+			if lastTarget and not characterHit then
+				characterSlash(character, targetChar)
+				characterHit = true
 			end
 		end
 	end

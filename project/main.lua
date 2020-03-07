@@ -27,7 +27,6 @@ require "endScreen"
 require "soundmanager"
 require "love.audio"
 require "morgue"
-require "heap"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
