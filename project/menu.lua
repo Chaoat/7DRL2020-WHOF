@@ -4,6 +4,7 @@ function initiateMenu()
 end
 
 function enterMenu(menu, camera)
+	GameStarted = false
 	menu.stage = "main"
 	resetCamera(camera)
 end
@@ -93,17 +94,17 @@ function checkMenuClicked(x, y, menu, camera)
 	if menu.stage == "main" then
 		checkMenuInterfaceClicked(x, y, menu.mainInterface, menu, camera)
 	elseif menu.stage == "intro" then
-		checkMenuInterfaceClicked(x, y, menu.introInterface, menu, camera)
 		GlobalTime = 100
+		checkMenuInterfaceClicked(x, y, menu.introInterface, menu, camera)
 	end
 end
 
 function checkMenuInterfaceClicked(x, y, interface, menu, camera)
 	local tileX, tileY = mousePosToTilePos(x, y, camera)
-	local leftMost = math.floor(camera.centerX) - interface.tilesWide/2
-	local topMost = math.floor(camera.centerY) + math.ceil(camera.tilesTall/2 - interface.tilesHigh)
+	local leftMost = camera.centerX - interface.tilesWide/2
+	local topMost = camera.centerY - interface.tilesHigh/2
 	
-	--print(tileX .. ":" .. tileY)
+	print(tileX .. ":" .. tileY)
 	
 	if tileX >= leftMost and tileX <= leftMost + interface.tilesWide then
 		local iX = tileX - leftMost
@@ -111,6 +112,7 @@ function checkMenuInterfaceClicked(x, y, interface, menu, camera)
 		--print((tileX - leftMost) .. ":" .. (tileY - topMost))
 		if interface.buttonTiles[iX][iY] then
 			local command = interface.buttonTiles[iX][iY].button.letter
+			print(command)
 			
 			if command == "start" then
 				startGame()

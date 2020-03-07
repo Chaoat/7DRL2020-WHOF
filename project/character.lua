@@ -155,7 +155,7 @@ function updateCharacterPositions(characterList)
 				placeCharOnTile(character, character.tile)
 				if character.master.speed and not character.approachingTile.character then
 					if character.master.speed > 2 then
-						damageCharacter(character, (character.master.speed - 2), 0, 0)
+						damageCharacter(character, (character.master.speed - 2), 0, 0, "collision")
 					end
 					character.master.speed = 0
 				end
@@ -244,7 +244,7 @@ function characterSlash(character, targetCharacter)
 		if character.master.speed then
 			speed = speed + character.master.speed/2
 		end
-		damageCharacter(targetCharacter, 4, findAngleBetween(character.facing, angleBetween, 0.8), speed)
+		damageCharacter(targetCharacter, 4, findAngleBetween(character.facing, angleBetween, 0.8), speed, "sworded")
 		
 		local shiftX, shiftY = getRelativeGridPositionFromAngle(angleBetween)
 		character.x = character.x + shiftX/2
@@ -268,11 +268,11 @@ function drawCharacters(characters, camera)
 end
 
 --Damages the characters master, if it has one
-function damageCharacter(character, damage, angle, speed)
+function damageCharacter(character, damage, angle, speed, source)
 	if character.side == "enemy" then
 		damageEnemy(character.master, damage)
 	elseif character.side == "player" then
-		damagePlayer(character.master, damage)
+		damagePlayer(character.master, damage, source)
 	end
 	
 	if character.master then

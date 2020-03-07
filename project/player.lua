@@ -32,6 +32,7 @@ function initiatePlayer(map, x, y)
 	local spawnTile = findFreeTileFromPoint(map, x, y, 0)
 	player.character = activateCharacter(initiateCharacter(map, spawnTile.x, spawnTile.y, initiateLetter("@", {1, 1, 1, 1}), player))
 	initiateLance(map, player.character, {1, 1, 1, 1})
+	
 	return player
 end
 
@@ -40,7 +41,7 @@ function updatePlayer(player, camera, dt)
 	camera.centerY = player.character.y
 end
 
-function damagePlayer(player, amount)
+function damagePlayer(player, amount, damageSource)
 	if GlobalTime - player.lastHit >= 1 then
 		player.lastHealth = player.health
 	end
@@ -49,6 +50,8 @@ function damagePlayer(player, amount)
 	player.health = player.health - amount
 	if player.health <= 0 then
 		killPlayer(player)
+		
+		startEndScreen(player, damageSource)
 	end
 end
 
@@ -80,7 +83,6 @@ function playerKeypressed(player, camera, key, curRound)
 		local dirY = 0
 		local kind = "none"
 		if action == "moveBotLeft" then
-			startGame()
 			kind = "movement"
 			dirX = -1
 			dirY = 1

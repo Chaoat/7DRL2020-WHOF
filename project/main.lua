@@ -23,6 +23,7 @@ require "interface"
 require "consumable"
 require "foliage"
 require "menu"
+require "endScreen"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
@@ -35,6 +36,7 @@ function love.load()
 	
 	GlobalTime = 0
 	
+	WinDistance = 3000
 	Camera = initiateCamera(0, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0.5, 0.5, 60, 60, 12, 12)
 	Menu = initiateMenu()
 	
@@ -66,6 +68,15 @@ function love.resize(x, y)
 	updateCameraSize(Camera, x, y)
 end
 
+function love.quit()
+	if GameStarted and Player.dead == false then
+		damagePlayer(Player, 8, "suicide")
+		startRound(Player, Map, CurRound)
+		return true
+	end
+	return false
+end
+
 function love.update(dt)
 	if dt > 0.1 then
 		dt = 1/60
@@ -94,6 +105,7 @@ function love.mousepressed(x, y, button)
 			if not checkInterfaceClicked(x, y, Interface, Camera, Player, CurRound) then
 				playerDecalsClicked(x, y, Player, Camera, CurRound)
 			end
+			clickEndScreen(x, y, Menu, Camera)
 		end
 	else
 		if button == 1 then
@@ -109,6 +121,8 @@ function love.draw()
 		drawExamineScreen(Map, Interface, Camera, Player)
 		drawInterface(Interface, Camera)
 		drawTopInterface(Interface, Camera, Player)
+		
+		drawEndScreen(Camera)
 		
 		drawCameraBars(Camera)
 	else

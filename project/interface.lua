@@ -154,8 +154,8 @@ function drawInterface(interface, camera)
 end
 
 function drawExamineScreen(map, interface, camera, player)
-	if GlobalTime - player.lastHit > -0.5 then
-		love.graphics.setColor(1, 0, 0, 0.5 - (GlobalTime - player.lastHit))
+	if GlobalTime - player.lastHit > -0.4 then
+		love.graphics.setColor(1, 0, 0, 0.4 - (GlobalTime - player.lastHit))
 		love.graphics.rectangle("fill", 0, 0, camera.width, camera.height)
 	end
 
@@ -224,7 +224,7 @@ end
 function drawTopInterface(interface, camera, player)
 	local dist = tostring(player.travelDist)
 	--converting to percentage
-	dist = math.ceil(dist / 3000 * 100)
+	dist = math.ceil(dist / WinDistance * 100)
 	dist = dist .. "%     "
 	local topText = {"d", "i", "s", "t", "a", "n", "c", "e", " ", "t", "r", "a", "v", "e", "l", "l", "e", "d", ":", string.sub(dist, 1, 1), string.sub(dist, 2, 2), string.sub(dist, 3, 3), string.sub(dist, 4, 4)}
 
