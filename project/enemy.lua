@@ -449,6 +449,7 @@ end
 
 function damageEnemy(enemy, damage)
 	enemy.dead = true
+	enemygruntsound()
 end
 
 function cleanupDeadEnemies(enemies)
