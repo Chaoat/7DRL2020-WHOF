@@ -24,6 +24,8 @@ require "consumable"
 require "foliage"
 require "menu"
 require "endScreen"
+require "soundmanager"
+require "love.audio"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
@@ -91,6 +93,8 @@ function love.update(dt)
 		updateRound(Player, Map, CurRound, dt)
 		updateWind(dt)
 	end
+
+	love.audio.update()
 end
 
 function love.keypressed(key)

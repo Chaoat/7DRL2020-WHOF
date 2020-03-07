@@ -53,6 +53,7 @@ function damagePlayer(player, amount, damageSource)
 		
 		startEndScreen(player, damageSource)
 	end
+	love.audio.play("grunt5.ogg", "static", false)
 end
 
 function healPlayer(player, amount)
@@ -167,6 +168,7 @@ function playerKeypressed(player, camera, key, curRound)
 			if curRound.finished then
 				if not camera.movingCursor then
 					determinePlayerAction(player, dirX, dirY, curRound)
+					love.audio.play("gallop_loop.ogg", "static", false)
 				else
 					moveCameraCursor(camera, dirX, dirY, player.firing, player)
 				end

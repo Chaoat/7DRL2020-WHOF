@@ -245,6 +245,7 @@ function characterSlash(character, targetCharacter)
 			speed = speed + character.master.speed/2
 		end
 		damageCharacter(targetCharacter, 4, findAngleBetween(character.facing, angleBetween, 0.8), speed, "sworded")
+		enemyswordsound()
 		
 		local shiftX, shiftY = getRelativeGridPositionFromAngle(angleBetween)
 		character.x = character.x + shiftX/2
