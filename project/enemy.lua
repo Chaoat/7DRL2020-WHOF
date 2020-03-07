@@ -60,6 +60,7 @@ enemyKinds["rider"]= {
 	lance = true,
 	mounted = true,
 	bleeds = true,
+	noFormation = true,
 	bow = {shootRange = 7, reloadTime = 4},
 	
 	title = "Horseman",
@@ -88,6 +89,7 @@ enemyKinds["barrier"]= {
 	end,
 	lance = false,
 	bleeds = false,
+	noFormation = true,
 	lance = true,
 	arrowImmune = true,
 	
@@ -99,7 +101,7 @@ enemyKinds["barrier"]= {
 function initiateEnemy(map, x, y, kind)
 	local enemyKind = enemyKinds[kind]
 	
-	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0, title = enemyKind.title, description = enemyKind.description}
+	local enemy = {character = nil, side = "enemy", kind = kind, stance = "hold", active = false, formation = nil, decideAction = enemyKind.decideAction, sword = enemyKind.sword, bow = enemyKind.bow, fleeRange = enemyKind.fleeRange, formationX = 0, formationY = 0, formationFacing = 0, title = enemyKind.title, description = enemyKind.description, noFormation = enemyKind.noFormation}
 	enemy.character = initiateCharacter(map, x, y, copyLetter(enemyKind.letter), enemy)
 	enemy.character.bleeds = enemyKind.bleeds
 	enemy.character.arrowImmune = enemyKind.arrowImmune

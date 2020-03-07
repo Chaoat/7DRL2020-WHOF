@@ -25,7 +25,7 @@ function initiatePlayer(map, x, y)
 		end
 	end
 	
-	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 0, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, maxArrows = 6, firing = false, fireRange = 6, dead = false, travelDist = 0}
+	local player = {character = nil, side = "player", currentlyActing = true, targeting = false, speed = 1, maxSpeed = 5, decals = {}, maxHealth = 8, lastHit = -2, arrows = 3, maxArrows = 6, firing = false, fireRange = 6, dead = false, travelDist = 0}
 	player.health = player.maxHealth
 	player.lastHealth = player.maxHealth
 	
@@ -80,6 +80,7 @@ function playerKeypressed(player, camera, key, curRound)
 		local dirY = 0
 		local kind = "none"
 		if action == "moveBotLeft" then
+			startGame()
 			kind = "movement"
 			dirX = -1
 			dirY = 1
@@ -295,7 +296,7 @@ function createPlayerDecals(player)
 			local arrow = createArrowDecal(Map, tileX, tileY, imageFacing)
 			arrow.colour = arrowColour
 			arrow.flashing = 0.3
-			table.insert(player.decals, arrow)
+			table.insert(player.decals, {decal = arrow, facing = imageFacing})
 		end
 		
 		if player.speed > 0 then
@@ -309,16 +310,68 @@ function createPlayerDecals(player)
 				localArrowCreate(player.character.facing + math.pi/4, player.character.facing + math.pi/2, player.speed - 1)
 				
 				localArrowCreate(player.character.facing - math.pi/4, player.character.facing - math.pi/2, player.speed - 1)
-				
-				localArrowCreate(player.character.facing, player.character.facing - math.pi, player.speed - 1)
 			end
+			localArrowCreate(player.character.facing, player.character.facing - math.pi, player.speed - 1)
+			
 			
 			if player.speed < player.maxSpeed then
 				local tileX, tileY = getCardinalPointInDirection(player.character.tile.x, player.character.tile.y, player.character.facing, player.speed)
 				local restDot = initiateDecal(Map, tileX, tileY, "dot")
 				restDot.colour = arrowColour
 				restDot.flashing = 0.3
-				table.insert(player.decals, restDot)
+				table.insert(player.decals, {decal = restDot, facing = nil})
+			end
+		else
+			localArrowCreate(-3*math.pi/4, -3*math.pi/4, 1)
+			localArrowCreate(-math.pi/2, -math.pi/2, 1)
+			localArrowCreate(-math.pi/4, -math.pi/4, 1)
+			localArrowCreate(0, 0, 1)
+			localArrowCreate(math.pi/4, math.pi/4, 1)
+			localArrowCreate(math.pi/2, math.pi/2, 1)
+			localArrowCreate(3*math.pi/4, 3*math.pi/4, 1)
+			localArrowCreate(math.pi, math.pi, 1)
+		end
+	end
+end
+
+function playerDecalsClicked(x, y, player, camera, curRound)
+	if camera.movingCursor then
+		local tX, tY = mousePosToTilePos(x, y, camera)
+		if player.firing and tX == camera.cursorX and tY == camera.cursorY then
+			playerKeypressed(player, camera, "f", curRound)
+		else
+			jumpCameraCursor(camera, tX, tY, player.firing, player)
+		end
+	else
+		local tX, tY = mousePosToTilePos(x, y, camera)
+		
+		for i = 1, #player.decals do
+			local decal = player.decals[i]
+			if decal.decal.x == tX and decal.decal.y == tY then
+				local command = "kp5"
+				if decal.facing then
+					if distanceBetweenAngles(decal.facing, 0) == 0 then
+						command = "kp6"
+					elseif distanceBetweenAngles(decal.facing, math.pi/4) == 0 then
+						command = "kp3"
+					elseif distanceBetweenAngles(decal.facing, math.pi/2) == 0 then
+						command = "kp2"
+					elseif distanceBetweenAngles(decal.facing, 3*math.pi/4) == 0 then
+						command = "kp1"
+					elseif distanceBetweenAngles(decal.facing, math.pi) == 0 then
+						command = "kp4"
+					elseif distanceBetweenAngles(decal.facing, -math.pi/4) == 0 then
+						command = "kp9"
+					elseif distanceBetweenAngles(decal.facing, -math.pi/2) == 0 then
+						command = "kp8"
+					elseif distanceBetweenAngles(decal.facing, -3*math.pi/4) == 0 then
+						command = "kp7"
+					end
+				end
+				
+				print(command)
+				playerKeypressed(player, camera, command, curRound)
+				break
 			end
 		end
 	end
@@ -326,8 +379,9 @@ end
 
 --Removes all the player decals
 function removePlayerDecals(player)
-	for i = 1, #player.decals do
-		player.decals[i].remove = true
+	while #player.decals > 0 do
+		player.decals[1].decal.remove = true
+		table.remove(player.decals, 1)
 	end
 end
 

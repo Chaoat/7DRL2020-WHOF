@@ -154,6 +154,11 @@ function drawInterface(interface, camera)
 end
 
 function drawExamineScreen(map, interface, camera, player)
+	if GlobalTime - player.lastHit > -0.5 then
+		love.graphics.setColor(1, 0, 0, 0.5 - (GlobalTime - player.lastHit))
+		love.graphics.rectangle("fill", 0, 0, camera.width, camera.height)
+	end
+
 	if camera.movingCursor and not player.firing then
 		local title = nil
 		local text = nil
@@ -262,7 +267,6 @@ function drawTopInterface(interface, camera, player)
 	end
 end
 
-
 function checkInterfaceClicked(x, y, interface, camera, player, curRound)
 	local tileX, tileY = mousePosToTilePos(x, y, camera)
 	local leftMost = math.floor(camera.centerX) - interface.tilesWide/2
@@ -276,6 +280,8 @@ function checkInterfaceClicked(x, y, interface, camera, player, curRound)
 		--print((tileX - leftMost) .. ":" .. (tileY - topMost))
 		if interface.buttonTiles[iX][iY] then
 			playerKeypressed(player, camera, interface.buttonTiles[iX][iY].button.letter, curRound)
+			return true
 		end
 	end
+	return false
 end

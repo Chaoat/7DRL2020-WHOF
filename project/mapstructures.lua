@@ -1,8 +1,14 @@
 local structureTemplates = {}
 local constructionList = {}
 
-function getRandomConstructionName()
-	return randomFromTable(constructionList)
+function getRandomConstructionName(maxSize)
+	local possible = {}
+	for i = 1, #constructionList do
+		if structureTemplates[constructionList[i]].size <= maxSize then
+			table.insert(possible, constructionList[i])
+		end
+	end
+	return randomFromTable(possible)
 end
 
 function getStructureSize(name)
@@ -11,8 +17,9 @@ end
 
 function spawnStructure(map, x, y, structureName, direction)
 	local template = structureTemplates[structureName]
-	print("Spawning Structure")
-	print(structureName)
+	
+	--print("Spawning Structure")
+	--print(structureName)
 	if not template.rotatable then
 		direction = 0
 	end
@@ -284,23 +291,20 @@ newStructureTemplate("smalltent", false, false, {
 	b = {121/255, 121/255, 121/255, 1},
 	c = {51/255, 51/255, 51/255, 1}
 }, {
-	{"b", "b", "b", "b", "n"},
-	{"b", "b", "b", "b", "n"},
-	{"b", "b", "b", "b", "n"},
-	{"b", "b", "b", "b", "n"},
-	{"n", "n", "n", "n", "n"}
+	{"b", "b", "b", "b",},
+	{"b", "b", "b", "b",},
+	{"b", "b", "b", "b",},
+	{"b", "b", "b", "b",}
 }, {
-	{"/", "-", "-", "\\", " "},
-	{"|", "\\", "/", "|", " "},
-	{"|", "/", "\\", "|", " "},
-	{"\\", "-", "-", "/", " "},
-	{" ", " ", " ", " ", " "}
+	{"/", "-", "-", "\\"},
+	{"|", "\\", "/", "|"},
+	{"|", "/", "\\", "|"},
+	{"\\", "-", "-", "/"}
 }, {
-	{"c", "b", "b", "c", " "},
-	{"b", "a", "a", "b", " "},
-	{"b", "a", "a", "b", " "},
-	{"c", "b", "b", "c", " "},
-	{" ", " ", " ", " ", " "}
+	{"c", "b", "b", "c"},
+	{"b", "a", "a", "b"},
+	{"b", "a", "a", "b"},
+	{"c", "b", "b", "c"}
 }
 )
 
@@ -375,7 +379,7 @@ newStructureTemplate("hugetent", false, false, {
 )
 
 --double huge tent
-newStructureTemplate("doublehugetent", false, true, {
+newStructureTemplate("doublehugetent", false, false, {
 	a = {1, 1, 1, 1},
 	b = {121/255, 121/255, 121/255, 1},
 	c = {51/255, 51/255, 51/255, 1}

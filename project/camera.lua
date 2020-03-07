@@ -46,15 +46,18 @@ function initCameraCursor(camera, player, firing)
 end
 
 function moveCameraCursor(camera, xDir, yDir, inFiringBounds, player)
+	jumpCameraCursor(camera, camera.cursorX + xDir, camera.cursorY + yDir, inFiringBounds, player)
+end
+
+function jumpCameraCursor(camera, x, y, inFiringBounds, player)
 	if inFiringBounds then
-		if orthogDistance(player.character.tile.x, player.character.tile.y, camera.cursorX + xDir, camera.cursorY + yDir) > player.fireRange then
+		if orthogDistance(player.character.tile.x, player.character.tile.y, x, y) > player.fireRange then
 			return false
 		end
 	end
 	
-	camera.cursorX = camera.cursorX + xDir
-	camera.cursorY = camera.cursorY + yDir
-	
+	camera.cursorX = x
+	camera.cursorY = y
 	camera.cursor.x = camera.cursorX
 	camera.cursor.y = camera.cursorY
 end

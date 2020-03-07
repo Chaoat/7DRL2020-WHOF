@@ -22,6 +22,7 @@ require "archery"
 require "interface"
 require "consumable"
 require "foliage"
+require "menu"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
@@ -32,8 +33,17 @@ function love.load()
 	doFontPreProcessing()
 	preProcessFormations()
 	
+	GlobalTime = 0
+	
+	Camera = initiateCamera(0, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0.5, 0.5, 60, 60, 12, 12)
+	Menu = initiateMenu()
+	
+	GameStarted = false
+end
+
+function startGame()
+	GlobalTime = 0
 	Map = initiateMap(120)
-	Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 60, 60, 12, 12)
 	--Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 999, 999, 4, 4)
 	
 	Player = initiatePlayer(Map, 0, 0)
@@ -44,11 +54,10 @@ function love.load()
 	--spawnFormation(Map, 15, 0, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnFormation(Map, 15, 5, getFormationTemplateInDifficultyRange(0, 0), "left")
 	--spawnFormation(Map, 15, -5, getFormationTemplateInDifficultyRange(0, 0), "left")
-	--spawnStructure(Map, 20, 0, "largetent", 0)
 	
 	--spawnEncounter(Map, 20, 0, 10, 2)
 	
-	GlobalTime = 0
+	GameStarted = true
 end
 
 function love.resize(x, y)
@@ -56,36 +65,51 @@ function love.resize(x, y)
 end
 
 function love.update(dt)
-	--print(dt*60)
-	
 	if dt > 0.1 then
 		dt = 1/60
 	end
 	
 	GlobalTime = GlobalTime + dt
+	--print(dt*60)
 	
-	updateMap(Map, dt)
-	updatePlayer(Player, Camera, dt)
-	updateRound(Player, Map, CurRound, dt)
-	updateWind(dt)
+	if GameStarted then
+		updateMap(Map, dt)
+		updatePlayer(Player, Camera, dt)
+		updateRound(Player, Map, CurRound, dt)
+		updateWind(dt)
+	end
 end
 
 function love.keypressed(key)
-	playerKeypressed(Player, Camera, key, CurRound)
+	if GameStarted then
+		playerKeypressed(Player, Camera, key, CurRound)
+	end
 end
 
 function love.mousepressed(x, y, button)
-	if button == 1 then
-		checkInterfaceClicked(x, y, Interface, Camera, Player, CurRound)
+	if GameStarted then
+		if button == 1 then
+			if not checkInterfaceClicked(x, y, Interface, Camera, Player, CurRound) then
+				playerDecalsClicked(x, y, Player, Camera, CurRound)
+			end
+		end
+	else
+		if button == 1 then
+			checkMenuClicked(x, y, Menu, Camera)
+		end
 	end
 end
 
 function love.draw()
-	drawMap(Map, Camera)
-	drawPlayerBowRangeOverlay(Player, Camera)
-	drawExamineScreen(Map, Interface, Camera, Player)
-	drawInterface(Interface, Camera)
-	drawTopInterface(Interface, Camera, Player)
-	
-	drawCameraBars(Camera)
+	if GameStarted then
+		drawMap(Map, Camera)
+		drawPlayerBowRangeOverlay(Player, Camera)
+		drawExamineScreen(Map, Interface, Camera, Player)
+		drawInterface(Interface, Camera)
+		drawTopInterface(Interface, Camera, Player)
+		
+		drawCameraBars(Camera)
+	else
+		drawMenu(Menu, Camera)
+	end
 end

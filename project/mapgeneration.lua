@@ -11,6 +11,7 @@ table.insert(difficultyBrackets, {
 	campFrequency = 30000,
 	campStrength = 10,
 	campBuildings = 1,
+	campBuildingMaxSize = 4,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -28,6 +29,7 @@ table.insert(difficultyBrackets, {
 	campFrequency = 25000,
 	campStrength = 5,
 	campBuildings = 1,
+	campBuildingMaxSize = 4,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -45,6 +47,7 @@ table.insert(difficultyBrackets, {
 	campFrequency = 20000,
 	campStrength = 15,
 	campBuildings = 1,
+	campBuildingMaxSize = 4,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -62,6 +65,7 @@ table.insert(difficultyBrackets, {
 	campFrequency = 10000,
 	campStrength = 20,
 	campBuildings = 2,
+	campBuildingMaxSize = 8,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -79,6 +83,7 @@ table.insert(difficultyBrackets, {
 	campFrequency = 5000,
 	campStrength = 25,
 	campBuildings = 4,
+	campBuildingMaxSize = 8,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -95,7 +100,8 @@ table.insert(difficultyBrackets, {
 	
 	campFrequency = 5000,
 	campStrength = 40,
-	campBuildings = 2,
+	campBuildings = 3,
+	campBuildingMaxSize = 15,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -103,7 +109,7 @@ table.insert(difficultyBrackets, {
 	messengerCavCount = 5,
 	treeSpawnChance = 0.005
 })
---difficulty 6
+--difficulty 7
 table.insert(difficultyBrackets, {
 	cutPoint = 2740,
 	
@@ -113,6 +119,7 @@ table.insert(difficultyBrackets, {
 	campFrequency = 1000,
 	campStrength = 50,
 	campBuildings = 2,
+	campBuildingMaxSize = 15,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -127,9 +134,9 @@ table.insert(difficultyBrackets, {
 	patrolFrequency = 500,
 	patrolStrength = 0,
 	
-	campFrequency = 500,
+	campFrequency = 1000,
 	campStrength = 0,
-	campBuildings = 0,
+	campBuildings = 2,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
@@ -221,14 +228,14 @@ function populateNewChunkWithEncounters(map, bracketI, tiles, campTiles)
 	
 	while campTileCount >= bracket.campFrequency do
 		local tile, i = randomFromTable(campTiles)
-		spawnEncounter(map, tile[1], tile[2], bracket.campStrength, bracket.campBuildings, false, bracket.messengerCavCount)
+		spawnEncounter(map, tile[1], tile[2], bracket.campStrength, bracket.campBuildings, false, bracket.messengerCavCount, bracket.campBuildingMaxSize)
 		table.remove(campTiles, i)
 		campTileCount = campTileCount - bracket.campFrequency
 	end
 	bracket.campRemainder = campTileCount
 end
 
-function spawnEncounter(map, x, y, difficulty, nStructures, patrol, messengerCavCount)
+function spawnEncounter(map, x, y, difficulty, nStructures, patrol, messengerCavCount, maxBuildingSize)
 	local spaceNeeded = 0
 	
 	local formationsChosen = {}
@@ -245,7 +252,7 @@ function spawnEncounter(map, x, y, difficulty, nStructures, patrol, messengerCav
 	
 	local structuresChosen = {}
 	while nStructures > 0 do
-		local structure = getRandomConstructionName()
+		local structure = getRandomConstructionName(maxBuildingSize)
 		spaceNeeded = spaceNeeded + getStructureSize(structure)
 		table.insert(structuresChosen, structure)
 		nStructures = nStructures - 1

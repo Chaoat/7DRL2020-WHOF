@@ -3,20 +3,22 @@ function initiateFormation(map, enemyList, x, y, template, formFacing)
 	local formation = {map = map, members = {}, messenger = nil, x = x, y = y, template = template, size = template.size, order = "follow", facing = formFacing, behaviour = template.behaviour, leniency = template.leniency, active = false, triggerDistance = template.size + 20}
 	for i = 1, #enemyList do
 		local enemy = enemyList[i]
-		local templateEntry = template.positions[i]
-		
-		local posX, posY = orthogRotate(templateEntry.x, templateEntry.y, formFacing)
-		local facing = templateEntry.facing
-		if not facing then
-			facing = 0
+		if not noFormation then
+			local templateEntry = template.positions[i]
+			
+			local posX, posY = orthogRotate(templateEntry.x, templateEntry.y, formFacing)
+			local facing = templateEntry.facing
+			if not facing then
+				facing = 0
+			end
+			table.insert(formation.members, {enemy = enemy, posX = posX, posY = posY, facing = facing})
+			
+			
+			enemy.formation = formation
+			enemy.formationX = x + posX
+			enemy.formationY = y + posY
+			enemy.formationFacing = formFacing + facing
 		end
-		table.insert(formation.members, {enemy = enemy, posX = posX, posY = posY, facing = facing})
-		
-		
-		enemy.formation = formation
-		enemy.formationX = x + posX
-		enemy.formationY = y + posY
-		enemy.formationFacing = formFacing + facing
 	end
 	
 	table.insert(map.formations, formation)
@@ -214,7 +216,7 @@ function determineFormationAction(map, player, formation)
 					targetFacing = player.character.facing + math.pi
 					action = "rotate"
 				else
-					local targetTile = getTileFromPointAtDistance(map, player.character.tile.x, player.character.tile.y, player.character.facing, 3*player.speed)
+					local targetTile = getTileFromPointAtDistance(map, player.character.tile.x, player.character.tile.y, 0, 10)
 					targetX = targetTile.x
 					targetY = targetTile.y
 					action = "move"
