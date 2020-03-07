@@ -85,7 +85,7 @@ enemyKinds["messenger"]= {
 enemyKinds["barrier"]= {
 	letter = initiateLetter("#", enemyColour),
 	decideAction = function(enemy, target)
-		enemy.stance = "hold"
+		enemy.stance = "none"
 	end,
 	lance = false,
 	bleeds = false,

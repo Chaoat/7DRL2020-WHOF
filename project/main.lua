@@ -47,6 +47,7 @@ function love.load()
 end
 
 function startGame()
+	resetEndScreen()
 	resetCamera(Camera)
 	GlobalTime = 0
 	Map = initiateMap(120)

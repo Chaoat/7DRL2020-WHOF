@@ -5,9 +5,7 @@ function saveDeathToMorgue(date, distance, deathCause)
 end
 
 function getDeathList()
-	local deaths = NewHeap(function(heap, a, b)
-		return heap.table[a][1] >= heap.table[b][1]
-	end)
+	local list = {}
 	
 	for line in love.filesystem.lines(morgueFileName) do
 		if #line > 0 then
@@ -23,14 +21,24 @@ function getDeathList()
 				end
 				i = i + 1
 			end
-			PushToHeap(deaths, death.distance, death)
+			table.insert(list, death)
 		end
 	end
 	
-	local list = {}
-	while #deaths.table > 0 do
-		table.insert(list, PopFromHeap(deaths))
+	local sortedList = {}
+	while #list > 0 do
+		local maxDist = -1
+		local maxI = 0
+		for i = 1, #list do
+			if list[i].distance > maxDist then
+				maxI = i
+				maxDist = list[i].distance
+			end
+		end
+		
+		table.insert(sortedList, list[maxI])
+		table.remove(list, maxI)
 	end
 	
-	return list
+	return sortedList
 end

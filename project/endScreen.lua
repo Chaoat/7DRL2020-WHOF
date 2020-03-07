@@ -1,5 +1,9 @@
 local endScreen = {playerDeathTime = 0, text = "", causeOfDeath = "", distanceTravelled = 0, started = false, restartButtonX = 0, restartButtonY = 150, restartButtonWidth = 70, restartButtonHeight = 40, quitButtonX = 0, quitButtonY = 220, quitButtonWidth = 70, quitButtonHeight = 40}
 
+function resetEndScreen()
+	endScreen.started = false
+end
+
 function startEndScreen(player, deathCause)
 	endScreen.playerDeathTime = GlobalTime
 	endScreen.started = true

@@ -224,7 +224,7 @@ createFormationTemplate(nil, "chase", {
 	{kind = "swordsman", x = 1, y = 1},
 	{kind = "lancer", x = 1, y = 0},
 	{kind = "swordsman", x = 1, y = -1},
-	{kind = "lancer", x = -1, y = -2}
+	{kind = "lancer", x = 1, y = -2}
 })
 
 --..L..
@@ -287,12 +287,12 @@ createFormationTemplate(nil, "guard", {
 	{kind = "barrier", x = -1, y = -1},
 	{kind = "barrier", x = -1, y = 0},
 	{kind = "barrier", x = -1, y = 1},
-	{kind = "barrier", x = 0, y = -2},
-	{kind = "barrier", x = 1, y = -2},
-	{kind = "barrier", x = 2, y = -2},
-	{kind = "barrier", x = 0, y = 2},
-	{kind = "barrier", x = 1, y = 2},
-	{kind = "barrier", x = 2, y = 2}
+	{kind = "barrier", x = 0, y = -2, facing = -3*math.pi/4},
+	{kind = "barrier", x = 1, y = -2, facing = -3*math.pi/4},
+	{kind = "barrier", x = 2, y = -2, facing = -3*math.pi/4},
+	{kind = "barrier", x = 0, y = 2, facing = 3*math.pi/4},
+	{kind = "barrier", x = 1, y = 2, facing = 3*math.pi/4},
+	{kind = "barrier", x = 2, y = 2, facing = 3*math.pi/4}
 })
 
 --..SSS
