@@ -6,6 +6,8 @@ function startEndScreen(player, deathCause)
 	endScreen.distanceTravelled = player.travelDist / WinDistance
 	endScreen.causeOfDeath = deathCause
 	
+	saveDeathToMorgue(os.date(), math.min(endScreen.distanceTravelled, 1), deathCause)
+	
 	if deathCause == "shot" then
 		endScreen.text = "You barely have time to glance down at the feathered shaft jutting from your chest before darkness overwhelms you.\nYour horse fights on after you slip from the saddle, but without her master she is quickly overwhelmed and hacked to pieces."
 	elseif deathCause == "sworded" then
@@ -16,6 +18,8 @@ function startEndScreen(player, deathCause)
 		endScreen.text = "Your horse is shattered, and your body in ruins.\nTo think that an Eijidin warrior could come to such an end.\nYour ancestors are ashamed."
 	elseif deathCause == "suicide" then
 		endScreen.text = "Despairing at the impossible task set before you, you hurl yourself from your horse.\nYour neck breaks instantly on impact."
+	elseif deathCause == "victory" then
+		endScreen.text = "Up ahead, you see the burning torches of your allies. Shortly afterwards, your pursuers also notice this, and wheel around in retreat.\nCrashing into camp, you breathlessly explain the situation and are taken directly to Ulijin to deliver your message."
 	end
 end
 
@@ -44,8 +48,8 @@ function drawEndScreen(camera)
 		if textAlpha > 0 then
 			love.graphics.setColor(1, 1, 1, textAlpha)
 			local text = endScreen.text
-			if endScreen.distanceTravelled == 1 then
-				text = text .. "\n\nYou lead the guerilla force assigned to destroying the flanking army. When you return, the stalemate is over and Ulijin has won a decisive victory.\nThe feasting lasts for days and you are celebrated as the greatest hero of the war."
+			if endScreen.distanceTravelled >= 1 then
+				text = text .. "\n\nYou lead the guerilla force assigned to destroying the flanking army. When you return, the stalemate is over and Ulijin has won a decisive victory.\nAfter the war is over, you are celebrated as one of the greatest heroes of the period."
 			else
 				text = text .. "\n\nYou made it " .. math.floor(100*endScreen.distanceTravelled) .. "% of the way before meeting your doom."
 			end
