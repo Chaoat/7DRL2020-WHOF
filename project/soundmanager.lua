@@ -78,3 +78,14 @@ function enemyswordsound()
 	    love.audio.play("sword3.ogg", "static", false)
 	end
 end
+
+function enemysurprisesound()
+	local chance = math.random()
+	if chance < 0.33 then
+		love.audio.play("gasp1.ogg", "static", false)
+	elseif chance < 0.66 then
+		love.audio.play("gasp2.ogg", "static", false)
+	else
+	    love.audio.play("gasp3.ogg", "static", false)
+	end
+end

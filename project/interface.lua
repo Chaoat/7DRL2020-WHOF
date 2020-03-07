@@ -224,7 +224,7 @@ end
 function drawTopInterface(interface, camera, player)
 	local dist = tostring(player.travelDist)
 	--converting to percentage
-	dist = math.ceil(dist / WinDistance * 100)
+	dist = math.floor(dist / WinDistance * 100)
 	dist = dist .. "%     "
 	local topText = {"d", "i", "s", "t", "a", "n", "c", "e", " ", "t", "r", "a", "v", "e", "l", "l", "e", "d", ":", string.sub(dist, 1, 1), string.sub(dist, 2, 2), string.sub(dist, 3, 3), string.sub(dist, 4, 4)}
 

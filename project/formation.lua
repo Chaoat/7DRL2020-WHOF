@@ -89,6 +89,7 @@ function activateFormation(formation)
 	for j = 1, #formation.members do
 		local enemy = formation.members[j].enemy
 		activateEnemy(enemy)
+		enemysurprisesound()
 	end
 	
 	if formation.messenger then
