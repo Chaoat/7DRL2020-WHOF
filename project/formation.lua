@@ -58,7 +58,7 @@ function rotateFormation(formation, rotation)
 	updateFormationMembers(formation)
 end
 
-function checkFormationAgro(map, target, layers)
+function checkFormationAgro(map, target, layers, originalTarget)
 	if layers > 10 then
 		return
 	end
@@ -67,6 +67,9 @@ function checkFormationAgro(map, target, layers)
 		local formation = map.formations[i]
 		
 		local distance = orthogDistance(formation.x, formation.y, target.x, target.y)
+		if originalTarget then
+			distance = math.max(distance, 1.5*orthogDistance(formation.x, formation.y, originalTarget.x, originalTarget.y))
+		end
 		if formation.active then
 			if distance > 5*formation.triggerDistance then
 				deactivateFormation(formation)
@@ -75,7 +78,7 @@ function checkFormationAgro(map, target, layers)
 		if not formation.active then
 			if distance < formation.triggerDistance then
 				activateFormation(formation, true)
-				--checkFormationAgro(map, formation, layers + 1)
+				checkFormationAgro(map, formation, layers + 1, target)
 			end
 		end
 	end

@@ -112,7 +112,8 @@ function initiateEnemy(map, x, y, kind)
 	end
 	
 	if enemyKind.lance then
-		initiateLance(map, enemy.character, enemyKind.letter.colour)
+		local lanceColour = {1, 1, 0.5, 1}
+		initiateLance(map, enemy.character, lanceColour)
 	end
 	
 	if enemyKind.mounted then

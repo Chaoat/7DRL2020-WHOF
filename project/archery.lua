@@ -10,7 +10,7 @@ function fireArrow(character, targetX, targetY)
 	
 	if targetTile.character then
 		if not targetTile.character.arrowImmune then
-			damageCharacter(targetTile.character, 2, math.atan2(targetY - character.tile.y, targetX - character.tile.x), 4)
+			damageCharacter(targetTile.character, 2, math.atan2(targetY - character.tile.y, targetX - character.tile.x), 4, "shot")
 		end
 	end
 end
