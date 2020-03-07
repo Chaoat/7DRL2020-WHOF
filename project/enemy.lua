@@ -419,6 +419,8 @@ function determineEnemyAttack(enemies, player, possiblePlayerTiles, curRound)
 					enemy.firing = true
 					enemy.character.letter.shaking = 0.1
 					
+					love.audio.play("bowDraw.ogg", "static", false)
+					
 					table.remove(possiblePlayerTiles, 1)
 				end
 			end
