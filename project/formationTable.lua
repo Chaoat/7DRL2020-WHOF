@@ -1,8 +1,8 @@
 local enemyDifficulties = {}
 enemyDifficulties["swordsman"] = 1
 enemyDifficulties["lancer"] = 2
-enemyDifficulties["bowman"] = 3
-enemyDifficulties["rider"] = 8
+enemyDifficulties["bowman"] = 3.5
+enemyDifficulties["rider"] = 9
 enemyDifficulties["barrier"] = 0.5
 
 local formations = {}
@@ -443,6 +443,15 @@ createFormationTemplate(nil, "intercept", {
 	{kind = "swordsman", x = 0, y = -1},
 	{kind = "rider", x = -1, y = 0},
 	{kind = "swordsman", x = 0, y = 1}
+})
+
+--.B.
+--H..
+--.B.
+createFormationTemplate(nil, "intercept", {
+	{kind = "bowman", x = 0, y = -1},
+	{kind = "rider", x = -1, y = 0},
+	{kind = "bowman", x = 0, y = 1}
 })
 
 --TestFormation

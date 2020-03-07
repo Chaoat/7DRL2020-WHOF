@@ -39,7 +39,7 @@ function love.load()
 	
 	GlobalTime = 0
 	
-	WinDistance = 3000
+	WinDistance = 2000
 	Camera = initiateCamera(0, 0, love.graphics.getWidth(), love.graphics.getHeight(), 0.5, 0.5, 60, 60, 12, 12)
 	Menu = initiateMenu()
 	
