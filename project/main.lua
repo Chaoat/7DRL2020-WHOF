@@ -39,9 +39,11 @@ function love.load()
 	Menu = initiateMenu()
 	
 	GameStarted = false
+	enterMenu(Menu, Camera)
 end
 
 function startGame()
+	resetCamera(Camera)
 	GlobalTime = 0
 	Map = initiateMap(120)
 	--Camera = initiateCamera(0, 0, 800, 600, 0.5, 0.5, 999, 999, 4, 4)

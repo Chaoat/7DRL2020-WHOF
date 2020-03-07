@@ -5,6 +5,11 @@ function initiateCamera(screenX, screenY, width, height, centerX, centerY, tiles
 	return camera
 end
 
+function resetCamera(camera)
+	camera.centerX = 0
+	camera.centerY = 0
+end
+
 --Updates the width and height of the camera. Necessary so that dependent variable can also be updated
 function updateCameraSize(camera, width, height)
 	--camera.tilesWide = camera.targetTilesWide

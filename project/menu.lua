@@ -3,6 +3,11 @@ function initiateMenu()
 	return menu
 end
 
+function enterMenu(menu, camera)
+	menu.stage = "main"
+	resetCamera(camera)
+end
+
 function createMainInterface()
 	local interface = {tilesWide = 60, tilesHigh = 50, frontColour = {1, 1, 1, 1}, backColour = {0, 0, 0, 0.8}, buttons = {}, buttonTiles = {}, text = {}}
 	for i = 0, interface.tilesWide do
@@ -30,8 +35,8 @@ function createIntroInterface()
 	end
 	
 	--Start
-	addButtonToInterface(interface, 27, 38, "Onward", "start", size)
-	addButtonToInterface(interface, 28, 44, "Back", "returnToMenu", size)
+	addButtonToInterface(interface, 27, 41, "Onward", "start", size)
+	addButtonToInterface(interface, 28, 46, "Back", "returnToMenu", size)
 	
 	return interface
 end
@@ -67,6 +72,21 @@ function drawMenuInterface(menu, interface, camera)
 			end
 		end
 	end
+	
+	if menu.stage == "intro" then
+		local text = "For one year the Atagan war machine has raged across the continent, feeding the greed of the Usurper and demolishing the ancestor's ways. Fuelled by the use of unconventional and dishonourable tactics, they have marched relentlessly through the native steppes of our peoples, destroying the lesser clans and shaming the spirits. Now they are here, in the Eijidin hunting grounds, the strongest of all the clans. If the Atagan can not be stopped by our warriors, they can be stopped by no one, and the ancient ways are surely doomed.\n\nA brave warrior bleeding from the wounds of several arrows rode into camp at sunset, telling of a great army maneuvering to flank our greatest general, Ulijin, in the east. Ulijin is currently engaged in a brutal war of attrition with the main Atagan force, and if we are to emerge victorious, he must be warned of this threat. We are positioned however on the other side of the Atagan force, and the chosen messenger must ride through the battle lines if they are to arrive in time.\n\nYou are an honourable Eijidini warrior. Since you were born, you have spent more time in the saddle than on foot. From childhood you have trained in the sword, lance and bow, and have mastered the use of each. You have been selected for this mission. May the ancestor's welcome you into their halls."
+		
+		local drawnText = string.sub(text, 1, math.ceil(60*GlobalTime))
+		
+		setFont("clacon", 24)
+		
+		local textX = camera.width/2 - camera.tileWidth*camera.tilesWide/2 + 15
+		local textY = camera.height/2 - camera.tileHeight*camera.tilesTall/2 + 20
+		local textWidth = camera.tileWidth*camera.tilesWide - 30
+		
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.printf(drawnText, textX, textY, textWidth, "left")
+	end
 end
 
 function checkMenuClicked(x, y, menu, camera)
@@ -74,6 +94,7 @@ function checkMenuClicked(x, y, menu, camera)
 		checkMenuInterfaceClicked(x, y, menu.mainInterface, menu, camera)
 	elseif menu.stage == "intro" then
 		checkMenuInterfaceClicked(x, y, menu.introInterface, menu, camera)
+		GlobalTime = 100
 	end
 end
 
