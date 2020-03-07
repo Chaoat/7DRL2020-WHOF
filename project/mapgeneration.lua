@@ -6,10 +6,10 @@ table.insert(difficultyBrackets, {
 	cutPoint = 150,
 	
 	patrolFrequency = 20000,
-	patrolStrength = 5,
+	patrolStrength = 3,
 	
 	campFrequency = 30000,
-	campStrength = 10,
+	campStrength = 5,
 	campBuildings = 1,
 	campBuildingMaxSize = 4,
 	
@@ -45,7 +45,7 @@ table.insert(difficultyBrackets, {
 	patrolStrength = 7,
 	
 	campFrequency = 20000,
-	campStrength = 15,
+	campStrength = 8,
 	campBuildings = 1,
 	campBuildingMaxSize = 4,
 	
@@ -60,10 +60,10 @@ table.insert(difficultyBrackets, {
 	cutPoint = 1000,
 	
 	patrolFrequency = 3000,
-	patrolStrength = 11,
+	patrolStrength = 9,
 	
 	campFrequency = 10000,
-	campStrength = 20,
+	campStrength = 12,
 	campBuildings = 2,
 	campBuildingMaxSize = 8,
 	
@@ -78,17 +78,17 @@ table.insert(difficultyBrackets, {
 	cutPoint = 2000,
 	
 	patrolFrequency = 2000,
-	patrolStrength = 15,
+	patrolStrength = 11,
 	
 	campFrequency = 5000,
-	campStrength = 25,
+	campStrength = 16,
 	campBuildings = 4,
 	campBuildingMaxSize = 8,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
-	messengerCavCount = 3,
+	messengerCavCount = 2,
 	treeSpawnChance = 0.01
 })
 --difficulty 6
@@ -96,17 +96,17 @@ table.insert(difficultyBrackets, {
 	cutPoint = 2500,
 	
 	patrolFrequency = 1000,
-	patrolStrength = 25,
+	patrolStrength = 15,
 	
 	campFrequency = 5000,
-	campStrength = 40,
+	campStrength = 20,
 	campBuildings = 3,
 	campBuildingMaxSize = 15,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
-	messengerCavCount = 5,
+	messengerCavCount = 3,
 	treeSpawnChance = 0.005
 })
 --difficulty 7
@@ -114,17 +114,17 @@ table.insert(difficultyBrackets, {
 	cutPoint = 2740,
 	
 	patrolFrequency = 500,
-	patrolStrength = 25,
+	patrolStrength = 15,
 	
 	campFrequency = 1000,
-	campStrength = 50,
+	campStrength = 40,
 	campBuildings = 2,
 	campBuildingMaxSize = 15,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
-	messengerCavCount = 5,
+	messengerCavCount = 3,
 	treeSpawnChance = 0.005
 })
 --difficulty final
