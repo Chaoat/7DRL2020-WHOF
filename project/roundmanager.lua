@@ -66,6 +66,8 @@ function updateRound(player, map, curRound, dt)
 			checkChunkExpansion(player.character.map, player.character.tile.x, player.character.tile.y)
 			createPlayerDecals(player)
 			createEnemyDecals(map.enemies)
+			
+			checkPlayerVictory(Player)
 		end
 	else
 	    --Wait until the timer is done

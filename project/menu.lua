@@ -1,5 +1,5 @@
 function initiateMenu()
-	local menu = {mainInterface = createMainInterface(), introInterface = createIntroInterface(), stage = "main"}
+	local menu = {mainInterface = createMainInterface(), introInterface = createIntroInterface(), morgueInterface = createMorgueInterface(), deathListOffset = 0, stage = "main"}
 	return menu
 end
 
@@ -42,12 +42,87 @@ function createIntroInterface()
 	return interface
 end
 
+function createMorgueInterface()
+	local interface = {tilesWide = 60, tilesHigh = 50, frontColour = {1, 1, 1, 1}, backColour = {0, 0, 0, 0.8}, buttons = {}, buttonTiles = {}, text = {}}
+	for i = 0, interface.tilesWide do
+		interface.buttonTiles[i] = {}
+	end
+	for i = 0, interface.tilesWide do
+		interface.text[i] = {}
+	end
+	
+	--Start
+	addButtonToInterface(interface, 28, 46, "Back", "returnToMenu", size)
+	
+	return interface
+end
+
 function drawMenu(menu, camera)
 	if menu.stage == "main" then
 		drawMenuInterface(menu, menu.mainInterface, camera)
 	elseif menu.stage == "intro" then
 		drawMenuInterface(menu, menu.introInterface, camera)
+	elseif menu.stage == "morgue" then
+		drawMenuInterface(menu, menu.morgueInterface, camera)
 	end
+end
+
+function compileDeathText(menu, camera)
+	local list = getDeathList()
+	menu.deathHeight = #list
+	
+	local deathText = ""
+	
+	local nEntries = math.min(#list - menu.deathListOffset, 30)
+	for i = 1 + menu.deathListOffset, nEntries + menu.deathListOffset do
+		local newLine = i .. ".  " .. list[i].date
+		while #newLine < 25 do
+			newLine = newLine .. " "
+		end
+		
+		newLine = newLine .. math.floor(100*list[i].distance) .. "%"
+		while #newLine < 32 do
+			newLine = newLine .. " "
+		end
+		
+		local causeText = ""
+		if list[i].cause == "shot" then
+			causeText = "Shot by an arrow"
+		elseif list[i].cause == "sworded" then
+			causeText = "Struck down by a soldiers blade"
+		elseif list[i].cause == "lanced" then
+			causeText = "Skewered by a lance"
+		elseif list[i].cause == "collision" then
+			causeText = "Shamefully collided with deadly force"
+		elseif list[i].cause == "suicide" then
+			causeText = "Slain by despair"
+		elseif list[i].cause == "victory" then
+			causeText = "Completed the journey a hero"
+		end
+		
+		newLine = newLine .. causeText
+		
+		deathText = deathText .. newLine .. "\n"
+	end
+	
+	if #list - menu.deathListOffset > 30 then
+		deathText = deathText .. "                                         V V V"
+	end
+	
+	menu.deathText = deathText
+end
+
+function scrollDeathMenu(menu, camera, x, y)
+	local list = getDeathList()
+	if y < 0 then
+		if #list > 30 then
+			menu.deathListOffset = math.min(menu.deathListOffset + 1, #list - 30)
+		end
+	else
+		menu.deathListOffset = math.max(menu.deathListOffset - 1, 0)
+	end
+	
+	compileDeathText(menu, camera)
 end
 
 function drawMenuInterface(menu, interface, camera)
@@ -87,6 +162,18 @@ function drawMenuInterface(menu, interface, camera)
 		
 		love.graphics.setColor(1, 1, 1, 1)
 		love.graphics.printf(drawnText, textX, textY, textWidth, "left")
+	elseif menu.stage == "morgue" then
+		local textX = camera.width/2 - camera.tileWidth*camera.tilesWide/2 + 15
+		local textY = camera.height/2 - camera.tileHeight*camera.tilesTall/2 + 30
+		local textWidth = camera.tileWidth*camera.tilesWide - 30
+		
+		setFont("clacon", 20)
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.printf(menu.deathText, textX, textY, textWidth, "left")
+		
+		if menu.deathListOffset > 0 then
+			love.graphics.printf("                                         ^ ^ ^", textX, textY - 15, textWidth, "left")
+		end
 	end
 end
 
@@ -96,6 +183,8 @@ function checkMenuClicked(x, y, menu, camera)
 	elseif menu.stage == "intro" then
 		GlobalTime = 100
 		checkMenuInterfaceClicked(x, y, menu.introInterface, menu, camera)
+	elseif menu.stage == "morgue" then
+		checkMenuInterfaceClicked(x, y, menu.morgueInterface, menu, camera)
 	end
 end
 
@@ -104,7 +193,7 @@ function checkMenuInterfaceClicked(x, y, interface, menu, camera)
 	local leftMost = camera.centerX - interface.tilesWide/2
 	local topMost = camera.centerY - interface.tilesHigh/2
 	
-	print(tileX .. ":" .. tileY)
+	--print(tileX .. ":" .. tileY)
 	
 	if tileX >= leftMost and tileX <= leftMost + interface.tilesWide then
 		local iX = tileX - leftMost
@@ -112,7 +201,7 @@ function checkMenuInterfaceClicked(x, y, interface, menu, camera)
 		--print((tileX - leftMost) .. ":" .. (tileY - topMost))
 		if interface.buttonTiles[iX][iY] then
 			local command = interface.buttonTiles[iX][iY].button.letter
-			print(command)
+			--print(command)
 			
 			if command == "start" then
 				startGame()
@@ -121,6 +210,10 @@ function checkMenuInterfaceClicked(x, y, interface, menu, camera)
 			elseif command == "ride" then
 				menu.stage = "intro"
 				GlobalTime = 0
+			elseif command == "morgue" then
+				menu.stage = "morgue"
+				menu.deathListOffset = 0
+				compileDeathText(menu, camera)
 			elseif command == "quit" then
 				love.event.quit()
 			end

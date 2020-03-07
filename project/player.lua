@@ -67,6 +67,13 @@ function killPlayer(player)
 	player.character.dead = true
 end
 
+function checkPlayerVictory(player)
+	if player.travelDist >= WinDistance then
+		player.dead = true
+		startEndScreen(player, "victory")
+	end
+end
+
 --Shifts the player 1 space
 function movePlayer(player, xDir, yDir)
 	shiftCharacter(player.character, xDir, yDir)
@@ -173,10 +180,18 @@ function playerKeypressed(player, camera, key, curRound)
 			end
 		elseif kind == "rest" then
 			--Player made a blank move with no input then just start the round
-			startRound(player, player.character.map, curRound)
+			if curRound.finished then
+				if not camera.movingCursor then
+					startRound(player, player.character.map, curRound)
+				end
+			end
 		elseif kind == "sword" then
-			characterStartSlashing(player.character)
-			startRound(player, player.character.map, curRound)
+			if curRound.finished then
+				if not camera.movingCursor then
+					characterStartSlashing(player.character)
+					startRound(player, player.character.map, curRound)
+				end
+			end
 		end
 	end
 end

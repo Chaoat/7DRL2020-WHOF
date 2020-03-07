@@ -24,6 +24,8 @@ require "consumable"
 require "foliage"
 require "menu"
 require "endScreen"
+require "morgue"
+require "heap"
 --Oh man, this is getting out of control. There's gotta be a better way to do this
 
 function love.load()
@@ -97,6 +99,10 @@ function love.keypressed(key)
 	if GameStarted then
 		playerKeypressed(Player, Camera, key, CurRound)
 	end
+end
+
+function love.wheelmoved(x, y)
+	scrollDeathMenu(Menu, Camera, x, y)
 end
 
 function love.mousepressed(x, y, button)
