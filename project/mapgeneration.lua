@@ -53,13 +53,13 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 1,
-	treeSpawnChance = 0.005
+	treeSpawnChance = 0.015
 })
 --difficulty 4
 table.insert(difficultyBrackets, {
 	cutPoint = 1000,
 	
-	patrolFrequency = 3000,
+	patrolFrequency = 5000,
 	patrolStrength = 9,
 	
 	campFrequency = 10000,
@@ -71,13 +71,13 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 2,
-	treeSpawnChance = 0.03
+	treeSpawnChance = 0.01
 })
 --difficulty 5
 table.insert(difficultyBrackets, {
-	cutPoint = 2000,
+	cutPoint = 1500,
 	
-	patrolFrequency = 2000,
+	patrolFrequency = 5000,
 	patrolStrength = 11,
 	
 	campFrequency = 5000,
@@ -89,61 +89,61 @@ table.insert(difficultyBrackets, {
 	campRemainder = 0,
 	
 	messengerCavCount = 2,
-	treeSpawnChance = 0.01
+	treeSpawnChance = 0.005
 })
 --difficulty 6
 table.insert(difficultyBrackets, {
-	cutPoint = 2500,
+	cutPoint = 1800,
 	
-	patrolFrequency = 1000,
+	patrolFrequency = 2000,
 	patrolStrength = 15,
 	
-	campFrequency = 5000,
+	campFrequency = 4000,
 	campStrength = 20,
-	campBuildings = 3,
+	campBuildings = 4,
 	campBuildingMaxSize = 15,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
 	messengerCavCount = 3,
-	treeSpawnChance = 0.005
+	treeSpawnChance = 0.001
 })
 --difficulty 7
 table.insert(difficultyBrackets, {
-	cutPoint = 2740,
+	cutPoint = 3000,
 	
-	patrolFrequency = 500,
-	patrolStrength = 15,
-	
-	campFrequency = 1000,
-	campStrength = 40,
-	campBuildings = 2,
-	campBuildingMaxSize = 15,
-	
-	patrolRemainder = 0,
-	campRemainder = 0,
-	
-	messengerCavCount = 3,
-	treeSpawnChance = 0.005
-})
---difficulty final
-table.insert(difficultyBrackets, {
-	cutPoint = 9999999999999,
-	
-	patrolFrequency = 500,
+	patrolFrequency = 9999,
 	patrolStrength = 0,
 	
 	campFrequency = 1000,
 	campStrength = 0,
-	campBuildings = 2,
+	campBuildings = 6,
+	campBuildingMaxSize = 15,
 	
 	patrolRemainder = 0,
 	campRemainder = 0,
 	
-	messengerCavCount = 0,
+	messengerCavCount = 3,
 	treeSpawnChance = 0
 })
+----difficulty final
+--table.insert(difficultyBrackets, {
+--	cutPoint = 9999999999999,
+--	
+--	patrolFrequency = 500,
+--	patrolStrength = 0,
+--	
+--	campFrequency = 1000,
+--	campStrength = 0,
+--	campBuildings = 2,
+--	
+--	patrolRemainder = 0,
+--	campRemainder = 0,
+--	
+--	messengerCavCount = 0,
+--	treeSpawnChance = 0
+--})
 
 function expandMap(map, tileKind, newTileX, newTileY)
 	if map.minX > newTileX then

@@ -155,8 +155,10 @@ end
 
 function drawExamineScreen(map, interface, camera, player)
 	if GlobalTime - player.lastHit > -0.4 then
-		love.graphics.setColor(1, 0, 0, 0.4 - (GlobalTime - player.lastHit))
-		love.graphics.rectangle("fill", 0, 0, camera.width, camera.height)
+		if player.health < player.lastHealth then
+			love.graphics.setColor(1, 0, 0, 0.4 - (GlobalTime - player.lastHit))
+			love.graphics.rectangle("fill", 0, 0, camera.width, camera.height)
+		end
 	end
 
 	if camera.movingCursor and not player.firing then
@@ -168,6 +170,14 @@ function drawExamineScreen(map, interface, camera, player)
 			if examinedTile.character.master.title then
 				title = examinedTile.character.master.title
 				text = examinedTile.character.master.description
+			end
+		elseif examinedTile.consumable then
+			if examinedTile.consumable.kind == "arrows" then
+				title = "Arrow bundle"
+				text = "A bundle of arrows left unattended in an Atagan camp. Although inferior to those of your clan, they will do when nothing else is available."
+			elseif examinedTile.consumable.kind == "health" then
+				title = "Bandages"
+				text = "A kit of medical supplies and healing herbs free for the taking."
 			end
 		end
 		
@@ -256,7 +266,11 @@ function drawTopInterface(interface, camera, player)
 			elseif y == top+1 then
 				local x2 = math.floor(i)
 				if topText[x2] then
-					drawLetter(initiateLetter(topText[x2], interface.frontColour, interface.backColour), x, y, camera)
+					local colour = interface.frontColour
+					if player.travelDist < 0 then
+						colour = {1, 0, 0, 1}
+					end
+					drawLetter(initiateLetter(topText[x2], colour, interface.backColour), x, y, camera)
 				else
     				drawLetter(backLetter, x, y, camera)
 				end

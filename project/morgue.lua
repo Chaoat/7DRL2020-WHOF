@@ -5,6 +5,10 @@ function saveDeathToMorgue(date, distance, deathCause)
 end
 
 function getDeathList()
+	if not love.filesystem.getInfo(morgueFileName) then
+		return {}
+	end
+	
 	local list = {}
 	
 	for line in love.filesystem.lines(morgueFileName) do

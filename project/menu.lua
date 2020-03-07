@@ -1,5 +1,5 @@
 function initiateMenu()
-	local menu = {mainInterface = createMainInterface(), introInterface = createIntroInterface(), morgueInterface = createMorgueInterface(), deathListOffset = 0, stage = "main"}
+	local menu = {mainInterface = createMainInterface(), introInterface = createIntroInterface(), morgueInterface = createMorgueInterface(), deathListOffset = 0, stage = "main", titleImage = love.graphics.newImage("images/Title Hooves.png")}
 	return menu
 end
 
@@ -21,9 +21,9 @@ function createMainInterface()
 	end
 	
 	--Start
-	addButtonToInterface(interface, 26, 28, "Ride Out", "ride", size)
-	addButtonToInterface(interface, 26, 35, "Remember", "morgue", size)
-	addButtonToInterface(interface, 28, 42, "Flee", "quit", size)
+	addButtonToInterface(interface, 26, 34, "Ride Out", "ride", size)
+	addButtonToInterface(interface, 26, 39, "Remember", "morgue", size)
+	addButtonToInterface(interface, 28, 44, "Flee", "quit", size)
 	
 	return interface
 end
@@ -151,7 +151,10 @@ function drawMenuInterface(menu, interface, camera)
 		end
 	end
 	
-	if menu.stage == "intro" then
+	if menu.stage == "main" then
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.draw(menu.titleImage, camera.width/2, camera.height/2 - 130, 0, 1, 1, menu.titleImage:getWidth()/2, menu.titleImage:getHeight()/2)
+	elseif menu.stage == "intro" then
 		local text = "For one year the Atagan war machine has raged across the continent, feeding the greed of the Usurper and demolishing the ancestor's ways. Fuelled by the use of unconventional and dishonourable tactics, they have marched relentlessly through the native steppes of our peoples, destroying the lesser clans and shaming the spirits. Now they are here, in the Eijidin hunting grounds, the strongest of all the clans. If the Atagan can not be stopped by our warriors, they can be stopped by no one, and the ancient ways are surely doomed.\n\nA brave warrior bleeding from the wounds of several arrows rode into camp at sunset, telling of a great army maneuvering to flank our greatest general, Ulijin, in the east. Ulijin is currently engaged in a brutal war of attrition with the main Atagan force, and if we are to emerge victorious, he must be warned of this threat. We are positioned however on the other side of the Atagan force, and the chosen messenger must ride through the battle lines if they are to arrive in time.\n\nYou are an honourable Eijidini warrior. Since you were born, you have spent more time in the saddle than on foot. From childhood you have trained in the sword, lance and bow, and have mastered the use of each. You have been selected for this mission. May the ancestor's welcome you into their halls."
 		
 		local drawnText = string.sub(text, 1, math.ceil(60*GlobalTime))

@@ -288,6 +288,9 @@ function getPossiblePlayerTiles(player)
 		addTileInLine(player.speed - 1, player.character.facing)
 	end
 	
+	addTileInLine(player.speed, player.character.facing + math.pi/4)
+	addTileInLine(player.speed, player.character.facing - math.pi/4)
+	
 	return tiles
 end
 
@@ -410,7 +413,7 @@ function collectPlayerPickups(map, player)
 		local collectibles = collectPickupsInRange(map, player.character.tile.x, player.character.tile.y, 1)
 		
 		if collectibles["health"] then
-			healPlayer(player, collectibles["health"])
+			healPlayer(player, 2*collectibles["health"])
 		end
 		if collectibles["arrows"] then
 			player.arrows = math.min(player.maxArrows, player.arrows + collectibles["arrows"])

@@ -102,7 +102,7 @@ end
 
 local eGallopSound = love.audio.newSource("sounds/gallop_loop.ogg", "static")
 function enemyGallopSound(distance)
-	local newVolume = 1 - distance/20
+	local newVolume = math.max(1 - distance/20, 0)
 	if eGallopSound:isPlaying() then
 		if eGallopSound:getVolume() < newVolume then
 			eGallopSound:setVolume(newVolume)
@@ -114,6 +114,7 @@ function enemyGallopSound(distance)
 end
 
 local enemyWalkSound = love.audio.newSource("sounds/footsteps.ogg", "static")
+enemyWalkSound:setVolume(0)
 function playEnemyWalkSound(volume)
 	if enemyWalkSound:isPlaying() then
 		if enemyWalkSound:getVolume() < volume then

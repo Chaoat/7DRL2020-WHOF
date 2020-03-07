@@ -118,7 +118,7 @@ function initiateEnemy(map, x, y, kind)
 	
 	if enemyKind.mounted then
 		enemy.speed = 0
-		enemy.maxSpeed = 5
+		enemy.maxSpeed = 6
 		enemy.moveDecals = {}
 	end
 	
@@ -377,7 +377,8 @@ function enemyAct(enemy, player)
 		
 		if distance >= 2*enemy.formation.triggerDistance then
 			for i = 1, enemy.cavCount do
-				local spawnTile = findFreeTileFromPoint(enemy.character.map, enemy.character.tile.x, enemy.character.tile.y, 3)
+				local targetTile = getTileFromPointAtDistance(enemy.character.map, player.character.tile.x, player.character.tile.y, randBetween(math.pi/4, -math.pi/4), 45)
+				local spawnTile = findFreeTileFromPoint(enemy.character.map, targetTile.x, targetTile.y, 3)
 				activateEnemy(initiateEnemy(enemy.character.map, spawnTile.x, spawnTile.y, "rider"))
 			end
 			enemy.cavCount = nil

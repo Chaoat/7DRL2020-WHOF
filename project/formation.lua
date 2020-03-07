@@ -3,22 +3,20 @@ function initiateFormation(map, enemyList, x, y, template, formFacing)
 	local formation = {map = map, members = {}, messenger = nil, x = x, y = y, template = template, size = template.size, order = "follow", facing = formFacing, behaviour = template.behaviour, leniency = template.leniency, active = false, triggerDistance = template.size + 20}
 	for i = 1, #enemyList do
 		local enemy = enemyList[i]
-		if not noFormation then
-			local templateEntry = template.positions[i]
-			
-			local posX, posY = orthogRotate(templateEntry.x, templateEntry.y, formFacing)
-			local facing = templateEntry.facing
-			if not facing then
-				facing = 0
-			end
-			table.insert(formation.members, {enemy = enemy, posX = posX, posY = posY, facing = facing})
-			
-			
-			enemy.formation = formation
-			enemy.formationX = x + posX
-			enemy.formationY = y + posY
-			enemy.formationFacing = formFacing + facing
+		local templateEntry = template.positions[i]
+		
+		local posX, posY = orthogRotate(templateEntry.x, templateEntry.y, formFacing)
+		local facing = templateEntry.facing
+		if not facing then
+			facing = 0
 		end
+		table.insert(formation.members, {enemy = enemy, posX = posX, posY = posY, facing = facing})
+		
+		
+		enemy.formation = formation
+		enemy.formationX = x + posX
+		enemy.formationY = y + posY
+		enemy.formationFacing = formFacing + facing
 	end
 	
 	table.insert(map.formations, formation)
@@ -249,10 +247,25 @@ function checkFormationInLine(map, formation)
 		local member = formation.members[i]
 		local tile = getMapTile(map, member.enemy.formationX, member.enemy.formationY)
 		if tile.properties.walkable then
-			if not (member.enemy.character.tile.x == member.enemy.formationX and member.enemy.character.tile.y == member.enemy.formationY and (distanceBetweenAngles(member.enemy.character.facing, member.enemy.formationFacing) == 0 or not member.enemy.character.lance)) then
+			if not (member.enemy.character.tile.x == member.enemy.formationX and member.enemy.character.tile.y == member.enemy.formationY and (distanceBetweenAngles(member.enemy.character.facing, member.enemy.formationFacing) == 0 or not member.enemy.character.lance)) and not member.enemy.noFormation then
 				nFightersNotReady = nFightersNotReady + 1
 			end
 		end
 	end
 	return nFightersNotReady
+end
+
+function cleanUpFormations(formations, map)
+	local i = 1
+	while i <= #formations do
+		local formation = formations[i]
+		if formation.x < map.minX or formation.x > map.maxX or formation.y < map.minY or formation.y > map.maxY then
+			for j = 1, #formation.members do
+				formation.members[j].enemy.dead = true
+			end
+			table.remove(formations, i)
+		else
+			i = i + 1
+		end
+	end
 end

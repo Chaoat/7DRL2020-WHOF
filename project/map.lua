@@ -1,5 +1,5 @@
 function initiateMap(chunkSize)
-	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, inactiveEnemies = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}, treeNoiseMult = 0.004, treeNoiseXOff = math.random(), treeNoiseYOff = math.random(), chunkSize = chunkSize}
+	local map = {minX = 0, maxX = 0, minY = 0, maxY = 0, tiles = {}, characters = {}, activeCharacters = {}, inactiveEnemies = {}, enemies = {}, formations = {}, lances = {}, decals = {}, particles = {}, treeNoiseMult = 0.004, treeNoiseXOff = math.random(), treeNoiseYOff = math.random(), chunkSize = chunkSize, maxChunkSize = 3*chunkSize}
 	fillMapArea(map, "ground", -chunkSize/2, -chunkSize/2, chunkSize/2, chunkSize/2)
 	return map
 end
@@ -26,6 +26,27 @@ function checkChunkExpansion(map, x, y)
 		expandMap(map, "ground", x, y + map.chunkSize)
 	elseif y - map.minY <= map.chunkSize/2 then
 		expandMap(map, "ground", x, y - map.chunkSize)
+	end
+	
+	local mapDecreased = false
+	if x - map.minX >= map.maxChunkSize then
+		map.minX = x - map.maxChunkSize
+		mapDecreased = true
+	elseif map.maxX - x >= map.maxChunkSize then
+		map.maxX = x + map.maxChunkSize
+		mapDecreased = true
+	end
+	
+	if y - map.minY >= map.maxChunkSize then
+		map.minY = y - map.maxChunkSize
+		mapDecreased = true
+	elseif map.maxY - y >= map.maxChunkSize then
+		map.maxY = y + map.maxChunkSize
+		mapDecreased = true
+	end
+	
+	if mapDecreased then
+		cleanUpFormations(map.formations, map)
 	end
 end
 
