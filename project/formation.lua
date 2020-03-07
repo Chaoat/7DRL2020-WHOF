@@ -216,8 +216,8 @@ function determineFormationAction(map, player, formation)
 			formation.order = "formation"
 		elseif formation.behaviour == "intercept" then
 			if membersNotReady <= #formation.members*formation.leniency then 
-				if distanceBetweenAngles(formation.facing, player.character.facing + math.pi) ~= 0 then
-					targetFacing = player.character.facing + math.pi
+				if distanceBetweenAngles(formation.facing, math.pi) ~= 0 then
+					targetFacing = math.pi
 					action = "rotate"
 				else
 					local targetTile = getTileFromPointAtDistance(map, player.character.tile.x, player.character.tile.y, 0, 10)

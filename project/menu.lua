@@ -7,6 +7,8 @@ function enterMenu(menu, camera)
 	GameStarted = false
 	menu.stage = "main"
 	resetCamera(camera)
+	
+	pauseWind()
 end
 
 function createMainInterface()

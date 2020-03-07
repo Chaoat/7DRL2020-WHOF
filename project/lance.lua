@@ -89,6 +89,7 @@ function checkLanceCollisions(characters)
 				damageCharacter(character, 10, angle, speed + 1, "lanced")
 				-- There was a collision
 				lanceCollision = true
+				love.audio.play("impale.ogg", "static", false, 1)
 			end
 		end
 	end

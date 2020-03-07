@@ -156,6 +156,9 @@ function updateCharacterPositions(characterList)
 				if character.master.speed and not character.approachingTile.character then
 					if character.master.speed > 2 then
 						damageCharacter(character, (character.master.speed - 2), 0, 0, "collision")
+						if character.master.side == "player" then
+							love.audio.play("whinny.ogg", "static", false, 1)
+						end
 					end
 					character.master.speed = 0
 				end

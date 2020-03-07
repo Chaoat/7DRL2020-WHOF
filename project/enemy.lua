@@ -147,7 +147,7 @@ function deactivateEnemy(enemy)
 	end
 end
 
-local enemyMoveToPos = function(enemy, x, y)
+local enemyMoveToPos = function(enemy, player, x, y)
 	local angleToTarget = angleBetweenVectors(enemy.character.tile.x, enemy.character.tile.y, x, y)
 	local blocked = true
 	
@@ -190,6 +190,11 @@ local enemyMoveToPos = function(enemy, x, y)
 	
 	if not blocked then
 		shiftCharacter(enemy.character, xDir, yDir)
+		
+		local volume = 1 - (orthogDistance(enemy.character.tile.x, enemy.character.tile.y, player.character.tile.x, player.character.tile.y)/10)
+		if volume > 0 then
+			love.audio.play("footsteps.ogg", "static", false, volume)
+		end
 	end
 end
 
@@ -212,20 +217,20 @@ local enemyRotateToPoint = function(enemy, x, y)
 	return false
 end
 
-local enemyRotateThenMoveToPoint = function(enemy, x, y)
+local enemyRotateThenMoveToPoint = function(enemy, player, x, y)
 	if not enemyRotateToPoint(enemy, x, y) and x ~= enemy.character.tile.x or y ~= enemy.character.tile.y then
-		enemyMoveToPos(enemy, x, y)
+		enemyMoveToPos(enemy, player, x, y)
 	end
 end
 
 local enemyFlee = function(enemy, target)
 	local angleAway = math.atan2(enemy.character.tile.y - target.character.tile.y, enemy.character.tile.x - target.character.tile.x)
 	local awayX, awayY = getRelativeGridPositionFromAngle(angleAway)
-	enemyMoveToPos(enemy, enemy.character.tile.x + awayX, enemy.character.tile.y + awayY)
+	enemyMoveToPos(enemy, target, enemy.character.tile.x + awayX, enemy.character.tile.y + awayY)
 end
 
 local enemyChase = function(enemy, target)
-	enemyRotateThenMoveToPoint(enemy, target.character.tile.x, target.character.tile.y)
+	enemyRotateThenMoveToPoint(enemy, target, target.character.tile.x, target.character.tile.y)
 end
 
 local enemyHold = function(enemy, target)
@@ -243,12 +248,12 @@ local enemyHold = function(enemy, target)
 	end
 end
 
-local enemyFollowFormation = function(enemy)
+local enemyFollowFormation = function(enemy, player)
 	if distanceBetweenAngles(enemy.formationFacing, enemy.character.facing) > 0 and enemy.character.lance then
 		enemyRotate(enemy, enemy.formationFacing)
 	elseif enemy.formationX ~= enemy.character.tile.x or enemy.formationY ~= enemy.character.tile.y then
 		--print("Moving To: [" .. enemy.formationX .. ":" .. enemy.formationY .. "]")
-		enemyMoveToPos(enemy, enemy.formationX, enemy.formationY)
+		enemyMoveToPos(enemy, player, enemy.formationX, enemy.formationY)
 	end
 end
 
@@ -357,7 +362,7 @@ function enemyAct(enemy, player)
 		if enemy.stance == "chase" then
 			enemyChase(enemy, player)
 		elseif enemy.stance == "formation" then
-			enemyFollowFormation(enemy)
+			enemyFollowFormation(enemy, player)
 		elseif enemy.stance == "hold" then
 			enemyHold(enemy, player)
 		elseif enemy.stance == "flee" then
@@ -452,6 +457,9 @@ end
 function damageEnemy(enemy, damage)
 	enemy.dead = true
 	enemygruntsound()
+	if enemy.speed then
+		love.audio.play("whinny.ogg", "static", false, 1)
+	end
 end
 
 function cleanupDeadEnemies(enemies)

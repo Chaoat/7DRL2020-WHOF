@@ -66,6 +66,7 @@ end
 function killPlayer(player)
 	player.dead = true
 	player.character.dead = true
+	love.audio.play("whinny.ogg", "static", false, 1)
 end
 
 function checkPlayerVictory(player)
@@ -77,6 +78,7 @@ end
 
 --Shifts the player 1 space
 function movePlayer(player, xDir, yDir)
+	playerGallopSound(player.speed)
 	shiftCharacter(player.character, xDir, yDir)
 	-- Increase the disance travelled
 	player.travelDist = player.travelDist + xDir
@@ -175,7 +177,6 @@ function playerKeypressed(player, camera, key, curRound)
 			if curRound.finished then
 				if not camera.movingCursor then
 					determinePlayerAction(player, dirX, dirY, curRound)
-					love.audio.play("gallop_loop.ogg", "static", false)
 				else
 					moveCameraCursor(camera, dirX, dirY, player.firing, player)
 				end

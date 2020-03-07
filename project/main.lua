@@ -66,6 +66,8 @@ function startGame()
 	--spawnEncounter(Map, 20, 0, 10, 2)
 	
 	GameStarted = true
+	
+	playWind()
 end
 
 function love.resize(x, y)

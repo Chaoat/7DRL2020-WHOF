@@ -17,6 +17,8 @@ function updateWind(dt)
 	windBlowStrength = windBlowStrength + randBetween(-dt, dt)
 	windBlowStrength = math.max(0, windBlowStrength)
 	windBlowStrength = math.min(1, windBlowStrength)
+	
+	updateWindSound(windBlowStrength)
 end
 
 function getWindAtPoint(windStrength, x, y)

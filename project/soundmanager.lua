@@ -20,7 +20,7 @@ do
  
     -- overwrite love.audio.play to create and register source if needed
     local play = love.audio.play
-    function love.audio.play(what, how, loop)
+    function love.audio.play(what, how, loop, volume)
         local src = what
         local path = "sounds/" .. what
         if type(what) ~= "userdata" or not what:typeOf("Source") then
@@ -30,6 +30,10 @@ do
 			
             src = sourceBank[path]:clone()
             src:setLooping(loop or false)
+			
+			if volume then
+				src:setVolume(volume)
+			end
         end
  
         play(src)
@@ -49,11 +53,11 @@ end
 function enemygruntsound()
 	local chance = math.random()
 	if chance < 0.33 then
-		love.audio.play("grunt2.ogg", "static", false)
+		love.audio.play("grunt2.ogg", "static", false, 0.7)
 	elseif chance < 0.66 then
-		love.audio.play("grunt3.ogg", "static", false)
+		love.audio.play("grunt3.ogg", "static", false, 0.7)
 	else
-	    love.audio.play("grunt4.ogg", "static", false)
+	    love.audio.play("grunt4.ogg", "static", false, 0.7)
 	end
 end
 
@@ -88,4 +92,49 @@ function enemysurprisesound()
 	else
 	    love.audio.play("gasp3.ogg", "static", false)
 	end
+end
+
+local pGallopSound = love.audio.newSource("sounds/gallop_loop.ogg", "static")
+function playerGallopSound(speed)
+	pGallopSound:play()
+	pGallopSound:setVolume(speed/5)
+end
+
+local eGallopSound = love.audio.newSource("sounds/gallop_loop.ogg", "static")
+function enemyGallopSound(distance)
+	local newVolume = 1 - distance/20
+	if eGallopSound:isPlaying() then
+		if eGallopSound:getVolume() < newVolume then
+			eGallopSound:setVolume(newVolume)
+		end
+	else
+		eGallopSound:setVolume(newVolume)
+		eGallopSound:play()
+	end
+end
+
+local enemyWalkSound = love.audio.newSource("sounds/footsteps.ogg", "static")
+function playEnemyWalkSound(volume)
+	if enemyWalkSound:isPlaying() then
+		if enemyWalkSound:getVolume() < volume then
+			enemyWalkSound:setVolume(volume)
+		end
+	else
+		enemyWalkSound:setVolume(volume)
+		enemyWalkSound:play()
+	end
+end
+
+local windSound = love.audio.newSource("sounds/wind.ogg", "static")
+function playWind()
+	windSound:setLooping(true)
+	windSound:play()
+end
+
+function pauseWind()
+	windSound:stop()
+end
+
+function updateWindSound(volume)
+	windSound:setVolume(volume)
 end

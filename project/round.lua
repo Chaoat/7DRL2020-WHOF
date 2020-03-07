@@ -33,6 +33,7 @@ function resolveTurn(player, map, curTurn)
 		if enemy.speed then
 			if curTurn <= enemy.rounds then
 				local xDir, yDir = getRelativeGridPositionFromAngle(enemy.character.facing)
+				enemyGallopSound(orthogDistance(enemy.character.tile.x, enemy.character.tile.y, player.character.tile.x, player.character.tile.y))
 				shiftCharacter(enemy.character, xDir, yDir)
 			end
 		end
