@@ -238,7 +238,7 @@ function checkSlashConnections(characters)
 			end
 			
 			if lastTarget and not characterHit then
-				characterSlash(character, targetChar)
+				characterSlash(character, lastTarget)
 				characterHit = true
 			end
 		end

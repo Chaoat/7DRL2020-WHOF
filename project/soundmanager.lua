@@ -1,5 +1,6 @@
 do
     -- will hold the currently playing sources
+	local sourceBank = {}
     local sources = {}
  
     -- check for sources that finished playing and remove them
@@ -23,7 +24,11 @@ do
         local src = what
         local path = "sounds/" .. what
         if type(what) ~= "userdata" or not what:typeOf("Source") then
-            src = love.audio.newSource(path, how)
+			if not sourceBank[path] then
+				sourceBank[path] = love.audio.newSource(path, how)
+			end
+			
+            src = sourceBank[path]:clone()
             src:setLooping(loop or false)
         end
  

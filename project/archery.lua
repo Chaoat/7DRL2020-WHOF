@@ -1,4 +1,5 @@
 function fireArrow(character, targetX, targetY)
+	love.audio.play("bowRelease.ogg", "static", false)
 	local targetTile = getMapTile(character.map, targetX, targetY)
 	
 	local arrowTiles = getTilesInLine(character.map, character.tile.x, character.tile.y, targetX, targetY)
